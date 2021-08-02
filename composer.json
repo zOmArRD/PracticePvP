@@ -1,15 +1,16 @@
 {
-  "name": "greeknetwork/practice",
+  "name": "greek/practicepvp",
   "description": "Practice PVP Core",
   "minimum-stability": "stable",
   "license": "proprietary",
   "authors": [
     {
       "name": "zOmArRD",
-      "email": "omarsena25@gmail.com"
+      "email": "zOmArRD@greekmc.net"
     }
   ],
   "require": {
-    "pocketmine/pocketmine-mp": "3.21.1"
+    "pocketmine/pocketmine-mp": "3.22.1",
+    "ext-mysqli": "*"
   }
 }
