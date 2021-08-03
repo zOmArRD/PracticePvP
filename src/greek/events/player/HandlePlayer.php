@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace greek\events\player;
 
 use greek\modules\database\mysql\AsyncQueue;
-use greek\modules\database\mysql\InsertQuery;
-use greek\modules\database\mysql\SelectQuery;
+use greek\modules\database\mysql\query\InsertQuery;
+use greek\modules\database\mysql\query\SelectQuery;
 use greek\network\player\NetworkPlayer;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerCreationEvent;

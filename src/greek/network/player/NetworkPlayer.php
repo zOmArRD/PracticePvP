@@ -50,9 +50,8 @@ class NetworkPlayer extends Player
         $this->setFood(20);
 
         try {
-            if (Settings::$pitch || Settings::$yaw !== null) $this->setRotation(Settings::$yaw, Settings::$pitch);
-            if (Settings::$x || Settings::$y || Settings::$z || Settings::$lobby !== null) $this->teleport(new Position(Settings::$x, Settings::$y, Settings::$z, $this->getWorld(Settings::$lobby)));
-
+            $this->setRotation(Settings::$yaw, Settings::$pitch);
+            $this->teleport(new Position(Settings::$x, Settings::$y, Settings::$z, $this->getWorld(Settings::$lobby)));
         } catch (Exception $exception) {
             var_dump($exception->getMessage());
         }

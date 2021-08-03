@@ -12,7 +12,7 @@ namespace greek\modules\languages;
 
 use Exception;
 use greek\modules\database\mysql\AsyncQueue;
-use greek\modules\database\mysql\InsertQuery;
+use greek\modules\database\mysql\query\InsertQuery;
 use greek\modules\form\lib\SimpleForm;
 use greek\network\player\NetworkPlayer;
 use greek\network\utils\TextUtils;
