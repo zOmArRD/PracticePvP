@@ -1,3 +1,34 @@
 ---
-config-version: "1.0"
+# Version of the plugin with the configuration.
+config.version: "1.0.0"
+
+# For the colors, please read the documentation on TextUtils. {greek/network/utils/TextUtils.php}
+general:
+  prefix: "{bold}{red}Practice {gray}»{reset} "
+
+# Array con los idiomas disponibles.
+# Si quieres agregar algun otro, debes tambien agregar las strings en la carpeta /lang/
+languages:
+  - ISOCode: "en_ENG"
+    name: "English"
+    icon: "https://cdn.countryflags.com/thumbs/united-states-of-america/flag-800.png"
+
+# Credentials for the MYSQL database.
+# Es sumamente necesario.
+database:
+  user: "root"
+  password: "1234"
+  host: "10.0.0.1"
+  database: "Database"
+
+# Esto es una array que contiene los datos donde el jugador entrara al entrar al server.
+# Si no quieres usar esta configuracion, deja los valores en "null".
+spawn-map:
+  World-name: null
+  X: null
+  Y: null
+  Z: null
+  Yaw: null
+  Pitch: null
+  MinY: 0
 ...
