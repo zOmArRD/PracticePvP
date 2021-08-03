@@ -17,3 +17,9 @@ strings:
   # LangSelector Strings
   form.title.langselector: "Choose your language:"
   message.langslector.setlanguage: "{green}Your language is currently set to English."
+
+
+  # Items Name
+  item.selectorduel.name: "{bold}{gray}» {gold}Duel Type {gray}«"
+  item.selectorffa.name: "{bold}{gray}» {gold}FFA Selector {gray}«"
+  item.settings.name: "{bold}{gray}» {gold}Settings {gray}«"

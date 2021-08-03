@@ -12,10 +12,12 @@ declare(strict_types=1);
 namespace greek\network\player;
 
 use Exception;
+use greek\items\PluginItems;
 use greek\Loader;
 use greek\modules\languages\Lang;
 use greek\network\config\Settings;
 use greek\network\utils\TextUtils;
+use pocketmine\item\Item;
 use pocketmine\level\Level;
 use pocketmine\level\Position;
 use pocketmine\network\mcpe\protocol\TransferPacket;
@@ -79,8 +81,7 @@ class NetworkPlayer extends Player
     }
 
     /**
-     * Transfiere al jugador a otro servidor (Debe estar proxieado.)
-     *
+     * Transfer the player to another server (Must be proxied.)
      *
      * @param string $server
      */
@@ -90,5 +91,27 @@ class NetworkPlayer extends Player
         $pk = new TransferPacket();
         $pk->address = $server;
         $this->dataPacket($pk);
+    }
+
+    /**
+     * This function is used to simplify the use of adding something to the player's inventory.
+     * @param int $index
+     * @param Item $item
+     * @return bool
+     */
+    public function setItem(int $index, Item $item): bool
+    {
+        $pi = $this->getInventory();
+        return $pi->setItem($index, $item);
+    }
+
+    /**
+     * He is in charge of giving the Lobby items to the player.
+     */
+    public function giveLobbyItems(): void
+    {
+        foreach (['selector.duel' => 0, 'selector.ffa' => 1] as $item => $index) {
+            $this->setItem($index, PluginItems::getItem($item, $this));
+        }
     }
 }
