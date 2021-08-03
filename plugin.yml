@@ -1,6 +1,6 @@
 name: PracticePVP
 version: 1.0.0
 author: zOmArRD
-main: zOmArRD\core\Loader
-api: 3.18.0
+main: greek\Loader
+api: 3.21.1
 description: Practice PVP Core
