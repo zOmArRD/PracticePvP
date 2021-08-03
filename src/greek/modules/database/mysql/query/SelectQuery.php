@@ -9,10 +9,11 @@
  */
 declare(strict_types=1);
 
-namespace greek\modules\database\mysql;
+namespace greek\modules\database\mysql\query;
 
 use Exception;
 use greek\Loader;
+use greek\modules\database\mysql\AsyncQuery;
 use mysqli;
 use pocketmine\Server;
 
