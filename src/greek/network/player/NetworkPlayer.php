@@ -45,9 +45,7 @@ class NetworkPlayer extends Player
 
     public function teleportToLobby(): void
     {
-        $playerInventory = $this->getInventory();
-        $playerInventory->clearAll();
-
+        $this->giveLobbyItems();
         $this->setHealth(20);
         $this->setFood(20);
 
@@ -102,6 +100,7 @@ class NetworkPlayer extends Player
     public function setItem(int $index, Item $item): bool
     {
         $pi = $this->getInventory();
+        $pi->clearAll();
         return $pi->setItem($index, $item);
     }
 
