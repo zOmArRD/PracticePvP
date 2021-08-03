@@ -12,7 +12,6 @@ languages:
   - ISOCode: "en_ENG"
     name: "English"
     icon: "https://cdn.countryflags.com/thumbs/united-states-of-america/flag-800.png"
-
 # Credentials for the MYSQL database.
 # Es sumamente necesario.
 database:

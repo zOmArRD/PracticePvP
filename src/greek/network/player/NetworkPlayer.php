@@ -41,7 +41,7 @@ class NetworkPlayer extends Player
         return $this->langClass;
     }
 
-    public function handleFirstJoin(): void
+    public function teleportToLobby(): void
     {
         $playerInventory = $this->getInventory();
         $playerInventory->clearAll();
