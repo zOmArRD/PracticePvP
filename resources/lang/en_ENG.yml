@@ -1,0 +1,19 @@
+strings:
+  # Global Strings
+  message.error: "{red}An error has occurred"
+  message.noperms: "{red}You don't have permission for this!"
+  message.server.connecting: "{green}Connecting to the server..."
+  message.server.connect.error: "{red}We have not connected to the server, please try later"
+
+  # Global Forms Strings
+  form.button.close: "{red}Close"
+  form.button.back: "{gray}<< Back"
+  form.button.join: "{gray}Click to join"
+
+  # Form Settings Strings
+  form.title.settingsform: "{bold}{gray}» {gold}Settings {gray}"
+  form.button.settingsform.changelanguage: "{bold}{gold}Change Language"
+
+  # LangSelector Strings
+  form.title.langselector: "Choose your language:"
+  message.langslector.setlanguage: "{green}Your language is currently set to English."

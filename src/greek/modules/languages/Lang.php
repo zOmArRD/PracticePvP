@@ -16,13 +16,12 @@ use greek\modules\database\mysql\InsertQuery;
 use greek\modules\form\lib\SimpleForm;
 use greek\network\player\NetworkPlayer;
 use greek\network\utils\TextUtils;
-use pocketmine\Player;
 use pocketmine\utils\Config;
 
-class Lang extends ILang
+class Lang
 {
-    /** @var Player */
-    static private Player $player;
+    /** @var NetworkPlayer  */
+    private NetworkPlayer $player;
 
     /** @var array */
     public static array $lang = [], $users = [];
@@ -30,47 +29,47 @@ class Lang extends ILang
     /** @var Config */
     public static Config $config;
 
-    public function __construct(Player $player)
+    public function __construct(NetworkPlayer $player)
     {
-        self::setPlayer($player);
+        $this->setPlayer($player);
     }
 
-    static public function setStringValue(string $key, string $value): void
+    public function setStringValue(string $key, string $value): void
     {
-        $playerName = self::getPlayer()->getName();
+        $playerName = $this->getPlayer()->getName();
         AsyncQueue::submitQuery(new InsertQuery("UPDATE settings SET $key='$value' WHERE ign='{$playerName}'"));
     }
 
-    static public function setLanguage(string $language, bool $safe): void
+    public function setLanguage(string $language, bool $safe): void
     {
-        $playerName = self::getPlayer()->getName();
+        $playerName = $this->getPlayer()->getName();
         self::$users[$playerName] = $language;
         if ($safe) {
             NetworkPlayer::$playerData[$playerName]["language"] = $language;
-            self::setStringValue("language", $language);
+            $this->setStringValue("language", $language);
         }
     }
 
-    static public function applyPlayerLanguage(): void
+    public function applyPlayerLanguage(): void
     {
         $player = self::getPlayer();
         if (isset(NetworkPlayer::$playerData[$player->getName()])) {
             $data = NetworkPlayer::$playerData[$player->getName()];
             if ($data["language"] !== null && $data["language"] !== "null") {
-                self::setLanguage($data["language"], false);
+                $this->setLanguage($data["language"], false);
             }
         }
     }
 
-    static public function getPlayerLanguage(): string
+    public function getPlayerLanguage(): string
     {
-        $player = self::getPlayer();
+        $player = $this->getPlayer();
         return self::$users[$player->getName()] ?? "en_ENG";
     }
 
-    static public function getString(string $id): string
+    public function getString(string $id): string
     {
-        $strings = self::$lang[self::getPlayerLanguage()]->get("strings");
+        $strings = self::$lang[$this->getPlayerLanguage()]->get("strings");
         try {
             return $strings["$id"] ?? TextUtils::replaceColor($strings["message.error"]);
         } catch (Exception $exception) {
@@ -78,7 +77,7 @@ class Lang extends ILang
         }
     }
 
-    static public function replaceVars(string $msg, array $array): string
+    public function replaceVars(string $msg, array $array): string
     {
         $m = $msg;
         $keys = array_keys($array);
@@ -89,31 +88,51 @@ class Lang extends ILang
     }
 
     /**
-     * TODO: Finalize the Language selector.
+     * TODO: Update language items.
      */
-    static public function showForm(): void
+    public function showForm(): void
     {
-        $player = self::getPlayer();
-        $form = new SimpleForm(function ($data) {
+        $player = $this->getPlayer();
+        $form = new SimpleForm(function (NetworkPlayer $player, $data) {
+            if (isset($data)) {
+                try {
+                    $languages = Lang::$config->get("languages");
+                    $lang = $languages[$data];
+                    $this->setLanguage($lang['ISOCode'], true);
 
+                    $player->sendMessage($player->getTranslatedMsg("message.langselector.setlanguage"));
+                } catch (Exception $exception) {
+                    var_dump($exception->getMessage());
+                }
+            }
         });
+
+        $form->setTitle($player->getTranslatedMsg("form.title.langselector"));
+
+        try {
+            foreach (Lang::$config->get("languages") as $lang) {
+                $form->addButton("§a" . $lang['name'], 1, $lang['icon']);
+            }
+        } catch (Exception $exception) {
+            var_dump($exception->getMessage());
+        }
 
         $player->sendForm($form);
     }
 
     /**
-     * @param Player $player
+     * @param NetworkPlayer $player
      */
-    public static function setPlayer(Player $player): void
+    public function setPlayer(NetworkPlayer $player): void
     {
-        self::$player = $player;
+        $this->player = $player;
     }
 
     /**
-     * @return Player
+     * @return NetworkPlayer
      */
-    public static function getPlayer(): Player
+    public function getPlayer(): NetworkPlayer
     {
-        return self::$player;
+        return $this->player;
     }
 }
