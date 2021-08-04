@@ -105,16 +105,18 @@ class HandlePlayer implements Listener
         $player = $event->getPlayer();
         $name = $player->getName();
 
+        $event->setJoinMessage(null);
+        $player->setImmobile(true);
+
         if (!$player instanceof NetworkPlayer) return;
 
         if (isset($this->login[$name])) {
             unset($this->login[$name]);
             $this->join[$name] = 1;
+
         }
 
-        $player->setImmobile(true);
-        $event->setJoinMessage(null);
-
+        $player->teleportToLobby();
         /* TODO: finish. */
     }
 

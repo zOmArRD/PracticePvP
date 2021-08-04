@@ -43,6 +43,9 @@ class NetworkPlayer extends Player
         return $this->langClass;
     }
 
+    /**
+     * This function is in charge of teleporting the player to the lobby, clearing his inventory, and giving him the items.
+     */
     public function teleportToLobby(): void
     {
         $this->giveLobbyItems();
