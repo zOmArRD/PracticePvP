@@ -1,0 +1,167 @@
+<?php
+/*
+ * Created by PhpStorm
+ *
+ * User: zOmArRD
+ * Date: 2/8/2021
+ *
+ * Copyright © 2021 - All Rights Reserved.
+ */
+declare(strict_types=1);
+
+namespace greek\events\player;
+
+use greek\modules\database\mysql\AsyncQueue;
+use greek\modules\database\mysql\query\InsertQuery;
+use greek\modules\database\mysql\query\SelectQuery;
+use greek\network\NetworkSession;
+use greek\network\player\NetworkPlayer;
+use greek\network\player\SessionManager;
+use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerCreationEvent;
+use pocketmine\event\player\PlayerExhaustEvent;
+use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerLoginEvent;
+use pocketmine\event\player\PlayerMoveEvent;
+use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\event\server\DataPacketReceiveEvent;
+use pocketmine\network\mcpe\protocol\EmotePacket;
+use pocketmine\network\mcpe\protocol\LoginPacket;
+use pocketmine\Server;
+use ReflectionClass;
+use ReflectionException;
+
+class PlayerEvents implements Listener
+{
+    /** @var array */
+    public array $login, $join, $move;
+
+    /**
+     * @throws ReflectionException
+     */
+    public function dataReceive(DataPacketReceiveEvent $event): void
+    {
+        $packet = $event->getPacket();
+        $player = $event->getPlayer();
+
+        switch (true) {
+            case $packet instanceof LoginPacket:
+                if (isset($packet->clientData["Waterdog_IP"])) {
+                    $class = new ReflectionClass($player);
+                    $property = $class->getProperty("ip");
+                    $property->setAccessible(true);
+                    $property->setValue($player, $packet->clientData["Waterdog_IP"]);
+                }
+                break;
+            case $packet instanceof EmotePacket:
+                $emoteId = $packet->getEmoteId();
+                Server::getInstance()->broadcastPacket($player->getViewers(), EmotePacket::create($player->getId(), $emoteId, 1 << 0));
+                break;
+        }
+    }
+
+    public function playerCreation(PlayerCreationEvent $event): void
+    {
+        $event->setPlayerClass(NetworkPlayer::class);
+    }
+
+    /**
+     * @param PlayerLoginEvent $event
+     */
+    public function pLogin(PlayerLoginEvent $event)
+    {
+        $player = $event->getPlayer();
+        $name = $player->getName();
+
+        if (!$player instanceof NetworkPlayer) return;
+        $player->setLangClass();
+        $player->setSession();
+
+        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM settings WHERE name='$name'"), function ($result, $data) {
+            $player = $data[0];
+            $name = $player->getName();
+            $mode = "en_ENG";
+
+            if (sizeof($result) === 0) {
+                AsyncQueue::submitQuery(new InsertQuery("INSERT INTO settings(name, language) VALUES ('$name', '$mode');"));
+            } else {
+                NetworkSession::$playerData[$name] = $result[0];
+                $this->updateLang($player);
+            }
+        }, [$player]);
+
+        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM practice_downstream WHERE name='$name'"), function ($result, $data){
+            $player = $data[0];
+            $name = $player->getName();
+
+            if (sizeof($result) === 0) {
+                AsyncQueue::submitQuery(new InsertQuery("INSERT INTO practice_downstream(name, DuelType, QueueKit, ShowScoreboard) VALUE ('$name', null, null, true);"));
+            } else {
+                NetworkSession::$playerData[$name] = $result[0];
+            }
+        }, [$player]);
+
+        /* Always put yourself at the end of all things. */
+        $this->login[$name] = 1;
+    }
+
+    public function updateLang(NetworkPlayer $player): void
+    {
+        $player->getLangClass()->applyLanguage();
+    }
+
+    /**
+     * @param PlayerJoinEvent $event
+     */
+    public function pJoin(PlayerJoinEvent $event): void
+    {
+        $player = $event->getPlayer();
+        $name = $player->getName();
+
+        $event->setJoinMessage(null);
+        $player->setImmobile(true);
+
+        if (!$player instanceof NetworkPlayer) return;
+
+        if (isset($this->login[$name])) {
+            unset($this->login[$name]);
+            $this->join[$name] = 1;
+        }
+
+        $player->getSession()->updateSession();
+    }
+
+    public function pQuit(PlayerQuitEvent $event): void
+    {
+        $player = $event->getPlayer();
+        $player->getInventory()->clearAll();
+        if ($player instanceof NetworkPlayer) $player->getSession()->closeSession();
+        $event->setQuitMessage(null);
+    }
+
+    public function handleExhaust(PlayerExhaustEvent $event)
+    {
+        $event->setCancelled();
+    }
+
+    public function pMove(PlayerMoveEvent $event): void
+    {
+        $player = $event->getPlayer();
+        $name = $player->getName();
+
+        if (isset($this->login[$name]) || isset($this->move[$name])) {
+            $event->setCancelled();
+        }
+
+        if (isset($this->join[$name])) {
+            unset($this->join[$name]);
+            $this->move[$player->getName()] = 1;
+            return;
+        }
+
+        if (isset($this->move[$name])) {
+            $player->setImmobile(false);
+            unset($this->move[$name]);
+        }
+    }
+}

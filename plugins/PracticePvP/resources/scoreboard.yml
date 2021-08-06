@@ -1,0 +1,37 @@
+###########################################################################################
+# This is a YML file. Be careful when editing. Check your edits in a YAML checker like    #
+# the one at http://yaml-online-parser.appspot.com                                        #
+###########################################################################################
+---
+display.name: "§6§lGreek §8Network"
+
+# Scoreboards:
+# - As you might know, scoreboards is bla bla bla...
+#   But here is the important things.
+#   -> The scoreboard are in ascending order. From 1-15
+#      From down to up.
+#   -> We have limited empty spaces due to mojang tomf*ckery
+#   -> They must be in array.
+#   -> You can simplify '§' as '&'
+#   -> The maximum arrays in one scoreboard is 15, Please follow this
+#      otherwise we will complain about it in console.
+#
+#   Enjoy your game with scoreboard (While it lasts)
+#
+# - Tags information.
+#   - {date}:             Displays the current date in the format 00/00/00.
+#   - {player.name}       Returns the name of the player.
+#   - {practice.online}     Returns the players on the Up-Stream server.
+#   - {practice.playing}  Return the players who are in an arena.
+#
+# Note: For the colors you can use "§" or use {gray}, {dark.blue},
+#       for more examples read the documentation at greek/network/utils/TextUtils.php
+en_ENG:
+  - "{gray}────────────────"
+  - ""
+  - " {gold}Online: {green}{practice.online}"
+  - " {gold}Playing: {gray}{practice.playing}"
+  - ""
+  - "{gray} play.greekmc.net"
+  - "{red}{gray}────────────────"
+...
