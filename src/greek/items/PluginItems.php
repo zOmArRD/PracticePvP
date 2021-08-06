@@ -27,13 +27,14 @@ class PluginItems
     static public function getItem(string $itemId, NetworkPlayer $player): Item
     {
         switch ($itemId) {
-            case "selector.duel":
-                return self::loadItem(ItemIds::DIAMOND_SWORD, $player->getTranslatedMsg("item.selectorduel.name"));
-            case "selector.ffa":
-                return self::loadItem(ItemIds::DIAMOND_SWORD, $player->getTranslatedMsg("item.selectorffa.name"));
-                /* TODO: Add more items. */
+            case "item.unranked":
+                return self::loadItem(ItemIds::IRON_SWORD, $player->getTranslatedMsg("item.unranked.name"));
+            case "item.ranked":
+                return self::loadItem(ItemIds::DIAMOND_SWORD, $player->getTranslatedMsg("item.ranked.name"));
+            case "item.settings":
+                return self::loadItem(ItemIds::BOOK, $player->getTranslatedMsg("item.settings.name"));
             default:
-                return ItemFactory::get(BlockIds::AIR);
+                return Item::get(BlockIds::AIR);
         }
     }
 

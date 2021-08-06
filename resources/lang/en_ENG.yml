@@ -9,17 +9,22 @@ strings:
   form.button.close: "{red}Close"
   form.button.back: "{gray}<< Back"
   form.button.join: "{gray}Click to join"
+  form.button.enable: "{green}Enable"
+  form.button.disable: "{red}Disable"
 
   # Form Settings Strings
   form.title.settingsform: "{bold}{gray}» {gold}Settings {gray}"
   form.button.settingsform.changelanguage: "{bold}{gold}Change Language"
+  form.button.settingsform.scoreboard: "{bold}{gold}Scoreboard Settings"
 
-  # LangSelector Strings
+  # Lang Selector Strings
   form.title.langselector: "Choose your language:"
-  message.langslector.setlanguage: "{green}Your language is currently set to English."
+  message.langselector.setlanguage: "{green}Your language is currently set to English."
 
+  # Scoreboard Setting Strings
+  form.title.scoreboard: "Scoreboard Settings"
 
   # Items Name
-  item.selectorduel.name: "{bold}{gray}» {gold}Duel Type {gray}«"
-  item.selectorffa.name: "{bold}{gray}» {gold}FFA Selector {gray}«"
-  item.settings.name: "{bold}{gray}» {gold}Settings {gray}«"
+  item.unranked.name: "{bold}{gray}» {reset}{gold}UnRanked Queue {gray}(Click) {bold}«"
+  item.ranked.name: "{bold}{gray}» {reset}{gold}Ranked Queue {gray}(Click) {bold}«"
+  item.settings.name: "{bold}{gray}» {reset}{gold}Settings {gray}(Click) {bold}«"

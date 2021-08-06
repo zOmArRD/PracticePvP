@@ -14,6 +14,7 @@ use Exception;
 use greek\modules\database\mysql\AsyncQueue;
 use greek\modules\database\mysql\query\InsertQuery;
 use greek\modules\form\lib\SimpleForm;
+use greek\network\NetworkSession;
 use greek\network\player\NetworkPlayer;
 use greek\network\utils\TextUtils;
 use pocketmine\utils\Config;
@@ -37,7 +38,7 @@ class Lang
     public function setStringValue(string $key, string $value): void
     {
         $playerName = $this->getPlayer()->getName();
-        AsyncQueue::submitQuery(new InsertQuery("UPDATE settings SET $key='$value' WHERE ign='{$playerName}'"));
+        AsyncQueue::submitQuery(new InsertQuery("UPDATE settings SET $key='$value' WHERE name='{$playerName}'"));
     }
 
     public function setLanguage(string $language, bool $safe): void
@@ -45,23 +46,23 @@ class Lang
         $playerName = $this->getPlayer()->getName();
         self::$users[$playerName] = $language;
         if ($safe) {
-            NetworkPlayer::$playerData[$playerName]["language"] = $language;
+            NetworkSession::$playerData[$playerName]["language"] = $language;
             $this->setStringValue("language", $language);
         }
     }
 
-    public function applyPlayerLanguage(): void
+    public function applyLanguage(): void
     {
         $player = self::getPlayer();
-        if (isset(NetworkPlayer::$playerData[$player->getName()])) {
-            $data = NetworkPlayer::$playerData[$player->getName()];
+        if (isset(NetworkSession::$playerData[$player->getName()])) {
+            $data = NetworkSession::$playerData[$player->getName()];
             if ($data["language"] !== null && $data["language"] !== "null") {
                 $this->setLanguage($data["language"], false);
             }
         }
     }
 
-    public function getPlayerLanguage(): string
+    public function getLanguage(): string
     {
         $player = $this->getPlayer();
         return self::$users[$player->getName()] ?? "en_ENG";
@@ -69,10 +70,11 @@ class Lang
 
     public function getString(string $id): string
     {
-        $strings = self::$lang[$this->getPlayerLanguage()]->get("strings");
+        $strings = self::$lang[$this->getLanguage()]->get("strings");
         try {
-            return $strings["$id"] ?? TextUtils::replaceColor($strings["message.error"]);
+            return $strings["$id"]/* ?? TextUtils::replaceColor($strings["message.error"])*/;
         } catch (Exception $exception) {
+            var_dump($exception->getMessage());
             return "error-402";
         }
     }
@@ -87,9 +89,6 @@ class Lang
         return $m;
     }
 
-    /**
-     * TODO: Update language items.
-     */
     public function showForm(): void
     {
         $player = $this->getPlayer();
@@ -99,7 +98,8 @@ class Lang
                     $languages = Lang::$config->get("languages");
                     $lang = $languages[$data];
                     $this->setLanguage($lang['ISOCode'], true);
-
+                    $player->getInventory()->clearAll();
+                    $player->giveLobbyItems();
                     $player->sendMessage($player->getTranslatedMsg("message.langselector.setlanguage"));
                 } catch (Exception $exception) {
                     var_dump($exception->getMessage());

@@ -11,9 +11,15 @@ declare(strict_types=1);
 
 namespace greek;
 
+use greek\commands\Command;
 use greek\events\ListenerManager;
+use greek\modules\database\mysql\AsyncQueue;
+use greek\modules\database\mysql\query\InsertQuery;
 use greek\modules\languages\Lang;
 use greek\network\config\Settings;
+use greek\network\player\skin\PersonaSkinAdapter;
+use greek\task\TaskManager;
+use pocketmine\network\mcpe\protocol\types\SkinAdapterSingleton;
 use pocketmine\plugin\PluginBase;
 use pocketmine\plugin\PluginLogger;
 use pocketmine\utils\Config;
@@ -36,12 +42,27 @@ final class Loader extends PluginBase
         self::setLogger($this->getLogger());
 
         $this->verifySettings();
+
+        /* Create the settings database if it is not already created. */
+        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS settings(name VARCHAR(50) UNIQUE, language VARCHAR(50))"));
+
+        /* It is responsible for creating the database if it does not exist. */
+        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS practice_downstream(name VARCHAR(50) UNIQUE, DuelType VARCHAR(50), QueueKit VARCHAR(50), ShowScoreboard bool)"));
     }
 
     public function onEnable()
     {
         /* It is responsible for recording all events. */
         new ListenerManager();
+
+        /* Register the plugin commands. */
+        new Command();
+
+        /* It is responsible for registering the tasks, and loading it. */
+        new TaskManager();
+
+        /* It is responsible for supporting the skin person. */
+        SkinAdapterSingleton::set(new PersonaSkinAdapter());
 
         self::$logger->info(Settings::$prefix . "§a" . "plugin loaded");
     }
@@ -78,8 +99,7 @@ final class Loader extends PluginBase
         @mkdir($this->getDataFolder());
         $archive = self::ARCHIVE_STRING;
 
-        foreach (['config.yml'] as $dataCfg) $this->saveResource($dataCfg);
-
+        foreach (['config.yml', 'playersettings.yml', 'scoreboard.yml'] as $dataCfg) $this->saveResource($dataCfg);
 
         $cfg = new Config($this->getDataFolder() . $archive, Config::YAML);
 

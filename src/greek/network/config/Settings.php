@@ -32,10 +32,12 @@ class Settings
         $general = $config->get('general');
         $world = $config->get('spawn-map');
 
+        // Guarda en una array los datos de la base de datos proporcionados por la config.
         self::$database = $config->get('database');
+
         self::$prefix = TextUtils::replaceColor($general['prefix']);
 
-        # World Spawn Settings
+        // World Spawn Settings.
         self::$lobby = $world['World-name'];
         self::$x = $world['X'];
         self::$y = $world['Y'];

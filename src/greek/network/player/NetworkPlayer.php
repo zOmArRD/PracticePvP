@@ -16,19 +16,24 @@ use greek\items\PluginItems;
 use greek\Loader;
 use greek\modules\languages\Lang;
 use greek\network\config\Settings;
+use greek\network\NetworkSession;
 use greek\network\utils\TextUtils;
 use pocketmine\item\Item;
 use pocketmine\level\Level;
 use pocketmine\level\Position;
 use pocketmine\network\mcpe\protocol\TransferPacket;
 use pocketmine\Player;
+use pocketmine\Server;
+use pocketmine\utils\Config;
 
 class NetworkPlayer extends Player
 {
-    /** @var array */
-    public static array $playerData = [];
-
+    /** @var Lang */
     public Lang $langClass;
+
+    /** @var NetworkSession */
+    public NetworkSession $session;
+
 
     public function setLangClass(): void
     {
@@ -43,19 +48,37 @@ class NetworkPlayer extends Player
         return $this->langClass;
     }
 
+
+    public function setSession(): void
+    {
+        $this->session = new NetworkSession($this);
+    }
+
+    /**
+     * @return NetworkSession
+     */
+    public function getSession(): NetworkSession
+    {
+        return $this->session;
+    }
+
     /**
      * This function is in charge of teleporting the player to the lobby, clearing his inventory, and giving him the items.
      */
     public function teleportToLobby(): void
     {
+        $this->getInventory()->clearAll();
         $this->giveLobbyItems();
         $this->setHealth(20);
         $this->setFood(20);
 
         try {
-            $this->setRotation(Settings::$yaw, Settings::$pitch);
-            $this->teleport(new Position(Settings::$x, Settings::$y, Settings::$z, $this->getWorld(Settings::$lobby)));
+            if (Server::getInstance()->isLevelGenerated(Settings::$lobby)) {
+                $this->setRotation(Settings::$yaw, Settings::$pitch);
+                $this->teleport(new Position(Settings::$x, Settings::$y, Settings::$z, $this->getWorld(Settings::$lobby)));
+            }
         } catch (Exception $exception) {
+            $this->teleport(new Position($this->getServer()->getDefaultLevel()->getSafeSpawn()));
             var_dump($exception->getMessage());
         }
     }
@@ -103,7 +126,6 @@ class NetworkPlayer extends Player
     public function setItem(int $index, Item $item): bool
     {
         $pi = $this->getInventory();
-        $pi->clearAll();
         return $pi->setItem($index, $item);
     }
 
@@ -112,7 +134,7 @@ class NetworkPlayer extends Player
      */
     public function giveLobbyItems(): void
     {
-        foreach (['selector.duel' => 0, 'selector.ffa' => 1] as $item => $index) {
+        foreach (["item.unranked" => 0, "item.ranked" => 1, "item.settings" => 8] as $item => $index) {
             $this->setItem($index, PluginItems::getItem($item, $this));
         }
     }

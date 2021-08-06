@@ -13,6 +13,7 @@ namespace greek\network\config;
 
 use greek\modules\form\lib\SimpleForm;
 use greek\network\player\NetworkPlayer;
+use greek\network\scoreboard\Scoreboard;
 
 class SettingsForm
 {
@@ -31,6 +32,9 @@ class SettingsForm
                     case "changelanguage":
                         $player->getLangClass()->showForm();
                         break;
+                    case "scoreboardsettings":
+                        Scoreboard::showForm($player);
+                        break;
                     default:
                         $player->sendMessage($player->getTranslatedMsg("message.error"));
                         break;
@@ -44,6 +48,7 @@ class SettingsForm
         
         $form->setTitle($player->getTranslatedMsg("form.title.settingsform"));
         $form->addButton($player->getTranslatedMsg("form.button.settingsform.changelanguage"), 0, $images['language'], "changelanguage");
+        $form->addButton($player->getTranslatedMsg("form.button.settingsform.scoreboard"), 1, "https://i.ibb.co/TY6MyrN/Hnet-com-image.png", "scoreboardsettings");
         $form->addButton($player->getTranslatedMsg("form.button.close"), 0, $images['close'], "close");
         
         $player->sendForm($form);

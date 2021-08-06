@@ -6,28 +6,29 @@ config.version: "1.0.0"
 general:
   prefix: "{bold}{red}Practice {gray}»{reset} "
 
-# Array con los idiomas disponibles.
-# Si quieres agregar algun otro, debes tambien agregar las strings en la carpeta /lang/
+# Array with available languages.
+# If you want to add any other, you must also add the strings in the lang folder
 languages:
   - ISOCode: "en_ENG"
     name: "English"
     icon: "https://cdn.countryflags.com/thumbs/united-states-of-america/flag-800.png"
+
 # Credentials for the MYSQL database.
-# Es sumamente necesario.
+# It is extremely necessary.
 database:
   user: "root"
-  password: "1234"
-  host: "10.0.0.1"
-  database: "Database"
+  password: "omar"
+  host: "localhost"
+  database: "minecraftnetwork"
 
-# Esto es una array que contiene los datos donde el jugador entrara al entrar al server.
-# Si no quieres usar esta configuracion, deja los valores en "null".
+# This is an array that contains the data where the player will enter when entering the server.
+# If you don't want to use this setting, leave the values "null".
 spawn-map:
-  World-name: null
-  X: null
-  Y: null
-  Z: null
-  Yaw: null
-  Pitch: null
+  World-name: awe
+  X: 0
+  Y: 0
+  Z: 0
+  Yaw: 0
+  Pitch: 0
   MinY: 0
 ...

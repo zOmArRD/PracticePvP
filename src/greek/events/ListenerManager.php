@@ -11,7 +11,9 @@ declare(strict_types=1);
 
 namespace greek\events;
 
-use greek\events\player\HandlePlayer;
+use greek\events\interact\InteractEvents;
+use greek\events\network\NetworkEvents;
+use greek\events\player\PlayerEvents;
 
 class ListenerManager extends ListenerBase
 {
@@ -22,7 +24,7 @@ class ListenerManager extends ListenerBase
 
     public function loadEvents(): void
     {
-        foreach ([new HandlePlayer()] as $listener) {
+        foreach ([new PlayerEvents(), new InteractEvents(), new NetworkEvents()] as $listener) {
             $this->registerEvent($listener);
         }
     }
