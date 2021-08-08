@@ -33,6 +33,8 @@ class PluginItems
                 return self::loadItem(ItemIds::DIAMOND_SWORD, $player->getTranslatedMsg("item.ranked.name"));
             case "item.settings":
                 return self::loadItem(ItemIds::BOOK, $player->getTranslatedMsg("item.settings.name"));
+            case "item.cosmetics":
+                return self::loadItem(BlockIds::ENDER_CHEST, $player->getTranslatedMsg("item.cosmetics.name"));
             default:
                 return Item::get(BlockIds::AIR);
         }

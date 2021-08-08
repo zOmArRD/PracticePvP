@@ -14,15 +14,17 @@ namespace greek\events\player;
 use greek\modules\database\mysql\AsyncQueue;
 use greek\modules\database\mysql\query\InsertQuery;
 use greek\modules\database\mysql\query\SelectQuery;
+use greek\network\config\Settings;
 use greek\network\NetworkSession;
 use greek\network\player\NetworkPlayer;
-use greek\network\player\SessionManager;
+use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerCreationEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\event\player\PlayerMoveEvent;
+use pocketmine\event\player\PlayerPreLoginEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\EmotePacket;
@@ -65,40 +67,53 @@ class PlayerEvents implements Listener
         $event->setPlayerClass(NetworkPlayer::class);
     }
 
-    /**
-     * @param PlayerLoginEvent $event
-     */
-    public function pLogin(PlayerLoginEvent $event)
+    public function onPrelogin(PlayerPreLoginEvent $event): void
     {
         $player = $event->getPlayer();
-        $name = $player->getName();
 
         if (!$player instanceof NetworkPlayer) return;
+
+        $name = $player->getName();
         $player->setLangClass();
         $player->setSession();
 
-        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM settings WHERE name='$name'"), function ($result, $data) {
+        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM settings WHERE ign='$name'"), function ($result, $data) {
             $player = $data[0];
             $name = $player->getName();
-            $mode = "en_ENG";
+            $lang = "en_ENG";
 
             if (sizeof($result) === 0) {
-                AsyncQueue::submitQuery(new InsertQuery("INSERT INTO settings(name, language) VALUES ('$name', '$mode');"));
-            } else {
-                NetworkSession::$playerData[$name] = $result[0];
-                $this->updateLang($player);
+                AsyncQueue::submitQuery(new InsertQuery("INSERT INTO settings(ign, language, ShowScoreboard) VALUES ('$name', '$lang', 1);"));
             }
         }, [$player]);
 
-        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM practice_downstream WHERE name='$name'"), function ($result, $data){
+        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM practice_downstream WHERE ign='$name'"), function ($result, $data) {
             $player = $data[0];
             $name = $player->getName();
 
             if (sizeof($result) === 0) {
-                AsyncQueue::submitQuery(new InsertQuery("INSERT INTO practice_downstream(name, DuelType, QueueKit, ShowScoreboard) VALUE ('$name', null, null, true);"));
-            } else {
-                NetworkSession::$playerData[$name] = $result[0];
+                AsyncQueue::submitQuery(new InsertQuery("INSERT INTO practice_downstream(ign) VALUES ('$name');"));
             }
+        }, [$player]);
+    }
+
+    /**
+     * @param PlayerLoginEvent $event
+     */
+    public function onLogin(PlayerLoginEvent $event)
+    {
+        $player = $event->getPlayer();
+
+        if (!$player instanceof NetworkPlayer) return;
+
+        $name = $player->getName();
+
+        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM settings WHERE ign='$name'"), function ($result, $data) {
+            $player = $data[0];
+            $name = $player->getName();
+
+            NetworkPlayer::$data[$name] = $result[0];
+            $this->updateLang($player);
         }, [$player]);
 
         /* Always put yourself at the end of all things. */
@@ -162,6 +177,18 @@ class PlayerEvents implements Listener
         if (isset($this->move[$name])) {
             $player->setImmobile(false);
             unset($this->move[$name]);
+        }
+    }
+
+    public function slotChange(InventoryTransactionEvent $ev): void
+    {
+        $entity = $ev->getTransaction()->getSource();
+
+        if ($entity->getLevel()->getName() === Settings::$lobby) {
+            $ev->setCancelled(true);
+            if ($entity->isOp()) {
+                $ev->setCancelled(false);
+            }
         }
     }
 }

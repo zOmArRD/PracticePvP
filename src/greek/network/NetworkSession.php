@@ -12,19 +12,15 @@ declare(strict_types=1);
 namespace greek\network;
 
 use greek\network\player\NetworkPlayer;
-use greek\network\scoreboard\Scoreboard;
 
 class NetworkSession
 {
-    /** @var NetworkPlayer  */
+    /** @var NetworkPlayer */
     public NetworkPlayer $player;
-
-    /** @var array  */
-    public static array $playerData = [];
 
     public function __construct(NetworkPlayer $player)
     {
-       $this->setPlayer($player);
+        $this->setPlayer($player);
     }
 
     /**
@@ -52,9 +48,8 @@ class NetworkSession
 
     public function closeSession(): void
     {
-        if (isset(self::$playerData[$this->getPlayer()->getName()])) {
-            unset(self::$playerData[$this->getPlayer()->getName()]);
+        if (isset(NetworkPlayer::$data[$this->getPlayer()->getName()])) {
+            unset(NetworkPlayer::$data[$this->getPlayer()->getName()]);
         }
     }
-
 }

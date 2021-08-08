@@ -14,6 +14,8 @@ use Exception;
 use greek\modules\database\mysql\AsyncQueue;
 use greek\modules\database\mysql\query\InsertQuery;
 use greek\modules\form\lib\SimpleForm;
+use greek\network\config\Settings;
+use greek\network\config\SettingsForm;
 use greek\network\NetworkSession;
 use greek\network\player\NetworkPlayer;
 use greek\network\utils\TextUtils;
@@ -21,7 +23,7 @@ use pocketmine\utils\Config;
 
 class Lang
 {
-    /** @var NetworkPlayer  */
+    /** @var NetworkPlayer */
     private NetworkPlayer $player;
 
     /** @var array */
@@ -38,7 +40,7 @@ class Lang
     public function setStringValue(string $key, string $value): void
     {
         $playerName = $this->getPlayer()->getName();
-        AsyncQueue::submitQuery(new InsertQuery("UPDATE settings SET $key='$value' WHERE name='{$playerName}'"));
+        AsyncQueue::submitQuery(new InsertQuery("UPDATE settings SET $key='$value' WHERE ign='{$playerName}'"));
     }
 
     public function setLanguage(string $language, bool $safe): void
@@ -46,7 +48,7 @@ class Lang
         $playerName = $this->getPlayer()->getName();
         self::$users[$playerName] = $language;
         if ($safe) {
-            NetworkSession::$playerData[$playerName]["language"] = $language;
+            NetworkPlayer::$data[$playerName]["language"] = $language;
             $this->setStringValue("language", $language);
         }
     }
@@ -54,8 +56,8 @@ class Lang
     public function applyLanguage(): void
     {
         $player = self::getPlayer();
-        if (isset(NetworkSession::$playerData[$player->getName()])) {
-            $data = NetworkSession::$playerData[$player->getName()];
+        if (isset(NetworkPlayer::$data[$player->getName()])) {
+            $data = NetworkPlayer::$data[$player->getName()];
             if ($data["language"] !== null && $data["language"] !== "null") {
                 $this->setLanguage($data["language"], false);
             }
@@ -72,10 +74,10 @@ class Lang
     {
         $strings = self::$lang[$this->getLanguage()]->get("strings");
         try {
-            return $strings["$id"]/* ?? TextUtils::replaceColor($strings["message.error"])*/;
+            return $strings["$id"]/* ?? TextUtils::replaceColor($strings["message.error"])*/ ;
         } catch (Exception $exception) {
             var_dump($exception->getMessage());
-            return "error-402";
+            return "error 402";
         }
     }
 
@@ -94,15 +96,17 @@ class Lang
         $player = $this->getPlayer();
         $form = new SimpleForm(function (NetworkPlayer $player, $data) {
             if (isset($data)) {
-                try {
-                    $languages = Lang::$config->get("languages");
-                    $lang = $languages[$data];
-                    $this->setLanguage($lang['ISOCode'], true);
+                if ($data == "back") {
+                    new SettingsForm($player);
+                    return;
+                }
+                if ($this->getLanguage() !== $data) {
+                    $this->setLanguage($data, true);
                     $player->getInventory()->clearAll();
                     $player->giveLobbyItems();
                     $player->sendMessage($player->getTranslatedMsg("message.langselector.setlanguage"));
-                } catch (Exception $exception) {
-                    var_dump($exception->getMessage());
+                } else {
+                    $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.cantupdate"));
                 }
             }
         });
@@ -111,11 +115,13 @@ class Lang
 
         try {
             foreach (Lang::$config->get("languages") as $lang) {
-                $form->addButton("§a" . $lang['name'], 1, $lang['icon']);
+                $form->addButton("§a" . $lang['name'], 1, $lang['icon'], $lang['ISOCode']);
             }
         } catch (Exception $exception) {
             var_dump($exception->getMessage());
         }
+
+        $form->addButton($player->getTranslatedMsg("form.button.back"), 0, "", "back");
 
         $player->sendForm($form);
     }

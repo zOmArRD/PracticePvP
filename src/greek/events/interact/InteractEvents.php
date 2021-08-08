@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace greek\events\interact;
 
+use greek\duels\form\DuelsForm;
 use greek\items\PluginItems;
 use greek\network\config\SettingsForm;
 use greek\network\player\NetworkPlayer;
@@ -34,6 +35,12 @@ class InteractEvents implements Listener
             switch (true) {
                 case $item->equals(PluginItems::getItem("item.settings", $player)):
                     new SettingsForm($player);
+                    break;
+                case $item->equals(PluginItems::getItem("item.unranked", $player)):
+                    DuelsForm::showDuelTypeForm($player);
+                    break;
+                case $item->equals(PluginItems::getItem("item.ranked", $player)):
+                    DuelsForm::showDuelTypeForm($player, true);
                     break;
             }
             $this->itemCountDown[$player->getName()] = time();

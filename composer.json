@@ -11,7 +11,8 @@
   ],
   "require": {
     "pocketmine/pocketmine-mp": "3.22.1",
-    "ext-mysqli": "*"
+    "ext-mysqli": "*",
+    "ph-7/obfuscator": "v2.0.1"
   },
   "scripts": {
     "phar": "@php -dphar.readonly=0 ./make-phar.php enableCompressAll"

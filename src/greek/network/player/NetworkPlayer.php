@@ -34,6 +34,9 @@ class NetworkPlayer extends Player
     /** @var NetworkSession */
     public NetworkSession $session;
 
+    /** @var array  */
+    public static array $data;
+
 
     public function setLangClass(): void
     {
@@ -134,7 +137,7 @@ class NetworkPlayer extends Player
      */
     public function giveLobbyItems(): void
     {
-        foreach (["item.unranked" => 0, "item.ranked" => 1, "item.settings" => 8] as $item => $index) {
+        foreach (["item.unranked" => 0, "item.ranked" => 1, "item.cosmetics" => 7, "item.settings" => 8] as $item => $index) {
             $this->setItem($index, PluginItems::getItem($item, $this));
         }
     }

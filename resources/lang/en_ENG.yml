@@ -4,6 +4,7 @@ strings:
   message.noperms: "{red}You don't have permission for this!"
   message.server.connecting: "{green}Connecting to the server..."
   message.server.connect.error: "{red}We have not connected to the server, please try later"
+  message.cantupdate: "{red}Apparently you already have this option activated."
 
   # Global Forms Strings
   form.button.close: "{red}Close"
@@ -13,9 +14,9 @@ strings:
   form.button.disable: "{red}Disable"
 
   # Form Settings Strings
-  form.title.settingsform: "{bold}{gray}» {gold}Settings {gray}"
-  form.button.settingsform.changelanguage: "{bold}{gold}Change Language"
-  form.button.settingsform.scoreboard: "{bold}{gold}Scoreboard Settings"
+  form.title.settingsform: "{bold}{gray}» {reset}Settings {bold}{gray}«"
+  form.button.settingsform.changelanguage: "{bold}{blue}Change Language"
+  form.button.settingsform.scoreboard: "{bold}{blue}Scoreboard Settings"
 
   # Lang Selector Strings
   form.title.langselector: "Choose your language:"
@@ -23,8 +24,10 @@ strings:
 
   # Scoreboard Setting Strings
   form.title.scoreboard: "Scoreboard Settings"
+  message.scoreboard.updated: "{green}Your Scoreboard settings have been updated."
 
   # Items Name
   item.unranked.name: "{bold}{gray}» {reset}{gold}UnRanked Queue {gray}(Click) {bold}«"
   item.ranked.name: "{bold}{gray}» {reset}{gold}Ranked Queue {gray}(Click) {bold}«"
   item.settings.name: "{bold}{gray}» {reset}{gold}Settings {gray}(Click) {bold}«"
+  item.cosmetics.name: "{bold}{gray}» {reset}{gold}Cosmetics {gray}(Click) {bold}«"

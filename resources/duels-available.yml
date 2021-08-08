@@ -1,0 +1,5 @@
+duels-available:
+  - Kit: "NoDebuff"
+    Icon: "potion_bottle_splash_saturation"
+  - Kit: "GApple"
+    Icon: "apple_golden"

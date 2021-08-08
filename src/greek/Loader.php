@@ -44,10 +44,10 @@ final class Loader extends PluginBase
         $this->verifySettings();
 
         /* Create the settings database if it is not already created. */
-        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS settings(name VARCHAR(50) UNIQUE, language VARCHAR(50))"));
+        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS settings(ign VARCHAR(50) UNIQUE, language VARCHAR(50), ShowScoreboard INT)"));
 
         /* It is responsible for creating the database if it does not exist. */
-        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS practice_downstream(name VARCHAR(50) UNIQUE, DuelType VARCHAR(50), QueueKit VARCHAR(50), ShowScoreboard bool)"));
+        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS practice_downstream(ign VARCHAR(50) UNIQUE, DuelType VARCHAR(50), QueueKit VARCHAR(50), isInviteDuel bool, playerInvited VARCHAR(50))"));
     }
 
     public function onEnable()
@@ -99,7 +99,7 @@ final class Loader extends PluginBase
         @mkdir($this->getDataFolder());
         $archive = self::ARCHIVE_STRING;
 
-        foreach (['config.yml', 'playersettings.yml', 'scoreboard.yml'] as $dataCfg) $this->saveResource($dataCfg);
+        foreach (['config.yml', 'duels-available.yml', 'scoreboard.yml'] as $dataCfg) $this->saveResource($dataCfg);
 
         $cfg = new Config($this->getDataFolder() . $archive, Config::YAML);
 
@@ -112,6 +112,8 @@ final class Loader extends PluginBase
             $this->saveResource($archive);
         }
 
+        Settings::init(new Config($this->getDataFolder() . "config.yml", Config::YAML));
+
         /* I define the variable here below for reasons that if the configuration changes, the variable is updated. */
         Lang::$config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 
@@ -121,9 +123,6 @@ final class Loader extends PluginBase
             Lang::$lang[$iso] = new Config($this->getDataFolder() . "lang/$iso.yml");
             $this->getLogger()->notice("$iso has been loaded!");
         }
-
-        Settings::init(new Config($this->getDataFolder() . "config.yml", Config::YAML));
-
         self::$logger->notice("The configuration has been loaded successfully!");
     }
 }
