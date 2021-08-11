@@ -43,7 +43,9 @@ class DuelsForm
             "close" => "textures/gui/newgui/anvil-crossout"
         ];
 
-        $getRanked = $ranked ? "Ranked" : "UnRanked";
+        //$getRanked = $ranked == true ? "Ranked" : "UnRanked";
+        $getRanked = ($ranked == true) ? "Ranked" : "UnRanked";
+
         $form->setTitle("§l§7» §1Queue for $getRanked §l§7«");
 
         $config = Settings::getConfig("duels-available.yml");
