@@ -3,10 +3,15 @@
  * Created by PhpStorm
  *
  * User: zOmArRD
- * Date: 8/8/2021
+ * Date: 9/8/2021
  *
  * Copyright © 2021 - All Rights Reserved.
  */
-require 'src/Obfuscator.php';
+declare(strict_types=1);
 
-$filename = ''
+namespace greek\duels\form;
+
+class PartyForm
+{
+
+}

@@ -44,13 +44,16 @@ final class Loader extends PluginBase
         $this->verifySettings();
 
         /* Create the settings database if it is not already created. */
-        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS settings(ign VARCHAR(50) UNIQUE, language VARCHAR(50), ShowScoreboard INT)"));
+        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS settings(ign TEXT UNIQUE, language TEXT, ShowScoreboard INT)"));
 
         /* It is responsible for creating the database if it does not exist. */
-        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS practice_downstream(ign VARCHAR(50) UNIQUE, DuelType VARCHAR(50), QueueKit VARCHAR(50), isInviteDuel bool, playerInvited VARCHAR(50))"));
+        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS practice_downstream(ign TEXT UNIQUE, DuelType TEXT, QueueKit TEXT, isInviteDuel bool, playerInvited TEXT)"));
+
+        /**/
+        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS ffa_data(ign TEXT, mode TEXT)"));
     }
 
-    public function onEnable()
+    public function onEnable(): void
     {
         /* It is responsible for recording all events. */
         new ListenerManager();
@@ -99,7 +102,7 @@ final class Loader extends PluginBase
         @mkdir($this->getDataFolder());
         $archive = self::ARCHIVE_STRING;
 
-        foreach (['config.yml', 'duels-available.yml', 'scoreboard.yml'] as $dataCfg) $this->saveResource($dataCfg);
+        foreach (['config.yml', 'duels-available.yml', 'scoreboard.yml', 'ffa-available.yml'] as $dataCfg) $this->saveResource($dataCfg);
 
         $cfg = new Config($this->getDataFolder() . $archive, Config::YAML);
 

@@ -35,6 +35,10 @@ class PluginItems
                 return self::loadItem(ItemIds::BOOK, $player->getTranslatedMsg("item.settings.name"));
             case "item.cosmetics":
                 return self::loadItem(BlockIds::ENDER_CHEST, $player->getTranslatedMsg("item.cosmetics.name"));
+            case "item.ffa":
+                return self::loadItem(ItemIds::GOLD_AXE, $player->getTranslatedMsg("item.ffa.name"));
+            case "item.party":
+                return self::loadItem(ItemIds::NAME_TAG, $player->getTranslatedMsg("item.party.name"));
             default:
                 return Item::get(BlockIds::AIR);
         }

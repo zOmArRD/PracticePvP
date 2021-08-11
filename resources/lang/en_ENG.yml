@@ -29,5 +29,14 @@ strings:
   # Items Name
   item.unranked.name: "{bold}{gray}» {reset}{gold}UnRanked Queue {gray}(Click) {bold}«"
   item.ranked.name: "{bold}{gray}» {reset}{gold}Ranked Queue {gray}(Click) {bold}«"
+  item.ffa.name: "{bold}{gray}» {reset}{gold}Arena FFA {gray}(Click) {bold}«"
+  item.party.name: "{bold}{gray}» {reset}{gold}Party {gray}(Click) {bold}«"
   item.settings.name: "{bold}{gray}» {reset}{gold}Settings {gray}(Click) {bold}«"
   item.cosmetics.name: "{bold}{gray}» {reset}{gold}Cosmetics {gray}(Click) {bold}«"
+
+  # Party Strings
+  message.party.error: "{red}An error has occurred, contact the developer."
+  message.party.create: "{green}You have created a party, to invite other players use /p invite <player>"
+  message.party.disband: "{red}You have deleted your party."
+
+  # FFA Strings

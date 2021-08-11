@@ -18,12 +18,10 @@ use greek\modules\database\mysql\query\InsertQuery;
 use greek\modules\form\lib\SimpleForm;
 use greek\network\config\Settings;
 use greek\network\config\SettingsForm;
-use greek\network\NetworkSession;
 use greek\network\player\NetworkPlayer;
 use pocketmine\Server;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
-use TypeError;
 
 class Scoreboard extends ScoreboardAPI
 {
@@ -36,7 +34,6 @@ class Scoreboard extends ScoreboardAPI
             $scData = NetworkPlayer::$data[$player->getName()];
 
             if ($scData["ShowScoreboard"] == false) {
-                $this->remove($player);
                 return;
             }
         }
@@ -125,6 +122,7 @@ class Scoreboard extends ScoreboardAPI
                             } else {
                                 $scData["ShowScoreboard"] = false;
                                 self::setScoreboard(0, $player->getName());
+                                (new Scoreboard)->remove($player);
                                 $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.scoreboard.updated"));
                             }
                             break;

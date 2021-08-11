@@ -15,7 +15,7 @@ use greek\modules\database\mysql\AsyncQueue;
 use greek\modules\database\mysql\query\InsertQuery;
 use greek\modules\database\mysql\query\SelectQuery;
 use greek\network\config\Settings;
-use greek\network\NetworkSession;
+use greek\network\Session;
 use greek\network\player\NetworkPlayer;
 use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
@@ -67,7 +67,7 @@ class PlayerEvents implements Listener
         $event->setPlayerClass(NetworkPlayer::class);
     }
 
-    public function onPrelogin(PlayerPreLoginEvent $event): void
+    public function onPreLogin(PlayerPreLoginEvent $event): void
     {
         $player = $event->getPlayer();
 

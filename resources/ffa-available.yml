@@ -1,0 +1,9 @@
+# Name of the FFA server in the Proxy.
+FFA-Server-Name: "FFA-1"
+
+# List of FFA modes that are available in the Down-Stream
+ffa-available:
+  - Kit: "NoDebuff"
+    Icon: "potion_bottle_splash_saturation"
+  - Kit: "GApple"
+    Icon: "apple_golden"

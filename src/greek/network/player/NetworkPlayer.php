@@ -16,7 +16,7 @@ use greek\items\PluginItems;
 use greek\Loader;
 use greek\modules\languages\Lang;
 use greek\network\config\Settings;
-use greek\network\NetworkSession;
+use greek\network\Session;
 use greek\network\utils\TextUtils;
 use pocketmine\item\Item;
 use pocketmine\level\Level;
@@ -31,12 +31,14 @@ class NetworkPlayer extends Player
     /** @var Lang */
     public Lang $langClass;
 
-    /** @var NetworkSession */
-    public NetworkSession $session;
+    /** @var Session */
+    public Session $session;
 
-    /** @var array  */
+    /** @var array */
     public static array $data;
 
+    /** @var bool */
+    protected bool $partyMode = false;
 
     public function setLangClass(): void
     {
@@ -54,15 +56,31 @@ class NetworkPlayer extends Player
 
     public function setSession(): void
     {
-        $this->session = new NetworkSession($this);
+        $this->session = new Session($this);
     }
 
     /**
-     * @return NetworkSession
+     * @return Session
      */
-    public function getSession(): NetworkSession
+    public function getSession(): Session
     {
         return $this->session;
+    }
+
+    /**
+     * @param bool $partyMode
+     */
+    public function setPartyMode(bool $partyMode): void
+    {
+        $this->partyMode = $partyMode;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPartyMode(): bool
+    {
+        return $this->partyMode;
     }
 
     /**
@@ -108,19 +126,6 @@ class NetworkPlayer extends Player
     }
 
     /**
-     * Transfer the player to another server (Must be proxied.)
-     *
-     * @param string $server
-     */
-    public function networkTransfer(string $server): void
-    {
-        $this->sendMessage($this->getTranslatedMsg("message.server.connecting"));
-        $pk = new TransferPacket();
-        $pk->address = $server;
-        $this->dataPacket($pk);
-    }
-
-    /**
      * This function is used to simplify the use of adding something to the player's inventory.
      * @param int $index
      * @param Item $item
@@ -137,7 +142,7 @@ class NetworkPlayer extends Player
      */
     public function giveLobbyItems(): void
     {
-        foreach (["item.unranked" => 0, "item.ranked" => 1, "item.cosmetics" => 7, "item.settings" => 8] as $item => $index) {
+        foreach (["item.unranked" => 0, "item.ranked" => 1, "item.ffa" => 2, "item.party" => 4, "item.cosmetics" => 7, "item.settings" => 8] as $item => $index) {
             $this->setItem($index, PluginItems::getItem($item, $this));
         }
     }

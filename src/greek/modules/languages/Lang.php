@@ -16,7 +16,7 @@ use greek\modules\database\mysql\query\InsertQuery;
 use greek\modules\form\lib\SimpleForm;
 use greek\network\config\Settings;
 use greek\network\config\SettingsForm;
-use greek\network\NetworkSession;
+use greek\network\Session;
 use greek\network\player\NetworkPlayer;
 use greek\network\utils\TextUtils;
 use pocketmine\utils\Config;

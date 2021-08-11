@@ -22,9 +22,6 @@ class TaskManager extends TaskBase
 
     function loadTask(): void
     {
-    /*    foreach ([20 => new ScoreboardRefreshTask()] as $ticks => $task) {
-            $this->registerTask($task, $ticks);
-        }*/
         $this->registerTask(new ScoreboardRefreshTask(), 20);
     }
 }

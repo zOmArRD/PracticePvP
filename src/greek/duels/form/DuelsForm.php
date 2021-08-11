@@ -18,16 +18,25 @@ use greek\network\player\NetworkPlayer;
 
 class DuelsForm
 {
-    public static function showDuelTypeForm(NetworkPlayer $player, $ranked = false): void
+
+    public function __construct(NetworkPlayer $player, bool $ranked = false)
+    {
+        $this->showForm($player, $ranked);
+    }
+
+    /**
+     * @param NetworkPlayer $player
+     * @param false $ranked
+     */
+    public function showForm(NetworkPlayer $player, bool $ranked = false): void
     {
         $form = new SimpleForm(function (NetworkPlayer $player, $data){
 
             if (isset($data)) {
                 if ($data == "close") return;
 
-                /* TODO: Hacer un metodo de queue, y transferir al jugador de servidor, tambien subir los datos a MySQL*/
+                /* TODO: Make a queue method, and transfer to the server player, also upload the data to MySQL */
             }
-
         });
 
         $images = [
@@ -35,7 +44,7 @@ class DuelsForm
         ];
 
         $getRanked = $ranked ? "Ranked" : "UnRanked";
-        $form->setTitle("§l§7» §1Queue for {$getRanked} §l§7«");
+        $form->setTitle("§l§7» §1Queue for $getRanked §l§7«");
 
         $config = Settings::getConfig("duels-available.yml");
 

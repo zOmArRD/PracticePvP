@@ -37,14 +37,16 @@ class InteractEvents implements Listener
                     new SettingsForm($player);
                     break;
                 case $item->equals(PluginItems::getItem("item.unranked", $player)):
-                    DuelsForm::showDuelTypeForm($player);
+                    new DuelsForm($player);
                     break;
                 case $item->equals(PluginItems::getItem("item.ranked", $player)):
-                    DuelsForm::showDuelTypeForm($player, true);
+                    new DuelsForm($player, true);
+                    break;
+                case $item->equals(PluginItems::getItem("item.party", $player)):
+                    $player->getSession()->setPartyMode();
                     break;
             }
             $this->itemCountDown[$player->getName()] = time();
         }
     }
-
 }
