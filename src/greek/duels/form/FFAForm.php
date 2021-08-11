@@ -16,6 +16,7 @@ use greek\duels\Manager;
 use greek\modules\form\lib\SimpleForm;
 use greek\network\config\Settings;
 use greek\network\player\NetworkPlayer;
+use pocketmine\utils\Config;
 
 class FFAForm extends Manager
 {
@@ -29,9 +30,14 @@ class FFAForm extends Manager
         $form = new SimpleForm(function (NetworkPlayer $player, $data){
             if ($data !== null) {
                 if ($data == "close") return;
+                try {
+                    $config = $this->getFFAConfig();
 
-                $this->changeFFAMode($data, $player->getName());
-                $player->getSession()->transfer("");
+                    $this->changeFFAMode($data, $player->getName());
+                    $player->getSession()->transfer($config->get('FFA-Server-Name'));
+                } catch (Exception $exception) {
+                    $player->sendMessage($player->getTranslatedMsg("message.error"));
+                }
             }
         });
 
@@ -39,7 +45,7 @@ class FFAForm extends Manager
             "close" => "textures/gui/newgui/anvil-crossout"
         ];
 
-        $config = Settings::getConfig("ffa-available.yml");
+        $config = $this->getFFAConfig();
 
         $form->setTitle("§l§7» §1FFA Arenas §l§7«");
 
@@ -52,5 +58,10 @@ class FFAForm extends Manager
 
         $form->addButton($player->getTranslatedMsg("form.button.close"), 0, $images['close'], "close");
         $player->sendForm($form);
+    }
+
+    function getFFAConfig(): Config
+    {
+        return Settings::getConfig("ffa-available.yml");
     }
 }

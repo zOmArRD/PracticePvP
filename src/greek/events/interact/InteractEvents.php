@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace greek\events\interact;
 
 use greek\duels\form\DuelsForm;
+use greek\duels\form\FFAForm;
 use greek\items\PluginItems;
 use greek\network\config\SettingsForm;
 use greek\network\player\NetworkPlayer;
@@ -44,6 +45,9 @@ class InteractEvents implements Listener
                     break;
                 case $item->equals(PluginItems::getItem("item.party", $player)):
                     $player->getSession()->setPartyMode();
+                    break;
+                case $item->equals(PluginItems::getItem("item.ffa", $player)):
+                    new FFAForm($player);
                     break;
             }
             $this->itemCountDown[$player->getName()] = time();
