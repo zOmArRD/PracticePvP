@@ -43,13 +43,9 @@ final class Loader extends PluginBase
 
         $this->verifySettings();
 
-        /* Create the settings database if it is not already created. */
+        /* Check in the database if the necessary Practice tables have been created. */
         AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS settings(ign TEXT UNIQUE, language TEXT, ShowScoreboard INT)"));
-
-        /* It is responsible for creating the database if it does not exist. */
         AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS practice_downstream(ign TEXT UNIQUE, DuelType TEXT, QueueKit TEXT, isInviteDuel bool, playerInvited TEXT)"));
-
-        /**/
         AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS ffa_data(ign TEXT, mode TEXT)"));
     }
 
@@ -102,13 +98,13 @@ final class Loader extends PluginBase
         @mkdir($this->getDataFolder());
         $archive = self::ARCHIVE_STRING;
 
-        foreach (['config.yml', 'duels-available.yml', 'scoreboard.yml', 'ffa-available.yml'] as $dataCfg) $this->saveResource($dataCfg);
+        foreach (['config.yml', 'duels-available.yml', 'scoreboard.yml', 'ffa-available.yml', 'server-info.yml'] as $dataCfg) $this->saveResource($dataCfg);
 
         $cfg = new Config($this->getDataFolder() . $archive, Config::YAML);
 
         /* This will verify that if the existing configuration file is not the same as the plugin version, it will be replaced. */
         if ($cfg->get('config.version') !== self::CONFIG_VER) {
-            self::$logger->error("The version of the file {$archive} is not compatible with the current version of the plugin, the old configuration will be in /resources/{$this->getName()}");
+            self::$logger->error("The version of the file $archive is not compatible with the current version of the plugin, the old configuration will be in /resources/{$this->getName()}");
 
             /* This replaces the file. */
             rename($this->getDataFolder() . 'config.yml', $this->getDataFolder() . 'config.yml.old');

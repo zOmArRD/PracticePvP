@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace greek\network;
 
+use greek\network\config\Settings;
 use greek\network\player\NetworkPlayer;
 use pocketmine\network\mcpe\protocol\TransferPacket;
 
@@ -43,7 +44,6 @@ class Session
     public function updateSession(): void
     {
         $player = $this->getPlayer();
-
         $player->teleportToLobby();
     }
 
@@ -51,6 +51,7 @@ class Session
     {
         if (isset(NetworkPlayer::$data[$this->getPlayer()->getName()])) {
             unset(NetworkPlayer::$data[$this->getPlayer()->getName()]);
+            $this->unSetPartyMode();
         }
     }
 
@@ -62,10 +63,9 @@ class Session
         $player = $this->player;
         if (!$player->isPartyMode()) {
             $player->setPartyMode(true);
-            $player->sendMessage($player->getTranslatedMsg("message.party.create"));
-
+            $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.party.create"));
         } else {
-            $player->sendMessage($player->getTranslatedMsg("message.party.error"));
+            $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.party.exist"));
         }
     }
 
@@ -77,10 +77,9 @@ class Session
         $player = $this->player;
         if ($player->isPartyMode()) {
             $player->setPartyMode(false);
-            $player->sendMessage($player->getTranslatedMsg("message.party.disband"));
-
+            $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.party.disband"));
         } else {
-            $player->sendMessage($player->getTranslatedMsg("message.party.error"));
+            $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.party.noparty"));
         }
     }
 

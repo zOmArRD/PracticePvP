@@ -17,23 +17,32 @@ use greek\network\scoreboard\Scoreboard;
 
 class SettingsForm
 {
+    /** @var NetworkPlayer */
+    private NetworkPlayer $player;
+
     public function __construct(NetworkPlayer $player)
     {
-        $this->showForm($player);
+        $this->setPlayer($player);
+        $this->showForm();
     }
     
-    public function showForm(NetworkPlayer $player): void
+    public function showForm(): void
     {
+        $player = $this->getPlayer();
+
         $form = new SimpleForm(function (NetworkPlayer $player, $data){
             if (isset($data)) {
                 if ($data === "close") return;
                 
                 switch ($data) {
                     case "changelanguage":
-                        $player->getLangClass()->showForm();
+                        $player->getLangSession()->showForm();
                         break;
                     case "scoreboardsettings":
                         Scoreboard::showForm($player);
+                        break;
+                    case "serversettings":
+                        $this->showServerSettingsForm();
                         break;
                     default:
                         $player->sendMessage($player->getTranslatedMsg("message.error"));
@@ -49,8 +58,34 @@ class SettingsForm
         $form->setTitle($player->getTranslatedMsg("form.title.settingsform"));
         $form->addButton($player->getTranslatedMsg("form.button.settingsform.changelanguage"), 0, $images['language'], "changelanguage");
         $form->addButton($player->getTranslatedMsg("form.button.settingsform.scoreboard"), 1, "https://i.ibb.co/TY6MyrN/Hnet-com-image.png", "scoreboardsettings");
+        $form->addButton("§9Server Settings", 1, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1ZvlkYtyFsEfNG5Cl-Zh3O32hwir7J3LNXA&usqp=CAU", "serversettings");
         $form->addButton($player->getTranslatedMsg("form.button.close"), 0, $images['close'], "close");
-        
         $player->sendForm($form);
+    }
+
+    public function showServerSettingsForm(): void
+    {
+        $player = $this->getPlayer();
+        $form = new SimpleForm(function (NetworkPlayer $player, $data){
+
+        });
+
+        $player->sendForm($form);
+    }
+
+    /**
+     * @param NetworkPlayer $player
+     */
+    public function setPlayer(NetworkPlayer $player): void
+    {
+        $this->player = $player;
+    }
+
+    /**
+     * @return NetworkPlayer
+     */
+    public function getPlayer(): NetworkPlayer
+    {
+        return $this->player;
     }
 }

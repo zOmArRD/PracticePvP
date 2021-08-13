@@ -54,10 +54,12 @@ abstract class ScoreboardAPI
             Loader::$logger->error("Cannot set a score to a player with no scoreboard");
             return;
         }
+
         if ($score > 15 || $score < 0) {
             Loader::$logger->error("Score must be between the value of 1-15. $score out of range");
             return;
         }
+
         $objectiveName = $this->getObjectiveName($player);
 
         $entry = new ScorePacketEntry();
@@ -87,7 +89,6 @@ abstract class ScoreboardAPI
      */
     public function remove(NetworkPlayer $player): void
     {
-        //$objectiveName = $this->getObjectiveName($player);
         $pk = new RemoveObjectivePacket();
         $pk->objectiveName = "greek.practice";
         $player->sendDataPacket($pk);

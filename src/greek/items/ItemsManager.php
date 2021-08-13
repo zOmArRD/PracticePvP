@@ -17,28 +17,28 @@ use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 
-class PluginItems
+class ItemsManager
 {
     /**
      * @param string $itemId
      * @param NetworkPlayer $player
      * @return Item
      */
-    static public function getItem(string $itemId, NetworkPlayer $player): Item
+    static public function get(string $itemId, NetworkPlayer $player): Item
     {
         switch ($itemId) {
             case "item.unranked":
-                return self::loadItem(ItemIds::IRON_SWORD, $player->getTranslatedMsg("item.unranked.name"));
+                return self::load(ItemIds::IRON_SWORD, $player->getTranslatedMsg("item.unranked.name"));
             case "item.ranked":
-                return self::loadItem(ItemIds::DIAMOND_SWORD, $player->getTranslatedMsg("item.ranked.name"));
+                return self::load(ItemIds::DIAMOND_SWORD, $player->getTranslatedMsg("item.ranked.name"));
             case "item.settings":
-                return self::loadItem(ItemIds::BOOK, $player->getTranslatedMsg("item.settings.name"));
+                return self::load(ItemIds::BOOK, $player->getTranslatedMsg("item.settings.name"));
             case "item.cosmetics":
-                return self::loadItem(BlockIds::ENDER_CHEST, $player->getTranslatedMsg("item.cosmetics.name"));
+                return self::load(BlockIds::ENDER_CHEST, $player->getTranslatedMsg("item.cosmetics.name"));
             case "item.ffa":
-                return self::loadItem(ItemIds::GOLD_AXE, $player->getTranslatedMsg("item.ffa.name"));
+                return self::load(ItemIds::GOLD_AXE, $player->getTranslatedMsg("item.ffa.name"));
             case "item.party":
-                return self::loadItem(ItemIds::NAME_TAG, $player->getTranslatedMsg("item.party.name"));
+                return self::load(ItemIds::NAME_TAG, $player->getTranslatedMsg("item.party.name"));
             default:
                 return Item::get(BlockIds::AIR);
         }
@@ -49,7 +49,7 @@ class PluginItems
      * @param string $customName
      * @return Item
      */
-    static public function loadItem(int $itemId, string $customName): Item
+    static public function load(int $itemId, string $customName): Item
     {
         return ItemFactory::get($itemId)->setCustomName($customName);
     }

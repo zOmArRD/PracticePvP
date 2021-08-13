@@ -29,7 +29,7 @@ class ScoreboardRefreshTask extends Task
 
         foreach ($level->getPlayers() as $player) {
             if (!$player instanceof NetworkPlayer) return;
-            (new Scoreboard)->sendScore($player, $player->getLangClass()->getLanguage());
+            (new Scoreboard)->updateScoreboard($player, $player->getLangSession()->getLanguage());
         }
     }
 }

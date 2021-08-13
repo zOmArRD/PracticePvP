@@ -28,7 +28,7 @@ class Scoreboard extends ScoreboardAPI
     /** @var string[] */
     private const EMPTY_CACHE = ["§0\e", "§1\e", "§2\e", "§3\e", "§4\e", "§5\e", "§6\e", "§7\e", "§8\e", "§9\e", "§a\e", "§b\e", "§c\e", "§d\e", "§e\e"];
 
-    public function sendScore(NetworkPlayer $player, string $language): void
+    public function updateScoreboard(NetworkPlayer $player, string $language): void
     {
         if (isset(NetworkPlayer::$data[$player->getName()])) {
             $scData = NetworkPlayer::$data[$player->getName()];
@@ -97,7 +97,6 @@ class Scoreboard extends ScoreboardAPI
         }
 
         return $msg;
-        /* END. */
     }
 
     public static function showForm(NetworkPlayer $player): void
@@ -134,7 +133,6 @@ class Scoreboard extends ScoreboardAPI
                 } catch (Exception $exception) {
                     var_dump($exception->getMessage() . "\n" . $exception->getLine() . "\n" . $exception->getCode());
                 }
-
             }
         });
         $images = [
@@ -145,9 +143,7 @@ class Scoreboard extends ScoreboardAPI
         $form->setTitle($player->getTranslatedMsg("form.title.scoreboard"));
         $form->addButton($player->getTranslatedMsg("form.button.enable"), 0, $images['enable'], "enable");
         $form->addButton($player->getTranslatedMsg("form.button.disable"), 0, $images['disable'], "disable");
-
         $form->addButton($player->getTranslatedMsg("form.button.back"));
-
         $player->sendForm($form);
     }
 

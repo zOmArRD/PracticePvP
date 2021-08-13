@@ -32,7 +32,7 @@ class Settings
         $general = $config->get('general');
         $world = $config->get('spawn-map');
 
-        // Guarda en una array los datos de la base de datos proporcionados por la config.
+        // Saves in an array the data from the database provided by the config.
         self::$database = $config->get('database');
 
         self::$prefix = TextUtils::replaceColor($general['prefix']);

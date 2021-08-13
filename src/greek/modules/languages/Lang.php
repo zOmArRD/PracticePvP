@@ -16,7 +16,6 @@ use greek\modules\database\mysql\query\InsertQuery;
 use greek\modules\form\lib\SimpleForm;
 use greek\network\config\Settings;
 use greek\network\config\SettingsForm;
-use greek\network\Session;
 use greek\network\player\NetworkPlayer;
 use greek\network\utils\TextUtils;
 use pocketmine\utils\Config;
@@ -73,12 +72,7 @@ class Lang
     public function getString(string $id): string
     {
         $strings = self::$lang[$this->getLanguage()]->get("strings");
-        try {
-            return $strings["$id"]/* ?? TextUtils::replaceColor($strings["message.error"])*/ ;
-        } catch (Exception $exception) {
-            var_dump($exception->getMessage());
-            return "error 402";
-        }
+        return $strings["$id"] ?? TextUtils::replaceColor($strings["message.error"]);
     }
 
     public function replaceVars(string $msg, array $array): string
@@ -100,6 +94,7 @@ class Lang
                     new SettingsForm($player);
                     return;
                 }
+
                 if ($this->getLanguage() !== $data) {
                     $this->setLanguage($data, true);
                     $player->getInventory()->clearAll();
@@ -122,7 +117,6 @@ class Lang
         }
 
         $form->addButton($player->getTranslatedMsg("form.button.back"), 0, "", "back");
-
         $player->sendForm($form);
     }
 

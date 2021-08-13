@@ -15,7 +15,6 @@ use greek\modules\database\mysql\AsyncQueue;
 use greek\modules\database\mysql\query\InsertQuery;
 use greek\modules\database\mysql\query\SelectQuery;
 use greek\network\config\Settings;
-use greek\network\Session;
 use greek\network\player\NetworkPlayer;
 use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
@@ -74,7 +73,7 @@ class PlayerEvents implements Listener
         if (!$player instanceof NetworkPlayer) return;
 
         $name = $player->getName();
-        $player->setLangClass();
+        $player->setLangSession();
         $player->setSession();
 
         AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM settings WHERE ign='$name'"), function ($result, $data) {
@@ -97,9 +96,6 @@ class PlayerEvents implements Listener
         }, [$player]);
     }
 
-    /**
-     * @param PlayerLoginEvent $event
-     */
     public function onLogin(PlayerLoginEvent $event)
     {
         $player = $event->getPlayer();
@@ -116,18 +112,14 @@ class PlayerEvents implements Listener
             $this->updateLang($player);
         }, [$player]);
 
-        /* Always put yourself at the end of all things. */
         $this->login[$name] = 1;
     }
 
     public function updateLang(NetworkPlayer $player): void
     {
-        $player->getLangClass()->applyLanguage();
+        $player->getLangSession()->applyLanguage();
     }
 
-    /**
-     * @param PlayerJoinEvent $event
-     */
     public function pJoin(PlayerJoinEvent $event): void
     {
         $player = $event->getPlayer();
@@ -184,7 +176,7 @@ class PlayerEvents implements Listener
     {
         $entity = $ev->getTransaction()->getSource();
 
-        if ($entity->getLevel()->getName() === Settings::$lobby) {
+        if ($entity->getLevel()->getName() === Settings::$lobby || $entity->getLevel()->getName() === "world") {
             $ev->setCancelled(true);
             if ($entity->isOp()) {
                 $ev->setCancelled(false);

@@ -25,6 +25,6 @@ class LangCmd extends Command
 
     public function execute(CommandSender $sender, string $commandLabel, array $args)
     {
-        if ($sender instanceof NetworkPlayer) $sender->getLangClass()->showForm();
+        if ($sender instanceof NetworkPlayer) $sender->getLangSession()->showForm();
     }
 }

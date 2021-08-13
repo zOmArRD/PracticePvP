@@ -13,7 +13,7 @@ namespace greek\events\interact;
 
 use greek\duels\form\DuelsForm;
 use greek\duels\form\FFAForm;
-use greek\items\PluginItems;
+use greek\items\ItemsManager;
 use greek\network\config\SettingsForm;
 use greek\network\player\NetworkPlayer;
 use pocketmine\event\Listener;
@@ -34,19 +34,19 @@ class InteractEvents implements Listener
 
         if (!isset($this->itemCountDown[$player->getName()]) or time() - $this->itemCountDown[$player->getName()] >= $countdown) {
             switch (true) {
-                case $item->equals(PluginItems::getItem("item.settings", $player)):
+                case $item->equals(ItemsManager::get("item.settings", $player)):
                     new SettingsForm($player);
                     break;
-                case $item->equals(PluginItems::getItem("item.unranked", $player)):
+                case $item->equals(ItemsManager::get("item.unranked", $player)):
                     new DuelsForm($player);
                     break;
-                case $item->equals(PluginItems::getItem("item.ranked", $player)):
+                case $item->equals(ItemsManager::get("item.ranked", $player)):
                     new DuelsForm($player, true);
                     break;
-                case $item->equals(PluginItems::getItem("item.party", $player)):
+                case $item->equals(ItemsManager::get("item.party", $player)):
                     $player->getSession()->setPartyMode();
                     break;
-                case $item->equals(PluginItems::getItem("item.ffa", $player)):
+                case $item->equals(ItemsManager::get("item.ffa", $player)):
                     new FFAForm($player);
                     break;
             }
