@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace greek\network\player;
 
 use Exception;
-use greek\items\PluginItems;
+use greek\items\ItemsManager;
 use greek\Loader;
 use greek\modules\languages\Lang;
 use greek\network\config\Settings;
@@ -21,15 +21,13 @@ use greek\network\utils\TextUtils;
 use pocketmine\item\Item;
 use pocketmine\level\Level;
 use pocketmine\level\Position;
-use pocketmine\network\mcpe\protocol\TransferPacket;
 use pocketmine\Player;
 use pocketmine\Server;
-use pocketmine\utils\Config;
 
 class NetworkPlayer extends Player
 {
     /** @var Lang */
-    public Lang $langClass;
+    public Lang $langSession;
 
     /** @var Session */
     public Session $session;
@@ -40,26 +38,36 @@ class NetworkPlayer extends Player
     /** @var bool */
     protected bool $partyMode = false;
 
-    public function setLangClass(): void
+    /**
+     * Sets the Language Session to the player.
+     */
+    public function setLangSession(): void
     {
-        $this->langClass = new Lang($this);
+        $this->langSession = new Lang($this);
     }
 
     /**
+     * Returns the session of the player's Lang class.
+     *
      * @return Lang
      */
-    public function getLangClass(): Lang
+    public function getLangSession(): Lang
     {
-        return $this->langClass;
+        return $this->langSession;
     }
 
 
+    /**
+     * Establishes the session of the player.
+     */
     public function setSession(): void
     {
         $this->session = new Session($this);
     }
 
     /**
+     * The player's session returns.
+     *
      * @return Session
      */
     public function getSession(): Session
@@ -68,6 +76,8 @@ class NetworkPlayer extends Player
     }
 
     /**
+     * Puts the player in Party mode.
+     *
      * @param bool $partyMode
      */
     public function setPartyMode(bool $partyMode): void
@@ -76,6 +86,8 @@ class NetworkPlayer extends Player
     }
 
     /**
+     * Returns a (bool) depending on whether the player is in party mode.
+     *
      * @return bool
      */
     public function isPartyMode(): bool
@@ -105,6 +117,8 @@ class NetworkPlayer extends Player
     }
 
     /**
+     * It is responsible for obtaining the world by entering the name.
+     *
      * @param string $world
      * @return Level
      */
@@ -121,7 +135,7 @@ class NetworkPlayer extends Player
      */
     public function getTranslatedMsg(string $idMsg): string
     {
-        $langClass = $this->getLangClass();
+        $langClass = $this->getLangSession();
         return TextUtils::replaceColor($langClass->getString($idMsg));
     }
 
@@ -143,7 +157,14 @@ class NetworkPlayer extends Player
     public function giveLobbyItems(): void
     {
         foreach (["item.unranked" => 0, "item.ranked" => 1, "item.ffa" => 2, "item.party" => 4, "item.cosmetics" => 7, "item.settings" => 8] as $item => $index) {
-            $this->setItem($index, PluginItems::getItem($item, $this));
+            $this->setItem($index, ItemsManager::get($item, $this));
+        }
+    }
+
+    public function getPartyItems(): void
+    {
+        foreach (['item.disband' => 8] as $item => $index) {
+            $this->setItem($index, ItemsManager::get($item, $this));
         }
     }
 }

@@ -35,8 +35,9 @@ strings:
   item.cosmetics.name: "{bold}{gray}» {reset}{gold}Cosmetics {gray}(Click) {bold}«"
 
   # Party Strings
-  message.party.error: "{red}An error has occurred, contact the developer."
-  message.party.create: "{green}You have created a party, to invite other players use /p invite <player>"
+  message.party.exist: "{red}We can't execute this action, apparently you already have a party created."
+  message.party.create: "{green}You have created a party. To invite other players use '/p invite <player>'"
+  message.party.noparty: "{red}We can't execute this action, you do not have a party created."
   message.party.disband: "{red}You have deleted your party."
 
   # FFA Strings
