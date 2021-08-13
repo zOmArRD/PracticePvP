@@ -28,7 +28,7 @@ use pocketmine\scheduler\TaskHandler;
 class NetworkEvents implements Listener
 {
     /** @var Closure[][] */
-    private $callbacks = [];
+    private array $callbacks = [];
 
     /** @var int */
     private int $times_to_request = 5;
