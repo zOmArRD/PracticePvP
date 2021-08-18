@@ -96,10 +96,9 @@ final class Loader extends PluginBase
     function verifySettings(): void
     {
         @mkdir($this->getDataFolder());
-        @mkdir($this->getDataFolder() . "maps");
         $archive = self::ARCHIVE_STRING;
 
-        foreach (['config.yml', 'duels-available.yml', 'scoreboard.yml', 'ffa-available.yml', 'server-info.yml', 'maps.yml'] as $dataCfg) $this->saveResource($dataCfg);
+        foreach (['config.yml', 'duels-available.yml', 'scoreboard.yml', 'ffa-available.yml', 'server-info.yml'] as $dataCfg) $this->saveResource($dataCfg);
 
         $cfg = new Config($this->getDataFolder() . $archive, Config::YAML);
 
