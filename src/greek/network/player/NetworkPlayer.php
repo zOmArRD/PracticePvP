@@ -16,6 +16,7 @@ use greek\items\ItemsManager;
 use greek\Loader;
 use greek\modules\languages\Lang;
 use greek\network\config\Settings;
+use greek\network\scoreboard\Scoreboard;
 use greek\network\Session;
 use greek\network\utils\TextUtils;
 use pocketmine\item\Item;
@@ -31,6 +32,8 @@ class NetworkPlayer extends Player
 
     /** @var Session */
     public Session $session;
+
+    public Scoreboard $scoreboardSession;
 
     /** @var array */
     public static array $data;
@@ -76,6 +79,22 @@ class NetworkPlayer extends Player
     }
 
     /**
+     * Establishes the Scoreboard Session of the player.
+     */
+    public function setScoreboardSession(): void
+    {
+        $this->scoreboardSession = new Scoreboard($this);
+    }
+
+    /**
+     * @return Scoreboard
+     */
+    public function getScoreboardSession(): Scoreboard
+    {
+        return $this->scoreboardSession;
+    }
+
+    /**
      * Puts the player in Party mode.
      *
      * @param bool $partyMode
@@ -100,31 +119,25 @@ class NetworkPlayer extends Player
      */
     public function teleportToLobby(): void
     {
-        $this->getInventory()->clearAll();
         $this->giveLobbyItems();
         $this->setHealth(20);
         $this->setFood(20);
 
-        try {
-            if (Server::getInstance()->isLevelGenerated(Settings::$lobby)) {
-                $this->setRotation(Settings::$yaw, Settings::$pitch);
-                $this->teleport(new Position(Settings::$x, Settings::$y, Settings::$z, $this->getWorld(Settings::$lobby)));
-            }
-        } catch (Exception $exception) {
-            $this->teleport(new Position($this->getServer()->getDefaultLevel()->getSafeSpawn()));
-            var_dump($exception->getMessage());
-        }
+        if (Server::getInstance()->isLevelGenerated(Settings::$lobby)) {
+            $this->setRotation(Settings::$yaw, Settings::$pitch);
+            $this->teleport(new Position(Settings::$x, Settings::$y, Settings::$z, $this->getWorld(Settings::$lobby)));
+        } else $this->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn());
     }
 
     /**
      * It is responsible for obtaining the world by entering the name.
      *
      * @param string $world
-     * @return Level
+     * @return Level|null
      */
-    public function getWorld(string $world): Level
+    public function getWorld(string $world): ?Level
     {
-        return Loader::$instance->getServer()->getLevelByName($world);
+        return Loader::$instance->getServer()->getLevelByName($world) ?? null;
     }
 
     /**
@@ -156,14 +169,16 @@ class NetworkPlayer extends Player
      */
     public function giveLobbyItems(): void
     {
-        foreach (["item.unranked" => 0, "item.ranked" => 1, "item.ffa" => 2, "item.party" => 4, "item.cosmetics" => 7, "item.settings" => 8] as $item => $index) {
+        $this->getInventory()->clearAll();
+        foreach (["item.unranked" => 0, "item.ranked" => 1, "item.ffa" => 2, "item.party" => 4, "item.hostevent" => 6, "item.cosmetics" => 7, "item.settings" => 8] as $item => $index) {
             $this->setItem($index, ItemsManager::get($item, $this));
         }
     }
 
     public function getPartyItems(): void
     {
-        foreach (['item.disband' => 8] as $item => $index) {
+        $this->getInventory()->clearAll();
+        foreach (['item.partyevent' => 0, 'item.partymember' => 7, 'item.disband' => 8] as $item => $index) {
             $this->setItem($index, ItemsManager::get($item, $this));
         }
     }

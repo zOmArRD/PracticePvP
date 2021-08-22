@@ -9,7 +9,7 @@
  */
 declare(strict_types=1);
 
-namespace greek\commands\server;
+namespace greek\commands\config;
 
 use greek\network\config\SettingsForm;
 use greek\network\player\NetworkPlayer;

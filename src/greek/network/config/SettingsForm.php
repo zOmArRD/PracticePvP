@@ -39,7 +39,7 @@ class SettingsForm
                         $player->getLangSession()->showForm();
                         break;
                     case "scoreboardsettings":
-                        Scoreboard::showForm($player);
+                        $player->getScoreboardSession()->showForm();
                         break;
                     case "serversettings":
                         $this->showServerSettingsForm();

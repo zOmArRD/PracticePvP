@@ -24,7 +24,7 @@ database:
 # This is an array that contains the data where the player will enter when entering the server.
 # If you don't want to use this setting, leave the values "null".
 spawn-map:
-  World-name: awe
+  World-name: "awe"
   X: 0
   Y: 0
   Z: 0

@@ -3,7 +3,7 @@
  * Created by PhpStorm
  *
  * User: zOmArRD
- * Date: 4/8/2021
+ * Date: 22/8/2021
  *
  * Copyright © 2021 - All Rights Reserved.
  */
@@ -25,36 +25,55 @@ use pocketmine\utils\TextFormat;
 
 class Scoreboard extends ScoreboardAPI
 {
-    /** @var string[] */
     private const EMPTY_CACHE = ["§0\e", "§1\e", "§2\e", "§3\e", "§4\e", "§5\e", "§6\e", "§7\e", "§8\e", "§9\e", "§a\e", "§b\e", "§c\e", "§d\e", "§e\e"];
 
-    public function updateScoreboard(NetworkPlayer $player, string $language): void
+    public function __construct(NetworkPlayer $player)
     {
-        if (isset(NetworkPlayer::$data[$player->getName()])) {
-            $scData = NetworkPlayer::$data[$player->getName()];
+        $this->setPlayer($player);
+    }
+
+    public function setScore(): void
+    {
+
+        if (isset(NetworkPlayer::$data[$this->player->getName()])) {
+            $scData = NetworkPlayer::$data[$this->player->getName()];
 
             if ($scData["ShowScoreboard"] == false) {
                 return;
             }
         }
-
         $configSC = new Config(Loader::getInstance()->getDataFolder() . "scoreboard.yml", Config::YAML);
 
-        $this->new($player, "greek.practice", $configSC->get("display.name", "§6§lGreek §8Network"));
+        $this->new("greek.practice", $configSC->get("display.name", "§6§lGreek §8Network"));
+        $this->updateLine();
+    }
 
-        $data = $configSC->get($language);
+    public function updateLine(): void
+    {
+        $configSC = new Config(Loader::getInstance()->getDataFolder() . "scoreboard.yml", Config::YAML);
 
-        if (!is_array($data)) return;
+        if ($this->getPlayer()->isPartyMode()) {
+            $strings = $configSC->get($this->player->getLangSession()->getLanguage())["party"];
+        } else {
+            $strings = $configSC->get($this->player->getLangSession()->getLanguage())["normal"];
+        }
+
+        $data = [];
+
+        foreach ($strings as $string => $message) {
+            $line = $string + 1;
+            $msg = $this->replaceData($line, $message);
+
+            $data[] = $msg;
+        }
 
         foreach ($data as $scLine => $message) {
-            $line = $scLine + 1;
-            $msg = $this->replaceData($player, $line, $message);
-
-            $this->setLine($player, $line, $msg);
+            $line = $scLine +1;
+            $this->setLine($line, $message);
         }
     }
 
-    public function replaceData(NetworkPlayer $player, int $line, string $message): string
+    public function replaceData(int $line, string $message): string
     {
         if (empty($message)) return self::EMPTY_CACHE[$line] ?? "";
 
@@ -84,9 +103,12 @@ class Scoreboard extends ScoreboardAPI
             "{italic}" => TextFormat::ITALIC,
             "{reset}" => TextFormat::RESET,
             "{eol}" => TextFormat::EOL,
-            "{player.name}" => $player->getName(),
+            "{player.name}" => $this->getPlayer()->getName(),
             "{date}" => date("d/m/Y"),
-            "{practice.online}" => count(Server::getInstance()->getOnlinePlayers())
+            "{practice.online}" => count(Server::getInstance()->getOnlinePlayers()),
+            "{practice.playing}" => 0, /* TODO: Get Down-Stream Server Players */
+            "{party.members}" => 0, /* TODO: Return the current players of the party. */
+            "{party.maxmembers}" => 0, /* TODO: Return the maximum players allowed in a party. */
         ];
 
         $keys = array_keys($data);
@@ -99,8 +121,9 @@ class Scoreboard extends ScoreboardAPI
         return $msg;
     }
 
-    public static function showForm(NetworkPlayer $player): void
+    public function showForm(): void
     {
+        $player = $this->getPlayer();
         $form = new SimpleForm(function (NetworkPlayer $player, $data) {
             if (isset($data)) {
                 try {
@@ -111,7 +134,7 @@ class Scoreboard extends ScoreboardAPI
                                 $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.cantupdate"));
                             } else {
                                 $scData["ShowScoreboard"] = true;
-                                self::setScoreboard(1, $player->getName());
+                                $this->setMysqlScore(1, $this->getPlayer()->getName());
                                 $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.scoreboard.updated"));
                             }
                             break;
@@ -120,8 +143,8 @@ class Scoreboard extends ScoreboardAPI
                                 $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.scoreboard.cantupdate"));
                             } else {
                                 $scData["ShowScoreboard"] = false;
-                                self::setScoreboard(0, $player->getName());
-                                (new Scoreboard)->remove($player);
+                                $this->setMysqlScore(0, $this->getPlayer()->getName());
+                                $this->remove();
                                 $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.scoreboard.updated"));
                             }
                             break;
@@ -147,7 +170,7 @@ class Scoreboard extends ScoreboardAPI
         $player->sendForm($form);
     }
 
-    public static function setScoreboard(int $bool, $ign)
+    public function setMysqlScore(int $bool, $ign)
     {
         AsyncQueue::submitQuery(new InsertQuery("UPDATE settings SET ShowScoreboard = $bool WHERE ign = '$ign'"));
     }

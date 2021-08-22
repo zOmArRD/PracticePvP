@@ -22,6 +22,6 @@ class TaskManager extends TaskBase
 
     function loadTask(): void
     {
-        $this->registerTask(new ScoreboardRefreshTask(), 20);
+        $this->registerTask(new ScoreboardRefreshTask(), 40);
     }
 }

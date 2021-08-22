@@ -63,6 +63,7 @@ class Session
         $player = $this->player;
         if (!$player->isPartyMode()) {
             $player->setPartyMode(true);
+            $player->getPartyItems();
             $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.party.create"));
         } else {
             $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.party.exist"));
@@ -77,6 +78,7 @@ class Session
         $player = $this->player;
         if ($player->isPartyMode()) {
             $player->setPartyMode(false);
+            $player->teleportToLobby();
             $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.party.disband"));
         } else {
             $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.party.noparty"));

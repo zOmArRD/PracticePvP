@@ -5,3 +5,7 @@ duels-available:
     Icon: "potion_bottle_splash_saturation"
   - Kit: "GApple"
     Icon: "apple_golden"
+  - Kit: "Build UHC"
+    Icon: "bucket_lava"
+  - Kit: "Final UHC"
+    Icon: "bow_standby"

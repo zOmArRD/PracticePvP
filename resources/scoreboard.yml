@@ -12,26 +12,43 @@ display.name: "§6§lPractice"
 #      From down to up.
 #   -> We have limited empty spaces due to mojang tomf*ckery
 #   -> They must be in array.
-#   -> You can simplify '§' as '&'
+#   -> You can simplify {someone color} as '§'
 #   -> The maximum arrays in one scoreboard is 15, Please follow this
 #      otherwise we will complain about it in console.
 #
 #   Enjoy your game with scoreboard (While it lasts)
 #
 # - Tags information.
-#   - {date}:             Displays the current date in the format 00/00/00.
-#   - {player.name}       Returns the name of the player.
+#   - {date}:               Displays the current date in the format 00/00/00.
+#   - {player.name}         Returns the name of the player.
 #   - {practice.online}     Returns the players on the Up-Stream server.
-#   - {practice.playing}  Return the players who are in an arena.
+#   - {practice.playing}    Return the players who are in an arena.
+#   - {party.member}        Returns the current players of the party.
+#   - {party.maxmembers}    Returns the maximum players per party.
+#   - {}
+#   - {}
+#   - {}
 #
 # Note: For the colors you can use "§" or use {gray}, {dark.blue},
 #       for more examples read the documentation at greek/network/utils/TextUtils.php
 en_ENG:
-  - "{gray}────────────────"
-  - ""
-  - " {gold}Online: {green}{practice.online}"
-  - " {gold}Playing: {gray}{practice.playing}"
-  - ""
-  - "{gray} play.greekmc.net"
-  - "{red}{gray}────────────────"
+  normal:
+    - "{gray}──────────────"
+    - ""
+    - " {gold}Online: {green}{practice.online}"
+    - " {gold}Playing: {green}{practice.playing}"
+    - ""
+    - "{gray} play.greekmc.net"
+    - "{red}{gray}──────────────"
+  party:
+    - "{gray}──────────────"
+    - ""
+    - " {gold}Online: {green}{practice.online}"
+    - " {gold}Playing: {green}{practice.playing}"
+    - ""
+    - " {gold}Party:"
+    - "  {gold}Members: {green}{party.members}{gray}/{green}{party.maxmembers}"
+    - ""
+    - "{gray} play.greekmc.net"
+    - "{red}{gray}──────────────"
 ...

@@ -19,7 +19,7 @@ use pocketmine\utils\Config;
 class Settings
 {
     /** @var string */
-    public static string $prefix, $lobby;
+    public static string $prefix, $lobby, $serverName;
 
     /** @var array */
     public static array $database;

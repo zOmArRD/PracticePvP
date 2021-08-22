@@ -32,13 +32,23 @@ class ItemsManager
             case "item.ranked":
                 return self::load(ItemIds::DIAMOND_SWORD, $player->getTranslatedMsg("item.ranked.name"));
             case "item.settings":
-                return self::load(ItemIds::BOOK, $player->getTranslatedMsg("item.settings.name"));
+                return self::load(ItemIds::MOB_HEAD, $player->getTranslatedMsg("item.settings.name"));
             case "item.cosmetics":
                 return self::load(BlockIds::ENDER_CHEST, $player->getTranslatedMsg("item.cosmetics.name"));
             case "item.ffa":
                 return self::load(ItemIds::GOLD_AXE, $player->getTranslatedMsg("item.ffa.name"));
             case "item.party":
                 return self::load(ItemIds::NAME_TAG, $player->getTranslatedMsg("item.party.name"));
+            case "item.hostevent":
+                return self::load(ItemIds::ENDER_EYE, $player->getTranslatedMsg("item.hostevent.name"));
+            case "item.disband":
+                return self::load(ItemIds::REDSTONE_DUST, $player->getTranslatedMsg("item.disband.name"));
+            case "item.partyevent":
+                return self::load(ItemIds::IRON_AXE, $player->getTranslatedMsg("item.partyevent.name"));
+            case "item.partymember":
+                return self::load(ItemIds::PAPER, $player->getTranslatedMsg("item.partymember.name"));
+            /*case "":
+                return self::load(ItemIds::IRON_AXE, $player->getTranslatedMsg(""));*/
             default:
                 return Item::get(BlockIds::AIR);
         }

@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace greek\commands;
 
 use greek\commands\lang\LangCmd;
-use greek\commands\server\ConfigCmd;
+use greek\commands\config\ConfigCmd;
 use greek\Loader;
 use pocketmine\command\Command as PMCommand;
 use pocketmine\Server;

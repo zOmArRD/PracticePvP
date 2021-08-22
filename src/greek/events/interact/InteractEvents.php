@@ -49,6 +49,9 @@ class InteractEvents implements Listener
                 case $item->equals(ItemsManager::get("item.ffa", $player)):
                     new FFAForm($player);
                     break;
+                    case $item->equals(ItemsManager::get("item.disband", $player));
+                    $player->getSession()->unSetPartyMode();
+                    break;
             }
             $this->itemCountDown[$player->getName()] = time();
         }

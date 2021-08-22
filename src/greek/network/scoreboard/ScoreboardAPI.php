@@ -3,7 +3,7 @@
  * Created by PhpStorm
  *
  * User: zOmArRD
- * Date: 4/8/2021
+ * Date: 21/8/2021
  *
  * Copyright © 2021 - All Rights Reserved.
  */
@@ -20,78 +20,112 @@ use pocketmine\network\mcpe\protocol\types\ScorePacketEntry;
 
 abstract class ScoreboardAPI
 {
-    /** @var array $scoreboards */
-    private array $scoreboards = [];
+    /** @var NetworkPlayer  */
+    public NetworkPlayer $player;
+
+    /** @var array  */
+    public array $lines = [], $objectiveName = [];
 
     /**
      * @param NetworkPlayer $player
-     * @param string $objectiveName
-     * @param string $displayName
      */
-    public function new(NetworkPlayer $player, string $objectiveName, string $displayName): void
+    public function setPlayer(NetworkPlayer $player): void
     {
-        if (isset($this->scoreboards[$player->getName()])) {
-            $this->remove($player);
-        }
-        $pk = new SetDisplayObjectivePacket();
-        $pk->displaySlot = "sidebar";
-        $pk->objectiveName = $objectiveName;
-        $pk->displayName = $displayName;
-        $pk->criteriaName = "dummy";
-        $pk->sortOrder = 0;
-        $player->sendDataPacket($pk);
-        $this->scoreboards[$player->getName()] = $objectiveName;
+        $this->player = $player;
     }
 
     /**
-     * @param NetworkPlayer $player
-     * @param int $score
-     * @param string $message
+     * @return NetworkPlayer
      */
-    public function setLine(NetworkPlayer $player, int $score, string $message): void
+    public function getPlayer(): NetworkPlayer
     {
-        if (!isset($this->scoreboards[$player->getName()])) {
-            Loader::$logger->error("Cannot set a score to a player with no scoreboard");
+        return $this->player;
+    }
+
+    public function setObjectiveName(string $objectiveName): void
+    {
+        $this->objectiveName[$this->getPlayer()->getName()] = $objectiveName;
+    }
+
+    public function getObjectiveName(): string
+    {
+        return $this->objectiveName[$this->getPlayer()->getName()];
+    }
+
+    public function removeObjectiveName(): void
+    {
+        unset($this->objectiveName[$this->getPlayer()->getName()]);
+    }
+
+    public function isObjectiveName(): bool
+    {
+        return isset($this->objectiveName[$this->getPlayer()->getName()]);
+    }
+
+    abstract public function __construct(NetworkPlayer $player);
+
+    public function new(string $objectiveName, string $displayName): void
+    {
+        if ($this->isObjectiveName()) {
+            $this->clear();
+            $this->remove();
+        }
+
+        $packet = new SetDisplayObjectivePacket();
+        $packet->objectiveName = $objectiveName;
+        $packet->displayName = $displayName;
+        $packet->sortOrder = 0;
+        $packet->displaySlot = "sidebar";
+        $packet->criteriaName = "dummy";
+        $this->setObjectiveName($objectiveName);
+        $this->getPlayer()->sendDataPacket($packet);
+    }
+
+    public function setLine(int $score, string $message): void
+    {
+        if (!$this->isObjectiveName()) {
             return;
         }
 
         if ($score > 15 || $score < 0) {
-            Loader::$logger->error("Score must be between the value of 1-15. $score out of range");
+            Loader::$logger->error("Score must be between the value of 1-15. $score out of range.");
             return;
         }
 
-        $objectiveName = $this->getObjectiveName($player);
-
         $entry = new ScorePacketEntry();
-        $entry->objectiveName = $objectiveName;
+        $entry->objectiveName = $this->getObjectiveName();
         $entry->type = $entry::TYPE_FAKE_PLAYER;
-        $entry->customName = $message;
+        if (isset($this->lines[$score])) {
+            $packet1 = new SetScorePacket();
+            $packet1->entries[] = $this->lines[$score];
+            $packet1->type = $packet1::TYPE_REMOVE;
+            $this->getPlayer()->sendDataPacket($packet1);
+            unset($this->lines[$score]);
+        }
         $entry->score = $score;
         $entry->scoreboardId = $score;
+        $entry->customName = $message;
+        $this->lines[$score] = $entry;
 
-        $pk = new SetScorePacket();
-        $pk->type = $pk::TYPE_CHANGE;
-        $pk->entries[] = $entry;
-        $player->sendDataPacket($pk);
+        $packet2 = new SetScorePacket();
+        $packet2->entries[] = $entry;
+        $packet2->type = $packet2::TYPE_CHANGE;
+        $this->getPlayer()->sendDataPacket($packet2);
     }
 
-    /**
-     * @param NetworkPlayer $player
-     * @return string|null
-     */
-    public function getObjectiveName(NetworkPlayer $player): ?string
+    public function clear(): void
     {
-        return $this->scoreboards[$player->getName()] ?? null;
+        $packet = new SetScorePacket();
+        $packet->entries = $this->lines;
+        $packet->type = $packet::TYPE_REMOVE;
+        $this->getPlayer()->sendDataPacket($packet);
+        $this->lines = [];
     }
 
-    /**
-     * @param NetworkPlayer $player
-     */
-    public function remove(NetworkPlayer $player): void
+    public function remove(): void
     {
-        $pk = new RemoveObjectivePacket();
-        $pk->objectiveName = "greek.practice";
-        $player->sendDataPacket($pk);
-        unset($this->scoreboards[$player->getName()]);
+        $packet = new RemoveObjectivePacket();
+        $packet->objectiveName = $this->getObjectiveName();
+        $this->getPlayer()->sendDataPacket($packet);
     }
 }

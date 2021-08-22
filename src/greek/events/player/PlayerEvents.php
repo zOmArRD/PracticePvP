@@ -75,6 +75,7 @@ class PlayerEvents implements Listener
         $name = $player->getName();
         $player->setLangSession();
         $player->setSession();
+        $player->setScoreboardSession();
 
         AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM settings WHERE ign='$name'"), function ($result, $data) {
             $player = $data[0];
