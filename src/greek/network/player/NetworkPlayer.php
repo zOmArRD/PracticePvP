@@ -22,6 +22,7 @@ use greek\network\utils\TextUtils;
 use pocketmine\item\Item;
 use pocketmine\level\Level;
 use pocketmine\level\Position;
+use pocketmine\network\mcpe\protocol\types\GameMode;
 use pocketmine\Player;
 use pocketmine\Server;
 
@@ -33,6 +34,7 @@ class NetworkPlayer extends Player
     /** @var Session */
     public Session $session;
 
+    /** @var Scoreboard  */
     public Scoreboard $scoreboardSession;
 
     /** @var array */
@@ -58,7 +60,6 @@ class NetworkPlayer extends Player
     {
         return $this->langSession;
     }
-
 
     /**
      * Establishes the session of the player.
@@ -120,6 +121,7 @@ class NetworkPlayer extends Player
     public function teleportToLobby(): void
     {
         $this->giveLobbyItems();
+        $this->setGamemode(GameMode::ADVENTURE);
         $this->setHealth(20);
         $this->setFood(20);
 
@@ -154,14 +156,14 @@ class NetworkPlayer extends Player
 
     /**
      * This function is used to simplify the use of adding something to the player's inventory.
+     *
      * @param int $index
      * @param Item $item
-     * @return bool
      */
-    public function setItem(int $index, Item $item): bool
+    public function setItem(int $index, Item $item)
     {
         $pi = $this->getInventory();
-        return $pi->setItem($index, $item);
+        $pi->setItem($index, $item);
     }
 
     /**

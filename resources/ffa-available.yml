@@ -2,11 +2,11 @@
 FFA-Server-Name: "FFA-1"
 
 # List of FFA modes that are available in the Down-Stream
-# Remember, the icon section is made only to put textures/items/...
+# REMEMBER | THE ICONS USED MUST BE INSIDE THE FOLDER /textures/...
 ffa-available:
   - Kit: "NoDebuff"
-    Icon: "potion_bottle_splash_saturation"
+    Icon: "textures/items/potion_bottle_splash_saturation"
   - Kit: "GApple"
-    Icon: "apple_golden"
+    Icon: "textures/items/apple_golden"
   - Kit: "Build FFA"
-    Icon: "gold_pickaxe"
+    Icon: "textures/items/gold_pickaxe"

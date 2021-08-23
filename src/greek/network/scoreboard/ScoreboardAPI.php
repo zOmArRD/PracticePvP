@@ -67,7 +67,7 @@ abstract class ScoreboardAPI
     public function new(string $objectiveName, string $displayName): void
     {
         if ($this->isObjectiveName()) {
-            $this->clear();
+            //$this->clear();
             $this->remove();
         }
 

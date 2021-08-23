@@ -24,6 +24,11 @@ class InteractEvents implements Listener
     /** @var array */
     private array $itemCountDown;
 
+    /**
+     * @param PlayerInteractEvent $event
+     *
+     * @todo End the events for each item.
+     */
     public function legacyInteract(PlayerInteractEvent $event): void
     {
         $player = $event->getPlayer();

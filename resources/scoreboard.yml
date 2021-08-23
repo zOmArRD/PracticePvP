@@ -19,35 +19,43 @@ display.name: "§6§lPractice"
 #   Enjoy your game with scoreboard (While it lasts)
 #
 # - Tags information.
-#   - {date}:               Displays the current date in the format 00/00/00.
-#   - {player.name}         Returns the name of the player.
-#   - {practice.online}     Returns the players on the Up-Stream server.
-#   - {practice.playing}    Return the players who are in an arena.
-#   - {party.member}        Returns the current players of the party.
-#   - {party.maxmembers}    Returns the maximum players per party.
-#   - {}
-#   - {}
-#   - {}
+#   - {date}:                 Displays the current date in the format 00/00/00.
+#   - {player.name}           Returns the name of the player.
+#   - {practice.players}      Returns the players on the Up-Stream server.
+#   - {practice.maxplayers}   Returns the maximum players allowed on the server.
+#   - {practice.playing}      Return the players who are in an arena.
+#   - {party.member}          Returns the current players of the party.
+#   - {party.maxmembers}      Returns the maximum players per party.
+#   - {tps}                   Returns the ticks per seconds.
+#   - {days}                  :V
+#   - {hours}                 :V
+#   - {minutes}               :V
 #
 # Note: For the colors you can use "§" or use {gray}, {dark.blue},
 #       for more examples read the documentation at greek/network/utils/TextUtils.php
 en_ENG:
   normal:
     - "{gray}──────────────"
-    - ""
-    - " {gold}Online: {green}{practice.online}"
+    - " {gold}Online: {green}{practice.players}{gray}/{green}{practice.maxplayers}"
     - " {gold}Playing: {green}{practice.playing}"
     - ""
-    - "{gray} play.greekmc.net"
+    - "{gold} play.greekmc.net"
     - "{red}{gray}──────────────"
   party:
     - "{gray}──────────────"
-    - ""
-    - " {gold}Online: {green}{practice.online}"
+    - " {gold}Online: {green}{practice.players}{gray}/{green}{practice.maxplayers}"
     - " {gold}Playing: {green}{practice.playing}"
     - ""
     - " {gold}Party:"
     - "  {gold}Members: {green}{party.members}{gray}/{green}{party.maxmembers}"
+    - ""
+    - "{gold} play.greekmc.net"
+    - "{red}{gray}──────────────"
+  admin:
+    - "{gray}──────────────"
+    - " {gold}Online: {green}{practice.players}{gray}/{green}{practice.maxplayers}"
+    - " {gold}TPS: {green}{tps}"
+    - " {gold}Uptime: {green}{days}{gray}:{green}{hours}{gray}:{green}{minutes}"
     - ""
     - "{gray} play.greekmc.net"
     - "{red}{gray}──────────────"

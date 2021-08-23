@@ -105,10 +105,15 @@ class Scoreboard extends ScoreboardAPI
             "{eol}" => TextFormat::EOL,
             "{player.name}" => $this->getPlayer()->getName(),
             "{date}" => date("d/m/Y"),
-            "{practice.online}" => count(Server::getInstance()->getOnlinePlayers()),
+            "{practice.players}" => count(Server::getInstance()->getOnlinePlayers()),
+            "{practice.maxplayers}" => Server::getInstance()->getMaxPlayers(),
             "{practice.playing}" => 0, /* TODO: Get Down-Stream Server Players */
             "{party.members}" => 0, /* TODO: Return the current players of the party. */
             "{party.maxmembers}" => 0, /* TODO: Return the maximum players allowed in a party. */
+            "{tps}" => Server::getInstance()->getTicksPerSecond(),
+            "{days}" => $this->getUptime(),
+            "{hours}" => $this->getUptime("hours"),
+            "{minutes}" => $this->getUptime("minutes"),
         ];
 
         $keys = array_keys($data);
@@ -119,6 +124,34 @@ class Scoreboard extends ScoreboardAPI
         }
 
         return $msg;
+    }
+
+    public function getUptime(string $type = "days"): string
+    {
+        $time = (int) (microtime(true) - \pocketmine\START_TIME);
+        $minutes = null;
+        $hours = null;
+        $days = null;
+
+        if($time >= 60){
+            $minutes = floor(($time % 3600) / 60);
+            if($time >= 3600){
+                $hours = floor(($time % (3600 * 24)) / 3600);
+                if($time >= 3600 * 24){
+                    $days = floor($time / (3600 * 24));
+                }
+            }
+        }
+
+        switch ($type) {
+            case "days":
+                return ($days !== null ? "$days" : "?");
+            case "hours":
+                return ($days !== null ? "$hours" : "?");
+            case "minutes":
+                return ($days !== null ? "$minutes" : "?");
+        }
+        return "?";
     }
 
     public function showForm(): void

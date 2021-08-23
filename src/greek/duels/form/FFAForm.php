@@ -22,16 +22,16 @@ class FFAForm extends Manager
 {
     public function __construct(NetworkPlayer $player)
     {
-        $this->showForm($player);
+        $this->show($player);
     }
 
-    function showForm(NetworkPlayer $player): void
+    private function show(NetworkPlayer $player): void
     {
         $form = new SimpleForm(function (NetworkPlayer $player, $data){
             if ($data !== null) {
                 if ($data == "close") return;
                 try {
-                    $config = $this->getFFAConfig();
+                    $config = $this->getConfig();
 
                     $this->changeFFAMode($data, $player->getName());
                     $player->getSession()->transfer($config->get('FFA-Server-Name'));
@@ -45,13 +45,13 @@ class FFAForm extends Manager
             "close" => "textures/gui/newgui/anvil-crossout"
         ];
 
-        $config = $this->getFFAConfig();
+        $config = $this->getConfig();
 
         $form->setTitle("§l§7» §1FFA Arenas §l§7«");
 
         try {
             foreach ($config->get('ffa-available') as $kits) {
-                $form->addButton("§7§l» §r§9" . $kits["Kit"] . " §l§7«" . "\n§r§fJoin to ffa", 0, "textures/items/{$kits['Icon']}", $kits["Kit"]);
+                $form->addButton("§7§l» §r§9" . $kits["Kit"] . " §l§7«" . "\n§r§fJoin to ffa", 0, $kits['Icon'], $kits["Kit"]);
             }
         } catch (Exception $exception) {
         }
@@ -60,7 +60,7 @@ class FFAForm extends Manager
         $player->sendForm($form);
     }
 
-    function getFFAConfig(): Config
+    private function getConfig(): Config
     {
         return Settings::getConfig("ffa-available.yml");
     }

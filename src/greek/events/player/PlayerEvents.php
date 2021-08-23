@@ -16,6 +16,8 @@ use greek\modules\database\mysql\query\InsertQuery;
 use greek\modules\database\mysql\query\SelectQuery;
 use greek\network\config\Settings;
 use greek\network\player\NetworkPlayer;
+use pocketmine\event\block\BlockBreakEvent;
+use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerCreationEvent;
@@ -52,6 +54,15 @@ class PlayerEvents implements Listener
                     $property = $class->getProperty("ip");
                     $property->setAccessible(true);
                     $property->setValue($player, $packet->clientData["Waterdog_IP"]);
+                }
+
+                if (isset($packet->clientData["Waterdog_XUID"])) {
+                    $class = new ReflectionClass($player);
+
+                    $property = $class->getProperty("xuid");
+                    $property->setAccessible(true);
+                    $property->setValue($player, $packet->clientData["Waterdog_XUID"]);
+                    $packet->xuid = $packet->clientData["Waterdog_XUID"];
                 }
                 break;
             case $packet instanceof EmotePacket:
@@ -127,7 +138,7 @@ class PlayerEvents implements Listener
         $name = $player->getName();
 
         $event->setJoinMessage(null);
-        $player->setImmobile(true);
+        $player->setImmobile();
 
         if (!$player instanceof NetworkPlayer) return;
 
@@ -173,14 +184,35 @@ class PlayerEvents implements Listener
         }
     }
 
-    public function slotChange(InventoryTransactionEvent $ev): void
+    public function slotChange(InventoryTransactionEvent $event): void
     {
-        $entity = $ev->getTransaction()->getSource();
+        $entity = $event->getTransaction()->getSource();
 
-        if ($entity->getLevel()->getName() === Settings::$lobby || $entity->getLevel()->getName() === "world") {
-            $ev->setCancelled(true);
-            if ($entity->isOp()) {
-                $ev->setCancelled(false);
+        if ($entity->getLevel()->getName() === Settings::$lobby || $entity->getLevel()->getName() === Server::getInstance()->getDefaultLevel()->getName()) {
+            if (!$entity->isOp()) {
+                $event->setCancelled();
+            }
+        }
+    }
+
+    public function onBreak(BlockBreakEvent $event): void
+    {
+        $player = $event->getPlayer();
+
+        if ($player->getLevel()->getName() === Settings::$lobby || $player->getLevel()->getName() === Server::getInstance()->getDefaultLevel()->getName()) {
+            if (!$player->isOp()) {
+                $event->setCancelled();
+            }
+        }
+    }
+
+    public function onPlace(BlockPlaceEvent $event): void
+    {
+        $player = $event->getPlayer();
+
+        if ($player->getLevel()->getName() === Settings::$lobby || $player->getLevel()->getName() === Server::getInstance()->getDefaultLevel()->getName()) {
+            if (!$player->isOp()) {
+                $event->setCancelled();
             }
         }
     }
