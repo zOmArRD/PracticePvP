@@ -101,7 +101,7 @@ final class Loader extends PluginBase
         @mkdir($this->getDataFolder());
         $archive = self::ARCHIVE_STRING;
 
-        foreach (['config.yml', 'duels-available.yml', 'scoreboard.yml', 'ffa-available.yml', 'server-info.yml'] as $dataCfg) $this->saveResource(filename: $dataCfg);
+        foreach (['config.yml', 'scoreboard.yml', 'network.data.yml'] as $dataCfg) $this->saveResource(filename: $dataCfg);
 
         $cfg = new Config(file: $this->getDataFolder() . $archive, type: Config::YAML);
 

@@ -1,0 +1,32 @@
+current.server: Practice-1
+
+# Example:
+#   0 = "textures/items/apple_golden" | Image is provided by PATH
+#   1 = "https://gooogle.png" | The image is provided by URL.
+image.form.duel.type: 0
+image.form.ffa.type: 0
+
+# Array with the kits available on the Down-Stream server.
+#
+# Alert: If the kits entered here are not in the database, adding them will not be of any use.
+#
+# Note: Consider reading what's above, so you know what to put in Icon: ""
+downstream.modes: # config for duels available.
+  - Kit: "NoDebuff"
+    Icon: "textures/items/potion_bottle_splash_saturation"
+  - Kit: "GApple"
+    Icon: "textures/items/apple_golden"
+#  - Kit: ""
+#    Icon: "textures/items/"
+
+
+# Array with the kits available on the FFA server.
+#
+# Alert: If the kits entered here are not in the database, adding them will not be of any use.
+#
+# Note: Consider reading what's above, so you know what to put in Icon: ""
+ffa.modes:
+  - Kit: "NoDebuff"
+    Icon: "textures/items/potion_bottle_splash_saturation"
+#  - Kit: ""
+#    Icon: "textures/items/"
