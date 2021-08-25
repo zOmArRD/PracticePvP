@@ -15,6 +15,7 @@ use Exception;
 use greek\modules\form\lib\SimpleForm;
 use greek\network\config\Settings;
 use greek\network\player\NetworkPlayer;
+use pocketmine\utils\Config;
 
 class DuelsForm
 {
@@ -44,12 +45,14 @@ class DuelsForm
 
         $form->setTitle(title: "§l§7» §1Queue for $getRanked §l§7«");
 
-        $config = Settings::getConfig(archive: "duels-available.yml");
+        $config = $this->getConfig();
+
+        $imageType = $config->get("image.form.duel.type");
 
         try {
-            foreach ($config->get(k: "duels-available") as $kits) {
+            foreach ($config->get(k: "downstream.modes") as $kits) {
                 $form->addButton(text: "§7§l» §r§9" . $kits["Kit"] . " §l§7«" . "\n§r§fJoin in the queue",
-                    imageType: $form::IMAGE_TYPE_PATH,
+                    imageType: $imageType,
                     imagePath: "textures/items/{$kits['Icon']}",
                     label: $kits["Kit"]);
             }
@@ -58,5 +61,10 @@ class DuelsForm
 
         $form->addButton(text: $player->getTranslatedMsg("form.button.close"), imageType: $form::IMAGE_TYPE_PATH, imagePath: $images['close'], label: "close");
         $player->sendForm(form: $form);
+    }
+
+    private function getConfig(): Config
+    {
+        return Settings::getConfig(archive: "network.data.yml");
     }
 }

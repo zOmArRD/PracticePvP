@@ -47,11 +47,16 @@ class FFAForm extends Manager
 
         $config = $this->getConfig();
 
+        $imageType = $config->get("image.form.ffa.type");
+
         $form->setTitle(title: "§l§7» §1FFA Arenas §l§7«");
 
         try {
             foreach ($config->get(k: 'ffa-available') as $kits) {
-                $form->addButton(text: "§7§l» §r§9" . $kits["Kit"] . " §l§7«" . "\n§r§fJoin to ffa", imageType: $form::IMAGE_TYPE_PATH, imagePath: $kits['Icon'], label: $kits["Kit"]);
+                $form->addButton(text: "§7§l» §r§9" . $kits["Kit"] . " §l§7«" . "\n§r§fJoin to ffa",
+                    imageType: $imageType,
+                    imagePath: $kits['Icon'],
+                    label: $kits["Kit"]);
             }
         } catch (Exception) {
         }

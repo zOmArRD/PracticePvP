@@ -18,6 +18,7 @@ use greek\network\config\Settings;
 use greek\network\config\SettingsForm;
 use greek\network\player\NetworkPlayer;
 use greek\network\utils\TextUtils;
+use JetBrains\PhpStorm\Pure;
 use pocketmine\utils\Config;
 
 class Lang
@@ -39,7 +40,7 @@ class Lang
     public function setStringValue(string $key, string $value): void
     {
         $playerName = $this->getPlayer()->getName();
-        AsyncQueue::submitQuery(new InsertQuery("UPDATE settings SET $key='$value' WHERE ign='{$playerName}'"));
+        AsyncQueue::submitQuery(asyncQuery: new InsertQuery(sqlQuery: "UPDATE settings SET $key='$value' WHERE ign='{$playerName}'"));
     }
 
     public function setLanguage(string $language, bool $safe): void
@@ -48,7 +49,7 @@ class Lang
         self::$users[$playerName] = $language;
         if ($safe) {
             NetworkPlayer::$data[$playerName]["language"] = $language;
-            $this->setStringValue("language", $language);
+            $this->setStringValue(key: "language", value: $language);
         }
     }
 
@@ -58,11 +59,12 @@ class Lang
         if (isset(NetworkPlayer::$data[$player->getName()])) {
             $data = NetworkPlayer::$data[$player->getName()];
             if ($data["language"] !== null && $data["language"] !== "null") {
-                $this->setLanguage($data["language"], false);
+                $this->setLanguage($data["language"], safe: false);
             }
         }
     }
 
+    #[Pure]
     public function getLanguage(): string
     {
         $player = $this->getPlayer();
@@ -75,15 +77,6 @@ class Lang
         return $strings["$id"] ?? TextUtils::replaceColor($strings["message.error"]);
     }
 
-    public function replaceVars(string $msg, array $array): string
-    {
-        $m = $msg;
-        $keys = array_keys($array);
-        $values = array_values($array);
-
-        for ($i = 0; $i < count($keys); $i++) $m = str_replace($keys[$i], $values[$i], $m);
-        return $m;
-    }
 
     public function showForm(): void
     {
@@ -91,33 +84,33 @@ class Lang
         $form = new SimpleForm(callable: function (NetworkPlayer $player, $data) {
             if (isset($data)) {
                 if ($data == "back") {
-                    new SettingsForm($player);
+                    new SettingsForm(player: $player);
                     return;
                 }
 
                 if ($this->getLanguage() !== $data) {
-                    $this->setLanguage($data, true);
+                    $this->setLanguage($data, safe: true);
                     $player->getInventory()->clearAll();
                     $player->giveLobbyItems();
-                    $player->sendMessage($player->getTranslatedMsg("message.langselector.setlanguage"));
+                    $player->sendMessage(message: $player->getTranslatedMsg(idMsg: "message.langselector.setlanguage"));
                 } else {
-                    $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.cantupdate"));
+                    $player->sendMessage(message: Settings::$prefix . $player->getTranslatedMsg(idMsg: "message.cantupdate"));
                 }
             }
         });
 
-        $form->setTitle($player->getTranslatedMsg("form.title.langselector"));
+        $form->setTitle(title: $player->getTranslatedMsg(idMsg: "form.title.langselector"));
 
         try {
-            foreach (Lang::$config->get("languages") as $lang) {
-                $form->addButton("§a" . $lang['name'], $form::IMAGE_TYPE_URL, $lang['icon'], $lang['ISOCode']);
+            foreach (Lang::$config->get(k: "languages") as $lang) {
+                $form->addButton(text: "§a" . $lang['name'], imageType: $form::IMAGE_TYPE_URL, imagePath: $lang['icon'], label: $lang['ISOCode']);
             }
         } catch (Exception $exception) {
-            var_dump($exception->getMessage());
+            var_dump(value: $exception->getMessage());
         }
 
-        $form->addButton($player->getTranslatedMsg("form.button.back"), $form::IMAGE_TYPE_PATH, "", "back");
-        $player->sendForm($form);
+        $form->addButton(text: $player->getTranslatedMsg(idMsg: "form.button.back"), imageType: $form::IMAGE_TYPE_PATH, imagePath: "", label: "back");
+        $player->sendForm(form: $form);
     }
 
     /**

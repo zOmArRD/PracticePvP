@@ -51,12 +51,22 @@ class TextUtils extends TextFormat
             "{eol}" => self::EOL];
 
         $keys = array_keys(array: $colors);
-        $values = array_values($colors);
+        $values = array_values(array: $colors);
 
         for ($i = 0; $i < count(value: $keys); $i++) {
             $m = str_replace(search: $keys[$i], replace: (string)$values[$i], subject: $m);
         }
 
         return $m ?? "";
+    }
+
+    public function replaceVars(string $msg, array $array): string
+    {
+        $m = $msg;
+        $keys = array_keys(array: $array);
+        $values = array_values(array: $array);
+
+        for ($i = 0; $i < count(value: $keys); $i++) $m = str_replace(search: $keys[$i], replace: $values[$i], subject: $m);
+        return $m;
     }
 }
