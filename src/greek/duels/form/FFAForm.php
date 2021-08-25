@@ -27,16 +27,16 @@ class FFAForm extends Manager
 
     private function show(NetworkPlayer $player): void
     {
-        $form = new SimpleForm(function (NetworkPlayer $player, $data){
+        $form = new SimpleForm(callable: function (NetworkPlayer $player, $data) {
             if ($data !== null) {
                 if ($data == "close") return;
                 try {
                     $config = $this->getConfig();
 
-                    $this->changeFFAMode($data, $player->getName());
-                    $player->getSession()->transfer($config->get('FFA-Server-Name'));
-                } catch (Exception $exception) {
-                    $player->sendMessage($player->getTranslatedMsg("message.error"));
+                    $this->changeFFAMode(mode: $data, playerName: $player->getName());
+                    $player->getSession()->transfer(server: $config->get(k: 'FFA-Server-Name'));
+                } catch (Exception) {
+                    $player->sendMessage(message: $player->getTranslatedMsg(idMsg: "message.error"));
                 }
             }
         });
@@ -47,21 +47,21 @@ class FFAForm extends Manager
 
         $config = $this->getConfig();
 
-        $form->setTitle("§l§7» §1FFA Arenas §l§7«");
+        $form->setTitle(title: "§l§7» §1FFA Arenas §l§7«");
 
         try {
-            foreach ($config->get('ffa-available') as $kits) {
-                $form->addButton("§7§l» §r§9" . $kits["Kit"] . " §l§7«" . "\n§r§fJoin to ffa", 0, $kits['Icon'], $kits["Kit"]);
+            foreach ($config->get(k: 'ffa-available') as $kits) {
+                $form->addButton(text: "§7§l» §r§9" . $kits["Kit"] . " §l§7«" . "\n§r§fJoin to ffa", imageType: $form::IMAGE_TYPE_PATH, imagePath: $kits['Icon'], label: $kits["Kit"]);
             }
-        } catch (Exception $exception) {
+        } catch (Exception) {
         }
 
-        $form->addButton($player->getTranslatedMsg("form.button.close"), 0, $images['close'], "close");
-        $player->sendForm($form);
+        $form->addButton(text: $player->getTranslatedMsg(idMsg: "form.button.close"), imageType: $form::IMAGE_TYPE_PATH, imagePath: $images['close'], label: "close");
+        $player->sendForm(form: $form);
     }
 
     private function getConfig(): Config
     {
-        return Settings::getConfig("ffa-available.yml");
+        return Settings::getConfig(archive: "ffa-available.yml");
     }
 }

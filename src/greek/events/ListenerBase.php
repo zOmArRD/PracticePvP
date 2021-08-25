@@ -38,6 +38,6 @@ abstract class ListenerBase
      */
     public function registerEvent(Listener $event): void
     {
-        $this->getPluginManager()->registerEvents($event, $this->getPlugin());
+        $this->getPluginManager()->registerEvents(listener: $event, plugin: $this->getPlugin());
     }
 }

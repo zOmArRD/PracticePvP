@@ -18,7 +18,7 @@ use pocketmine\Server;
 
 class InsertQuery extends AsyncQuery
 {
-    public $res;
+    public mixed $res;
 
     public string $query;
 
@@ -29,17 +29,17 @@ class InsertQuery extends AsyncQuery
 
     public function query(mysqli $mysqli): void
     {
-        $result = $mysqli->query($this->query);
-        $this->res = serialize($result);
+        $result = $mysqli->query(query: $this->query);
+        $this->res = serialize(value: $result);
     }
 
     public function onCompletion(Server $server)
     {
         try {
-            $this->res = unserialize($this->res);
-        } catch (Exception $exception) {
+            $this->res = unserialize(data: $this->res);
+        } catch (Exception) {
             $this->res = null;
         }
-        parent::onCompletion($server);
+        parent::onCompletion(server: $server);
     }
 }

@@ -25,7 +25,7 @@ class ListenerManager extends ListenerBase
     public function loadEvents(): void
     {
         foreach ([new PlayerEvents(), new InteractEvents(), new NetworkEvents()] as $listener) {
-            $this->registerEvent($listener);
+            $this->registerEvent(event: $listener);
         }
     }
 }

@@ -21,13 +21,11 @@ class ConfigCmd extends Command
 
     public function __construct()
     {
-        parent::__construct("config", "Server configuration.", "/config", ['configuration']);
+        parent::__construct(name: "config", description: "Server configuration.", usageMessage: "/config", aliases: ['configuration']);
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args)
     {
-        if (!$sender instanceof NetworkPlayer) return;
-
-        new SettingsForm($sender);
+        if ($sender instanceof NetworkPlayer) new SettingsForm(player: $sender);
     }
 }

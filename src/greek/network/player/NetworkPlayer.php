@@ -121,14 +121,14 @@ class NetworkPlayer extends Player
     public function teleportToLobby(): void
     {
         $this->giveLobbyItems();
-        $this->setGamemode(GameMode::ADVENTURE);
-        $this->setHealth(20);
-        $this->setFood(20);
+        $this->setGamemode(gm: GameMode::ADVENTURE);
+        $this->setHealth(amount: 20);
+        $this->setFood(new: 20);
 
-        if (Server::getInstance()->isLevelGenerated(Settings::$lobby)) {
-            $this->setRotation(Settings::$yaw, Settings::$pitch);
-            $this->teleport(new Position(Settings::$x, Settings::$y, Settings::$z, $this->getWorld(Settings::$lobby)));
-        } else $this->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn());
+        if (Server::getInstance()->isLevelGenerated(name: Settings::$lobby)) {
+            $this->setRotation(yaw: Settings::$yaw, pitch: Settings::$pitch);
+            $this->teleport(pos: new Position(x: Settings::$x, y: Settings::$y, z: Settings::$z, level: $this->getWorld(world: Settings::$lobby)));
+        } else $this->teleport(pos: Server::getInstance()->getDefaultLevel()->getSafeSpawn());
     }
 
     /**
@@ -137,9 +137,9 @@ class NetworkPlayer extends Player
      * @param string $world
      * @return Level|null
      */
-    public function getWorld(string $world): ?Level
+    public function getWorld(string $world): Level|null
     {
-        return Loader::$instance->getServer()->getLevelByName($world) ?? null;
+        return Loader::$instance->getServer()->getLevelByName(name: $world) ?? null;
     }
 
     /**
@@ -151,7 +151,7 @@ class NetworkPlayer extends Player
     public function getTranslatedMsg(string $idMsg): string
     {
         $langClass = $this->getLangSession();
-        return TextUtils::replaceColor($langClass->getString($idMsg));
+        return TextUtils::replaceColor($langClass->getString(id: $idMsg));
     }
 
     /**
@@ -163,7 +163,7 @@ class NetworkPlayer extends Player
     public function setItem(int $index, Item $item)
     {
         $pi = $this->getInventory();
-        $pi->setItem($index, $item);
+        $pi->setItem(index: $index, item: $item);
     }
 
     /**
@@ -173,7 +173,7 @@ class NetworkPlayer extends Player
     {
         $this->getInventory()->clearAll();
         foreach (["item.unranked" => 0, "item.ranked" => 1, "item.ffa" => 2, "item.party" => 4, "item.hostevent" => 6, "item.cosmetics" => 7, "item.settings" => 8] as $item => $index) {
-            $this->setItem($index, ItemsManager::get($item, $this));
+            $this->setItem(index: $index, item: ItemsManager::get(itemId: $item, player: $this));
         }
     }
 
@@ -181,7 +181,7 @@ class NetworkPlayer extends Player
     {
         $this->getInventory()->clearAll();
         foreach (['item.partyevent' => 0, 'item.partymember' => 7, 'item.disband' => 8] as $item => $index) {
-            $this->setItem($index, ItemsManager::get($item, $this));
+            $this->setItem(index: $index, item: ItemsManager::get(itemId: $item, player: $this));
         }
     }
 }

@@ -20,7 +20,8 @@ class LangCmd extends Command
 
     public function __construct()
     {
-        parent::__construct("lang", "Change your language", "/lang", ["idioma", "language"]);
+        $this->setPermission("test");
+        parent::__construct(name: "lang", description: "Change your language", usageMessage: "/lang", aliases: ["idioma", "language"]);
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args)

@@ -39,22 +39,22 @@ class InteractEvents implements Listener
 
         if (!isset($this->itemCountDown[$player->getName()]) or time() - $this->itemCountDown[$player->getName()] >= $countdown) {
             switch (true) {
-                case $item->equals(ItemsManager::get("item.settings", $player)):
-                    new SettingsForm($player);
+                case $item->equals(item: ItemsManager::get(itemId: "item.settings", player: $player)):
+                    new SettingsForm(player: $player);
                     break;
-                case $item->equals(ItemsManager::get("item.unranked", $player)):
-                    new DuelsForm($player);
+                case $item->equals(item: ItemsManager::get(itemId: "item.unranked", player: $player)):
+                    new DuelsForm(player: $player);
                     break;
-                case $item->equals(ItemsManager::get("item.ranked", $player)):
-                    new DuelsForm($player, true);
+                case $item->equals(item: ItemsManager::get(itemId: "item.ranked", player: $player)):
+                    new DuelsForm(player: $player, isRanked: true);
                     break;
-                case $item->equals(ItemsManager::get("item.party", $player)):
+                case $item->equals(item: ItemsManager::get(itemId: "item.party", player: $player)):
                     $player->getSession()->setPartyMode();
                     break;
-                case $item->equals(ItemsManager::get("item.ffa", $player)):
-                    new FFAForm($player);
+                case $item->equals(item: ItemsManager::get(itemId: "item.ffa", player: $player)):
+                    new FFAForm(player: $player);
                     break;
-                    case $item->equals(ItemsManager::get("item.disband", $player));
+                    case $item->equals(item: ItemsManager::get(itemId: "item.disband", player: $player));
                     $player->getSession()->unSetPartyMode();
                     break;
             }

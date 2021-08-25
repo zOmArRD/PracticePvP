@@ -43,7 +43,7 @@ class NetworkEvents implements Listener
         $pk = new NetworkStackLatencyPacket();
         $pk->timestamp = $ts;
         $pk->needResponse = true;
-        $player->sendDataPacket($pk);
+        $player->sendDataPacket(packet: $pk);
         $this->callbacks[$player->getId()][$ts] = $callback;
     }
 
@@ -72,8 +72,8 @@ class NetworkEvents implements Listener
     {
         $pk = new UpdateAttributesPacket();
         $pk->entityRuntimeId = $player->getId();
-        $pk->entries[] = $player->getAttributeMap()->getAttribute(Attribute::EXPERIENCE_LEVEL);
-        $player->sendDataPacket($pk);
+        $pk->entries[] = $player->getAttributeMap()->getAttribute(id: Attribute::EXPERIENCE_LEVEL);
+        $player->sendDataPacket(packet: $pk);
     }
 
     /**
@@ -85,7 +85,7 @@ class NetworkEvents implements Listener
     {
         if ($event->getPacket() instanceof ModalFormRequestPacket) {
             $player = $event->getPlayer();
-            Loader::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($player): void {
+            Loader::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($player): void {
                 if ($player->isOnline()) {
                     $this->onPacketSend($player, function () use ($player): void {
                         if ($player->isOnline()) {
@@ -96,17 +96,17 @@ class NetworkEvents implements Listener
                                 $handler = null;
                                 $handler = Loader::getInstance()->getScheduler()->scheduleRepeatingTask(new ClosureTask(function (int $currentTick) use ($player, $times, &$handler): void {
                                     if (--$times >= 0 && $player->isOnline()) {
-                                        $this->requestUpdate($player);
+                                        $this->requestUpdate(player: $player);
                                     } else {
                                         $handler->cancel();
                                         $handler = null;
                                     }
-                                }), 10);
+                                }), period: 10);
                             }
                         }
                     });
                 }
-            }), 1);
+            }), delay: 1);
         }
     }
 

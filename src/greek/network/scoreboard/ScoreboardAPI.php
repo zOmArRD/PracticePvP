@@ -13,6 +13,8 @@ namespace greek\network\scoreboard;
 
 use greek\Loader;
 use greek\network\player\NetworkPlayer;
+use JetBrains\PhpStorm\NoReturn;
+use JetBrains\PhpStorm\Pure;
 use pocketmine\network\mcpe\protocol\RemoveObjectivePacket;
 use pocketmine\network\mcpe\protocol\SetDisplayObjectivePacket;
 use pocketmine\network\mcpe\protocol\SetScorePacket;
@@ -47,6 +49,7 @@ abstract class ScoreboardAPI
         $this->objectiveName[$this->getPlayer()->getName()] = $objectiveName;
     }
 
+    #[Pure]
     public function getObjectiveName(): string
     {
         return $this->objectiveName[$this->getPlayer()->getName()];
@@ -57,6 +60,7 @@ abstract class ScoreboardAPI
         unset($this->objectiveName[$this->getPlayer()->getName()]);
     }
 
+    #[Pure]
     public function isObjectiveName(): bool
     {
         return isset($this->objectiveName[$this->getPlayer()->getName()]);
@@ -77,10 +81,11 @@ abstract class ScoreboardAPI
         $packet->sortOrder = 0;
         $packet->displaySlot = "sidebar";
         $packet->criteriaName = "dummy";
-        $this->setObjectiveName($objectiveName);
-        $this->getPlayer()->sendDataPacket($packet);
+        $this->setObjectiveName(objectiveName:  $objectiveName);
+        $this->getPlayer()->sendDataPacket(packet: $packet);
     }
 
+    #[NoReturn]
     public function setLine(int $score, string $message): void
     {
         if (!$this->isObjectiveName()) {
@@ -88,7 +93,7 @@ abstract class ScoreboardAPI
         }
 
         if ($score > 15 || $score < 0) {
-            Loader::$logger->error("Score must be between the value of 1-15. $score out of range.");
+            Loader::$logger->error(message: "Score must be between the value of 1-15. $score out of range.");
             return;
         }
 
@@ -99,7 +104,7 @@ abstract class ScoreboardAPI
             $packet1 = new SetScorePacket();
             $packet1->entries[] = $this->lines[$score];
             $packet1->type = $packet1::TYPE_REMOVE;
-            $this->getPlayer()->sendDataPacket($packet1);
+            $this->getPlayer()->sendDataPacket(packet: $packet1);
             unset($this->lines[$score]);
         }
         $entry->score = $score;
@@ -110,7 +115,7 @@ abstract class ScoreboardAPI
         $packet2 = new SetScorePacket();
         $packet2->entries[] = $entry;
         $packet2->type = $packet2::TYPE_CHANGE;
-        $this->getPlayer()->sendDataPacket($packet2);
+        $this->getPlayer()->sendDataPacket(packet: $packet2);
     }
 
     public function clear(): void
@@ -118,7 +123,7 @@ abstract class ScoreboardAPI
         $packet = new SetScorePacket();
         $packet->entries = $this->lines;
         $packet->type = $packet::TYPE_REMOVE;
-        $this->getPlayer()->sendDataPacket($packet);
+        $this->getPlayer()->sendDataPacket(packet: $packet);
         $this->lines = [];
     }
 
@@ -126,6 +131,6 @@ abstract class ScoreboardAPI
     {
         $packet = new RemoveObjectivePacket();
         $packet->objectiveName = $this->getObjectiveName();
-        $this->getPlayer()->sendDataPacket($packet);
+        $this->getPlayer()->sendDataPacket(packet: $packet);
     }
 }

@@ -29,11 +29,11 @@ class Settings
 
     static final public function init(Config $config): void
     {
-        $general = $config->get('general');
-        $world = $config->get('spawn-map');
+        $general = $config->get(k: 'general');
+        $world = $config->get(k: 'spawn-map');
 
         // Saves in an array the data from the database provided by the config.
-        self::$database = $config->get('database');
+        self::$database = $config->get(k: 'database');
 
         self::$prefix = TextUtils::replaceColor($general['prefix']);
 
@@ -45,7 +45,7 @@ class Settings
         self::$yaw = $world['Yaw'];
         self::$pitch = $world['Pitch'];
 
-        Loader::$logger->info(self::$prefix . "§a" . "config.yml data loaded successfully!");
+        Loader::$logger->info(message: self::$prefix . "§a" . "config.yml data loaded successfully!");
     }
 
     /**
@@ -63,7 +63,7 @@ class Settings
      */
     static public function getConfig(string $archive, int $type = Config::YAML): Config
     {
-        return new Config(Loader::getInstance()->getDataFolder() . $archive, $type);
+        return new Config(file: Loader::getInstance()->getDataFolder() . $archive, type: $type);
     }
 
     /**

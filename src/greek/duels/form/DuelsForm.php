@@ -19,44 +19,44 @@ use greek\network\player\NetworkPlayer;
 class DuelsForm
 {
 
-    public function __construct(NetworkPlayer $player, bool $ranked = false)
+    public function __construct(NetworkPlayer $player, bool $isRanked = false)
     {
-        $this->showForm($player, $ranked);
+        $this->showForm(player:  $player, isRanked: $isRanked);
     }
 
     /**
      * @param NetworkPlayer $player
-     * @param false $ranked
+     * @param false $isRanked
      */
-    public function showForm(NetworkPlayer $player, bool $ranked = false): void
+    public function showForm(NetworkPlayer $player, bool $isRanked = false): void
     {
-        $form = new SimpleForm(function (NetworkPlayer $player, $data){
+        $form = new SimpleForm(callable: function (NetworkPlayer $player, $data){
 
-            if (isset($data)) {
-                if ($data == "close") return;
-
-                /* TODO: Make a queue method, and transfer to the server player, also upload the data to MySQL */
-            }
+            /* TODO: Make a queue method, and transfer to the server player, also upload the data to MySQL */
+            if (isset($data) && $data == "close") return;
         });
 
         $images = [
             "close" => "textures/gui/newgui/anvil-crossout"
         ];
 
-        $getRanked = ($ranked == true) ? "Ranked" : "UnRanked";
+        $getRanked = ($isRanked == true) ? "Ranked" : "UnRanked";
 
-        $form->setTitle("§l§7» §1Queue for $getRanked §l§7«");
+        $form->setTitle(title: "§l§7» §1Queue for $getRanked §l§7«");
 
-        $config = Settings::getConfig("duels-available.yml");
+        $config = Settings::getConfig(archive: "duels-available.yml");
 
         try {
-            foreach ($config->get("duels-available") as $kits) {
-                $form->addButton("§7§l» §r§9" . $kits["Kit"] . " §l§7«" . "\n§r§fJoin in the queue", 0, "textures/items/{$kits['Icon']}", $kits["Kit"]);
+            foreach ($config->get(k: "duels-available") as $kits) {
+                $form->addButton(text: "§7§l» §r§9" . $kits["Kit"] . " §l§7«" . "\n§r§fJoin in the queue",
+                    imageType: $form::IMAGE_TYPE_PATH,
+                    imagePath: "textures/items/{$kits['Icon']}",
+                    label: $kits["Kit"]);
             }
-        } catch (Exception $exception) {
+        } catch (Exception) {
         }
 
-        $form->addButton($player->getTranslatedMsg("form.button.close"), 0, $images['close'], "close");
-        $player->sendForm($form);
+        $form->addButton(text: $player->getTranslatedMsg("form.button.close"), imageType: $form::IMAGE_TYPE_PATH, imagePath: $images['close'], label: "close");
+        $player->sendForm(form: $form);
     }
 }

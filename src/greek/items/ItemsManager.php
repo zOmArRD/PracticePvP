@@ -26,32 +26,19 @@ class ItemsManager
      */
     static public function get(string $itemId, NetworkPlayer $player): Item
     {
-        switch ($itemId) {
-            case "item.unranked":
-                return self::load(ItemIds::IRON_SWORD, $player->getTranslatedMsg("item.unranked.name"));
-            case "item.ranked":
-                return self::load(ItemIds::DIAMOND_SWORD, $player->getTranslatedMsg("item.ranked.name"));
-            case "item.settings":
-                return self::load(ItemIds::MOB_HEAD, $player->getTranslatedMsg("item.settings.name"));
-            case "item.cosmetics":
-                return self::load(BlockIds::ENDER_CHEST, $player->getTranslatedMsg("item.cosmetics.name"));
-            case "item.ffa":
-                return self::load(ItemIds::GOLD_AXE, $player->getTranslatedMsg("item.ffa.name"));
-            case "item.party":
-                return self::load(ItemIds::NAME_TAG, $player->getTranslatedMsg("item.party.name"));
-            case "item.hostevent":
-                return self::load(ItemIds::ENDER_EYE, $player->getTranslatedMsg("item.hostevent.name"));
-            case "item.disband":
-                return self::load(ItemIds::REDSTONE_DUST, $player->getTranslatedMsg("item.disband.name"));
-            case "item.partyevent":
-                return self::load(ItemIds::IRON_AXE, $player->getTranslatedMsg("item.partyevent.name"));
-            case "item.partymember":
-                return self::load(ItemIds::PAPER, $player->getTranslatedMsg("item.partymember.name"));
-            /*case "":
-                return self::load(ItemIds::IRON_AXE, $player->getTranslatedMsg(""));*/
-            default:
-                return Item::get(BlockIds::AIR);
-        }
+        return match ($itemId) {
+            "item.unranked" => self::load(itemId: ItemIds::IRON_SWORD, customName: $player->getTranslatedMsg(idMsg: "item.unranked.name")),
+            "item.ranked" => self::load(itemId: ItemIds::DIAMOND_SWORD, customName: $player->getTranslatedMsg(idMsg: "item.ranked.name")),
+            "item.settings" => self::load(itemId: ItemIds::MOB_HEAD, customName: $player->getTranslatedMsg(idMsg: "item.settings.name")),
+            "item.cosmetics" => self::load(itemId: BlockIds::ENDER_CHEST, customName: $player->getTranslatedMsg(idMsg: "item.cosmetics.name")),
+            "item.ffa" => self::load(itemId: ItemIds::GOLD_AXE, customName: $player->getTranslatedMsg(idMsg: "item.ffa.name")),
+            "item.party" => self::load(itemId: ItemIds::NAME_TAG, customName: $player->getTranslatedMsg(idMsg: "item.party.name")),
+            "item.hostevent" => self::load(itemId: ItemIds::ENDER_EYE, customName: $player->getTranslatedMsg(idMsg: "item.hostevent.name")),
+            "item.disband" => self::load(itemId: ItemIds::REDSTONE_DUST, customName: $player->getTranslatedMsg(idMsg: "item.disband.name")),
+            "item.partyevent" => self::load(itemId: ItemIds::IRON_AXE, customName: $player->getTranslatedMsg(idMsg: "item.partyevent.name")),
+            "item.partymember" => self::load(itemId: ItemIds::PAPER, customName: $player->getTranslatedMsg(idMsg: "item.partymember.name")),
+            default => Item::get(id: BlockIds::AIR),
+        };
     }
 
     /**
@@ -61,6 +48,6 @@ class ItemsManager
      */
     static public function load(int $itemId, string $customName): Item
     {
-        return ItemFactory::get($itemId)->setCustomName($customName);
+        return ItemFactory::get(id: $itemId)->setCustomName(name: $customName);
     }
 }

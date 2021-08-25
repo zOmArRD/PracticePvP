@@ -19,7 +19,7 @@ use pocketmine\Server;
 
 class SelectQuery extends AsyncQuery
 {
-    public $rows;
+    public mixed $rows;
 
     public string $query;
 
@@ -30,24 +30,24 @@ class SelectQuery extends AsyncQuery
 
     public function query(mysqli $mysqli): void
     {
-        $result = $mysqli->query($this->query);
+        $result = $mysqli->query(query: $this->query);
         $rows = [];
         try {
             if ($result !== false) {
                 while ($row = $result->fetch_assoc()) {
                     $rows[] = $row;
                 }
-                $this->rows = serialize($rows);
+                $this->rows = serialize(value: $rows);
             }
         } catch (Exception $exception) {
-            var_dump($exception->getMessage());
+            var_dump(value: $exception->getMessage());
         }
     }
 
     public function onCompletion(Server $server)
     {
-        if ($this->rows === null) Loader::$logger->error("Error while executing query. Please check database settnigs and try again.");
-        $this->rows = unserialize($this->rows);
-        parent::onCompletion($server);
+        if ($this->rows === null) Loader::$logger->error(message: "Error while executing query. Please check database settings and try again.");
+        $this->rows = unserialize(data: $this->rows);
+        parent::onCompletion(server: $server);
     }
 }

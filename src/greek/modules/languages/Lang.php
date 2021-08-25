@@ -88,7 +88,7 @@ class Lang
     public function showForm(): void
     {
         $player = $this->getPlayer();
-        $form = new SimpleForm(function (NetworkPlayer $player, $data) {
+        $form = new SimpleForm(callable: function (NetworkPlayer $player, $data) {
             if (isset($data)) {
                 if ($data == "back") {
                     new SettingsForm($player);
@@ -110,13 +110,13 @@ class Lang
 
         try {
             foreach (Lang::$config->get("languages") as $lang) {
-                $form->addButton("§a" . $lang['name'], 1, $lang['icon'], $lang['ISOCode']);
+                $form->addButton("§a" . $lang['name'], $form::IMAGE_TYPE_URL, $lang['icon'], $lang['ISOCode']);
             }
         } catch (Exception $exception) {
             var_dump($exception->getMessage());
         }
 
-        $form->addButton($player->getTranslatedMsg("form.button.back"), 0, "", "back");
+        $form->addButton($player->getTranslatedMsg("form.button.back"), $form::IMAGE_TYPE_PATH, "", "back");
         $player->sendForm($form);
     }
 

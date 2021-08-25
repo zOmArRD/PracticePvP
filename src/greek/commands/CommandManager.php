@@ -25,7 +25,7 @@ abstract class CommandManager
      */
     public function registerCmd(string $prefix, PMCommand $command): void
     {
-        $this->getServer()->getCommandMap()->register($prefix, $command);
+        $this->getServer()->getCommandMap()->register(fallbackPrefix: $prefix, command: $command);
     }
 
     public function getServer(): Server
@@ -39,8 +39,8 @@ abstract class CommandManager
     public function loadCommands(): void
     {
         foreach (["lang" => new LangCmd(), "config" => new ConfigCmd()] as $prefix => $command) {
-            $this->registerCmd($prefix, $command);
-            Loader::$logger->info("The command $prefix has been registered.");
+            $this->registerCmd(prefix: $prefix, command: $command);
+            Loader::$logger->info(message: "The command $prefix has been registered.");
         }
     }
 }

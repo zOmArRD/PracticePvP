@@ -51,30 +51,30 @@ class PlayerEvents implements Listener
             case $packet instanceof LoginPacket:
                 if (isset($packet->clientData["Waterdog_IP"])) {
                     $class = new ReflectionClass($player);
-                    $property = $class->getProperty("ip");
-                    $property->setAccessible(true);
+                    $property = $class->getProperty(name: "ip");
+                    $property->setAccessible(accessible: true);
                     $property->setValue($player, $packet->clientData["Waterdog_IP"]);
                 }
 
                 if (isset($packet->clientData["Waterdog_XUID"])) {
                     $class = new ReflectionClass($player);
 
-                    $property = $class->getProperty("xuid");
-                    $property->setAccessible(true);
-                    $property->setValue($player, $packet->clientData["Waterdog_XUID"]);
+                    $property = $class->getProperty(name:"xuid");
+                    $property->setAccessible(accessible: true);
+                    $property->setValue(objectOrValue:  $player, value: $packet->clientData["Waterdog_XUID"]);
                     $packet->xuid = $packet->clientData["Waterdog_XUID"];
                 }
                 break;
             case $packet instanceof EmotePacket:
                 $emoteId = $packet->getEmoteId();
-                Server::getInstance()->broadcastPacket($player->getViewers(), EmotePacket::create($player->getId(), $emoteId, 1 << 0));
+                Server::getInstance()->broadcastPacket(players: $player->getViewers(), packet: EmotePacket::create(entityRuntimeId: $player->getId(), emoteId: $emoteId, flags: 1 << 0));
                 break;
         }
     }
 
     public function playerCreation(PlayerCreationEvent $event): void
     {
-        $event->setPlayerClass(NetworkPlayer::class);
+        $event->setPlayerClass(class: NetworkPlayer::class);
     }
 
     public function onPreLogin(PlayerPreLoginEvent $event): void
@@ -88,22 +88,22 @@ class PlayerEvents implements Listener
         $player->setSession();
         $player->setScoreboardSession();
 
-        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM settings WHERE ign='$name'"), function ($result, $data) {
+        AsyncQueue::submitQuery(new SelectQuery(sqlQuery: "SELECT * FROM settings WHERE ign='$name'"), function ($result, $data) {
             $player = $data[0];
             $name = $player->getName();
             $lang = "en_ENG";
 
             if (sizeof($result) === 0) {
-                AsyncQueue::submitQuery(new InsertQuery("INSERT INTO settings(ign, language, ShowScoreboard) VALUES ('$name', '$lang', 1);"));
+                AsyncQueue::submitQuery(new InsertQuery(sqlQuery: "INSERT INTO settings(ign, language, ShowScoreboard) VALUES ('$name', '$lang', 1);"));
             }
         }, [$player]);
 
-        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM practice_downstream WHERE ign='$name'"), function ($result, $data) {
+        AsyncQueue::submitQuery(new SelectQuery(sqlQuery: "SELECT * FROM practice_downstream WHERE ign='$name'"), function ($result, $data) {
             $player = $data[0];
             $name = $player->getName();
 
             if (sizeof($result) === 0) {
-                AsyncQueue::submitQuery(new InsertQuery("INSERT INTO practice_downstream(ign) VALUES ('$name');"));
+                AsyncQueue::submitQuery(new InsertQuery(sqlQuery: "INSERT INTO practice_downstream(ign) VALUES ('$name');"));
             }
         }, [$player]);
     }
@@ -116,12 +116,12 @@ class PlayerEvents implements Listener
 
         $name = $player->getName();
 
-        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM settings WHERE ign='$name'"), function ($result, $data) {
+        AsyncQueue::submitQuery(new SelectQuery(sqlQuery: "SELECT * FROM settings WHERE ign='$name'"), function ($result, $data) {
             $player = $data[0];
             $name = $player->getName();
 
             NetworkPlayer::$data[$name] = $result[0];
-            $this->updateLang($player);
+            $this->updateLang(player: $player);
         }, [$player]);
 
         $this->login[$name] = 1;
@@ -137,7 +137,7 @@ class PlayerEvents implements Listener
         $player = $event->getPlayer();
         $name = $player->getName();
 
-        $event->setJoinMessage(null);
+        $event->setJoinMessage(joinMessage: null);
         $player->setImmobile();
 
         if (!$player instanceof NetworkPlayer) return;
@@ -155,7 +155,7 @@ class PlayerEvents implements Listener
         $player = $event->getPlayer();
         $player->getInventory()->clearAll();
         if ($player instanceof NetworkPlayer) $player->getSession()->closeSession();
-        $event->setQuitMessage(null);
+        $event->setQuitMessage(quitMessage: null);
     }
 
     public function handleExhaust(PlayerExhaustEvent $event)
@@ -179,7 +179,7 @@ class PlayerEvents implements Listener
         }
 
         if (isset($this->move[$name])) {
-            $player->setImmobile(false);
+            $player->setImmobile(value: false);
             unset($this->move[$name]);
         }
     }

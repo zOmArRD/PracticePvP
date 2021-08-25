@@ -13,6 +13,7 @@ namespace greek\network;
 
 use greek\network\config\Settings;
 use greek\network\player\NetworkPlayer;
+use JetBrains\PhpStorm\NoReturn;
 use pocketmine\network\mcpe\protocol\TransferPacket;
 
 class Session
@@ -22,7 +23,7 @@ class Session
 
     public function __construct(NetworkPlayer $player)
     {
-        $this->setPlayer($player);
+        $this->setPlayer(player: $player);
     }
 
     /**
@@ -41,17 +42,18 @@ class Session
         return $this->player;
     }
 
+    #[NoReturn]
     public function updateSession(): void
     {
         $player = $this->getPlayer();
         $player->teleportToLobby();
     }
 
+    #[NoReturn]
     public function closeSession(): void
     {
         if (isset(NetworkPlayer::$data[$this->getPlayer()->getName()])) {
             unset(NetworkPlayer::$data[$this->getPlayer()->getName()]);
-            $this->unSetPartyMode();
         }
     }
 
@@ -62,11 +64,11 @@ class Session
     {
         $player = $this->player;
         if (!$player->isPartyMode()) {
-            $player->setPartyMode(true);
+            $player->setPartyMode(partyMode: true);
             $player->getPartyItems();
-            $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.party.create"));
+            $player->sendMessage(message: Settings::$prefix . $player->getTranslatedMsg(idMsg: "message.party.create"));
         } else {
-            $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.party.exist"));
+            $player->sendMessage(message: Settings::$prefix . $player->getTranslatedMsg(idMsg: "message.party.exist"));
         }
     }
 
@@ -77,11 +79,11 @@ class Session
     {
         $player = $this->player;
         if ($player->isPartyMode()) {
-            $player->setPartyMode(false);
+            $player->setPartyMode(partyMode: false);
             $player->teleportToLobby();
-            $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.party.disband"));
+            $player->sendMessage(message: Settings::$prefix . $player->getTranslatedMsg(idMsg: "message.party.disband"));
         } else {
-            $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.party.noparty"));
+            $player->sendMessage(message: Settings::$prefix . $player->getTranslatedMsg(idMsg: "message.party.noparty"));
         }
     }
 
@@ -91,11 +93,12 @@ class Session
      *
      * @param string $server
      */
+    #[NoReturn]
     public function transfer(string $server): void
     {
-        $this->player->sendMessage($this->player->getTranslatedMsg("message.server.connecting"));
+        $this->player->sendMessage(message: $this->player->getTranslatedMsg(idMsg: "message.server.connecting"));
         $pk = new TransferPacket();
         $pk->address = $server;
-        $this->player->dataPacket($pk);
+        $this->player->dataPacket(packet: $pk);
     }
 }

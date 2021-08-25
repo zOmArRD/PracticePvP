@@ -26,8 +26,7 @@ class TextUtils extends TextFormat
     {
         $m = $text;
 
-        $colors = [
-            "{black}" => self::BLACK,
+        $colors = ["{black}" => self::BLACK,
             "{dark.blue}" => self::DARK_BLUE,
             "{dark.green}" => self::DARK_GREEN,
             "{dark.aqua}" => self::DARK_AQUA,
@@ -49,14 +48,13 @@ class TextUtils extends TextFormat
             "{underline}" => self::UNDERLINE,
             "{italic}" => self::ITALIC,
             "{reset}" => self::RESET,
-            "{eol}" => self::EOL
-        ];
+            "{eol}" => self::EOL];
 
-        $keys = array_keys($colors);
+        $keys = array_keys(array: $colors);
         $values = array_values($colors);
 
-        for ($i = 0; $i < count($keys); $i++) {
-            $m = str_replace($keys[$i], (string)$values[$i], $m);
+        for ($i = 0; $i < count(value: $keys); $i++) {
+            $m = str_replace(search: $keys[$i], replace: (string)$values[$i], subject: $m);
         }
 
         return $m ?? "";
