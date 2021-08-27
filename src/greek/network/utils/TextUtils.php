@@ -53,9 +53,7 @@ class TextUtils extends TextFormat
         $keys = array_keys(array: $colors);
         $values = array_values(array: $colors);
 
-        for ($i = 0; $i < count(value: $keys); $i++) {
-            $m = str_replace(search: $keys[$i], replace: (string)$values[$i], subject: $m);
-        }
+        for ($i = 0; $i < count(value: $keys); $i++) $m = str_replace(search: $keys[$i], replace: (string)$values[$i], subject: $m);
 
         return $m ?? "";
     }

@@ -29,11 +29,11 @@ class Settings
 
     static final public function init(Config $config): void
     {
-        $general = $config->get(k: 'general');
-        $world = $config->get(k: 'spawn-map');
+        $general = $config->get('general');
+        $world = $config->get('spawn-map');
 
         // Saves in an array the data from the database provided by the config.
-        self::$database = $config->get(k: 'database');
+        self::$database = $config->get('database');
 
         self::$prefix = TextUtils::replaceColor($general['prefix']);
 

@@ -39,9 +39,13 @@ strings:
   item.partymember.name: "{bold}{gray}» {reset}{red}Party Members{gray}(Click) {bold}«"
 
   # Party Strings
-  message.party.exist: "{red}We can't execute this action, apparently you already have a party created."
+  message.party.exist: "{red}We can't execute this action, apparently you already have a party."
   message.party.create: "{green}You have created a party. To invite other players use '/p invite <player>'"
   message.party.noparty: "{red}We can't execute this action, you do not have a party created."
   message.party.disband: "{red}You have disbanded your party."
+  message.party.full: "{red}An error has occurred, apparently this party is full."
+  message.party.noid: "{red}An error has occurred, apparently this party no longer exists!"
+  message.party.cantjoin: "{red}An error has occurred, you cannot enter this party"
+  message.party.deleted: "{red}This party has disbanded."
 
   # FFA Strings

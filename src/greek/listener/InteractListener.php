@@ -3,13 +3,13 @@
  * Created by PhpStorm
  *
  * User: zOmArRD
- * Date: 6/8/2021
+ * Date: 27/8/2021
  *
- * Copyright © 2021 - All Rights Reserved.
+ *  Copyright © 2021 - All Rights Reserved.
  */
 declare(strict_types=1);
 
-namespace greek\events\interact;
+namespace greek\listener;
 
 use greek\duels\form\DuelsForm;
 use greek\duels\form\FFAForm;
@@ -19,7 +19,7 @@ use greek\network\player\NetworkPlayer;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 
-class InteractEvents implements Listener
+class InteractListener implements Listener
 {
     /** @var array */
     private array $itemCountDown;
@@ -27,7 +27,7 @@ class InteractEvents implements Listener
     /**
      * @param PlayerInteractEvent $event
      *
-     * @todo End the events for each item.
+     * @todo End the event for each item.
      */
     public function legacyInteract(PlayerInteractEvent $event): void
     {

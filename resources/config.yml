@@ -18,7 +18,7 @@ languages:
 database:
   user: "root"
   password: "omar"
-  host: "localhost"
+  host: 127.0.0.1
   database: "minecraftnetwork"
 
 # This is an array that contains the data where the player will enter when entering the server.

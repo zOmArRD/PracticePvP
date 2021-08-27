@@ -9,7 +9,7 @@
  */
 declare(strict_types=1);
 
-namespace greek\events\player;
+namespace greek\listener;
 
 use greek\modules\database\mysql\AsyncQueue;
 use greek\modules\database\mysql\query\InsertQuery;
@@ -34,7 +34,7 @@ use pocketmine\Server;
 use ReflectionClass;
 use ReflectionException;
 
-class PlayerEvents implements Listener
+class PlayerListener implements Listener
 {
     /** @var array */
     public array $login, $join, $move;

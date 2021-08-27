@@ -11,13 +11,12 @@ declare(strict_types=1);
 
 namespace greek\network\player;
 
-use Exception;
 use greek\items\ItemsManager;
 use greek\Loader;
 use greek\modules\languages\Lang;
 use greek\network\config\Settings;
 use greek\network\scoreboard\Scoreboard;
-use greek\network\Session;
+use greek\network\session\Session;
 use greek\network\utils\TextUtils;
 use pocketmine\item\Item;
 use pocketmine\level\Level;
@@ -96,26 +95,6 @@ class NetworkPlayer extends Player
     }
 
     /**
-     * Puts the player in Party mode.
-     *
-     * @param bool $partyMode
-     */
-    public function setPartyMode(bool $partyMode): void
-    {
-        $this->partyMode = $partyMode;
-    }
-
-    /**
-     * Returns a (bool) depending on whether the player is in party mode.
-     *
-     * @return bool
-     */
-    public function isPartyMode(): bool
-    {
-        return $this->partyMode;
-    }
-
-    /**
      * This function is in charge of teleporting the player to the lobby, clearing his inventory, and giving him the items.
      */
     public function teleportToLobby(): void
@@ -152,6 +131,11 @@ class NetworkPlayer extends Player
     {
         $langClass = $this->getLangSession();
         return TextUtils::replaceColor($langClass->getString(id: $idMsg));
+    }
+
+    public function sendTranslatedMsg(string $id): void
+    {
+        $this->sendMessage($this->getTranslatedMsg($id));
     }
 
     /**

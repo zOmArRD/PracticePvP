@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace greek;
 
 use greek\commands\Command;
-use greek\events\ListenerManager;
+use greek\event\EventsManager;
 use greek\modules\database\mysql\AsyncQueue;
 use greek\modules\database\mysql\query\InsertQuery;
 use greek\modules\languages\Lang;
@@ -54,8 +54,8 @@ final class Loader extends PluginBase
     #[NoReturn]
     public function onEnable(): void
     {
-        /* It is responsible for recording all events. */
-        new ListenerManager();
+        /* It is responsible for recording all event. */
+        new EventsManager();
 
         /* Register the plugin commands. */
         new Command();
