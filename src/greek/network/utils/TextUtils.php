@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace greek\network\utils;
 
+use Exception;
 use pocketmine\utils\TextFormat;
 
 class TextUtils extends TextFormat
@@ -66,5 +67,19 @@ class TextUtils extends TextFormat
 
         for ($i = 0; $i < count($keys); $i++) $m = str_replace($keys[$i], $values[$i], $m);
         return $m;
+    }
+
+
+    /**
+     * @param string $id
+     * @return bool|string
+     */
+    public static function uDecode(string $id): bool|string
+    {
+        try {
+            return convert_uudecode($id);
+        } catch (Exception) {
+            return "error";
+        }
     }
 }

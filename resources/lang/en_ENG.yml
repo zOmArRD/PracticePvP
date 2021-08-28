@@ -35,8 +35,8 @@ strings:
   item.cosmetics.name: "{bold}{gray}» {reset}{gold}Cosmetics {gray}(Click) {bold}«"
   item.hostevent.name: "{bold}{gray}» {reset}{gold}Host Events {gray}(Click) {bold}«"
   item.disband.name: "{bold}{gray}» {reset}{red}Disband Party {gray}(Click) {bold}«"
-  item.partyevent.name: "{bold}{gray}» {reset}{red}Start Party Event{gray}(Click) {bold}«"
-  item.partymember.name: "{bold}{gray}» {reset}{red}Party Members{gray}(Click) {bold}«"
+  item.partyevent.name: "{bold}{gray}» {reset}{red}Start Party Event{gray} (Click) {bold}«"
+  item.partymember.name: "{bold}{gray}» {reset}{red}Party Members {gray}(Click) {bold}«"
 
   # Party Strings
   message.party.exist: "{red}We can't execute this action, apparently you already have a party."

@@ -18,6 +18,7 @@ use greek\modules\database\mysql\query\InsertQuery;
 use greek\modules\languages\Lang;
 use greek\network\config\Settings;
 use greek\network\player\skin\PersonaSkinAdapter;
+use greek\network\utils\TextUtils;
 use greek\task\TaskManager;
 use pocketmine\network\mcpe\protocol\types\SkinAdapterSingleton;
 use pocketmine\plugin\PluginBase;
@@ -64,7 +65,7 @@ final class Loader extends PluginBase
         /* It is responsible for supporting the skin person. */
         SkinAdapterSingleton::set(new PersonaSkinAdapter());
 
-        self::$logger->info(PREFIX . "§a" . "plugin loaded");
+        self::$logger->info(PREFIX . "§a" . TextUtils::uDecode("-<&QU9VEN(&QO861E9````"));
     }
 
     /**
@@ -105,7 +106,7 @@ final class Loader extends PluginBase
 
         /* This will verify that if the existing configuration file is not the same as the plugin version, it will be replaced. */
         if ($cfg->get('config.version') !== self::CONFIG_VER) {
-            self::$logger->error("The version of the file $archive is not compatible with the current version of the plugin, the old configuration will be in /resources/{$this->getName()}");
+            self::$logger->error(TextUtils::uDecode("85&AE('9E<G-I;VX@;V8@=&AE(&9I;&4@") . "$archive" . "is not compatible with the current version of the plugin, the old configuration will be in /resources/{$this->getName()}");
 
             /* This replaces the file. */
             rename($this->getDataFolder() . 'config.yml', $this->getDataFolder() . 'config.yml.old');
@@ -123,8 +124,8 @@ final class Loader extends PluginBase
             $iso = $language["ISOCode"];
             $this->saveResource("lang/$iso.yml");
             Lang::$lang[$iso] = new Config($this->getDataFolder() . "lang/$iso.yml");
-            $this->getLogger()->notice(PREFIX . "$iso has been loaded!");
+            $this->getLogger()->notice(PREFIX . "$iso " . TextUtils::uDecode("0:&%S(&)E96X@;&]A9&5D(0```"));
         }
-        self::$logger->notice(PREFIX . "The configuration has been loaded successfully!");
+        self::$logger->notice(TextUtils::uDecode("M5&AE(&-O;F9I9W5R871I;VX@:&%S(&)E96X@;&]A9&5D('-U8V-E<W-F=6QL !>0```"));
     }
 }
