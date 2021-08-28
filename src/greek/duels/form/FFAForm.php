@@ -52,7 +52,7 @@ class FFAForm extends Manager
         $form->setTitle(title: "§l§7» §1FFA Arenas §l§7«");
 
         try {
-            foreach ($config->get(k: 'ffa-available') as $kits) {
+            foreach ($config->get(k: 'ffa.modes') as $kits) {
                 $form->addButton(text: "§7§l» §r§9" . $kits["Kit"] . " §l§7«" . "\n§r§fJoin to ffa",
                     imageType: $imageType,
                     imagePath: $kits['Icon'],
@@ -67,6 +67,6 @@ class FFAForm extends Manager
 
     private function getConfig(): Config
     {
-        return Settings::getConfig(archive: "ffa-available.yml");
+        return Settings::getConfig(archive: "network.data.yml");
     }
 }

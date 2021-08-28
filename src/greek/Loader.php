@@ -25,6 +25,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\plugin\PluginLogger;
 use pocketmine\utils\Config;
 
+
 final class Loader extends PluginBase
 {
 
@@ -66,7 +67,7 @@ final class Loader extends PluginBase
         /* It is responsible for supporting the skin person. */
         SkinAdapterSingleton::set(new PersonaSkinAdapter());
 
-        self::$logger->info(message: Settings::$prefix . "§a" . "plugin loaded");
+        self::$logger->info(message: PREFIX . "§a" . "plugin loaded");
     }
 
     /**
@@ -96,7 +97,7 @@ final class Loader extends PluginBase
     /**
      * It is responsible for verifying and loading the settings that are stored in the resources' folder of the plugin.
      */
-    function verifySettings(): void
+    public function verifySettings(): void
     {
         @mkdir($this->getDataFolder());
         $archive = self::ARCHIVE_STRING;
@@ -107,7 +108,7 @@ final class Loader extends PluginBase
 
         /* This will verify that if the existing configuration file is not the same as the plugin version, it will be replaced. */
         if ($cfg->get(k: 'config.version') !== self::CONFIG_VER) {
-            self::$logger->error(message: "The version of the file $archive is not compatible with the current version of the plugin, the old configuration will be in /resources/{$this->getName()}");
+            self::$logger->error(message:  "The version of the file $archive is not compatible with the current version of the plugin, the old configuration will be in /resources/{$this->getName()}");
 
             /* This replaces the file. */
             rename(from: $this->getDataFolder() . 'config.yml', to: $this->getDataFolder() . 'config.yml.old');
@@ -116,6 +117,8 @@ final class Loader extends PluginBase
 
         Settings::init(new Config(file: $this->getDataFolder() . "config.yml", type: Config::YAML));
 
+        define('greek\PREFIX', Settings::$prefix);
+
         /* I define the variable here below for reasons that if the configuration changes, the variable is updated. */
         Lang::$config = new Config(file: $this->getDataFolder() . "config.yml", type: Config::YAML);
 
@@ -123,8 +126,8 @@ final class Loader extends PluginBase
             $iso = $language["ISOCode"];
             $this->saveResource(filename: "lang/$iso.yml");
             Lang::$lang[$iso] = new Config(file: $this->getDataFolder() . "lang/$iso.yml");
-            $this->getLogger()->notice(message: "$iso has been loaded!");
+            $this->getLogger()->notice(message: PREFIX . "$iso has been loaded!");
         }
-        self::$logger->notice(message: "The configuration has been loaded successfully!");
+        self::$logger->notice(PREFIX . "The configuration has been loaded successfully!");
     }
 }

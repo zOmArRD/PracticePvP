@@ -11,9 +11,10 @@ declare(strict_types=1);
 
 namespace greek\commands;
 
-use greek\commands\lang\LangCmd;
 use greek\commands\config\ConfigCmd;
+use greek\commands\lang\LangCmd;
 use greek\Loader;
+use JetBrains\PhpStorm\Pure;
 use pocketmine\command\Command as PMCommand;
 use pocketmine\Server;
 
@@ -28,6 +29,7 @@ abstract class CommandManager
         $this->getServer()->getCommandMap()->register(fallbackPrefix: $prefix, command: $command);
     }
 
+    #[Pure]
     public function getServer(): Server
     {
         return Loader::getInstance()->getServer();

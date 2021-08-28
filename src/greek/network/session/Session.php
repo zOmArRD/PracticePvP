@@ -30,6 +30,9 @@ class Session
     /** @var array */
     private array $invitations = [];
 
+    /** @var array */
+    public static array $data;
+
     /**
      * @param NetworkPlayer $player
      */
@@ -141,7 +144,7 @@ class Session
      */
     public function hasInvitation(PartyInvitation $invitation): bool
     {
-        return in_array($invitation, $this->invitations, true);
+        return in_array($invitation, $this->invitations, strict: true);
     }
 
     /**
@@ -163,7 +166,7 @@ class Session
      */
     public function addInvitation(PartyInvitation $invitation): void
     {
-        $this->invitations[microtime(true)] = $invitation;
+        $this->invitations[microtime(as_float: true)] = $invitation;
     }
 
     /**
@@ -171,7 +174,7 @@ class Session
      */
     public function removeInvitation(PartyInvitation $invitation): void {
         if($this->hasInvitation($invitation)) {
-            unset($this->invitations[array_search($invitation, $this->invitations, true)]);
+            unset($this->invitations[array_search($invitation, $this->invitations, strict: true)]);
         }
     }
 

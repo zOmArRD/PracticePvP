@@ -19,10 +19,13 @@ use pocketmine\utils\Config;
 
 class DuelsForm
 {
-
+    /**
+     * @param NetworkPlayer $player
+     * @param bool $isRanked
+     */
     public function __construct(NetworkPlayer $player, bool $isRanked = false)
     {
-        $this->showForm(player:  $player, isRanked: $isRanked);
+        $this->showForm(player: $player, isRanked: $isRanked);
     }
 
     /**
@@ -47,19 +50,22 @@ class DuelsForm
 
         $config = $this->getConfig();
 
-        $imageType = $config->get("image.form.duel.type");
+        $imageType = $config->get(k: "image.form.duel.type");
 
         try {
             foreach ($config->get(k: "downstream.modes") as $kits) {
                 $form->addButton(text: "§7§l» §r§9" . $kits["Kit"] . " §l§7«" . "\n§r§fJoin in the queue",
                     imageType: $imageType,
-                    imagePath: "textures/items/{$kits['Icon']}",
+                    imagePath: $kits['Icon'],
                     label: $kits["Kit"]);
             }
         } catch (Exception) {
         }
 
-        $form->addButton(text: $player->getTranslatedMsg("form.button.close"), imageType: $form::IMAGE_TYPE_PATH, imagePath: $images['close'], label: "close");
+        $form->addButton(text: $player->getTranslatedMsg(idMsg: "form.button.close"),
+            imageType: $form::IMAGE_TYPE_PATH,
+            imagePath: $images['close'],
+            label: "close");
         $player->sendForm(form: $form);
     }
 

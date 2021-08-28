@@ -13,10 +13,12 @@ namespace greek\network\player;
 
 use greek\items\ItemsManager;
 use greek\Loader;
+use greek\manager\PartyManager;
 use greek\modules\languages\Lang;
 use greek\network\config\Settings;
 use greek\network\scoreboard\Scoreboard;
 use greek\network\session\Session;
+use greek\network\session\SessionFactory;
 use greek\network\utils\TextUtils;
 use pocketmine\item\Item;
 use pocketmine\level\Level;
@@ -35,12 +37,6 @@ class NetworkPlayer extends Player
 
     /** @var Scoreboard  */
     public Scoreboard $scoreboardSession;
-
-    /** @var array */
-    public static array $data;
-
-    /** @var bool */
-    protected bool $partyMode = false;
 
     /**
      * Sets the Language Session to the player.
@@ -61,24 +57,6 @@ class NetworkPlayer extends Player
     }
 
     /**
-     * Establishes the session of the player.
-     */
-    public function setSession(): void
-    {
-        $this->session = new Session($this);
-    }
-
-    /**
-     * The player's session returns.
-     *
-     * @return Session
-     */
-    public function getSession(): Session
-    {
-        return $this->session;
-    }
-
-    /**
      * Establishes the Scoreboard Session of the player.
      */
     public function setScoreboardSession(): void
@@ -92,6 +70,14 @@ class NetworkPlayer extends Player
     public function getScoreboardSession(): Scoreboard
     {
         return $this->scoreboardSession;
+    }
+
+    /**
+     * @return PartyManager
+     */
+    public function getPartyManager(): PartyManager
+    {
+        return new PartyManager(SessionFactory::getSession($this));
     }
 
     /**

@@ -49,13 +49,16 @@ class InteractListener implements Listener
                     new DuelsForm(player: $player, isRanked: true);
                     break;
                 case $item->equals(item: ItemsManager::get(itemId: "item.party", player: $player)):
-                    $player->getSession()->setPartyMode();
+                    $player->getPartyManager()->createParty();
                     break;
                 case $item->equals(item: ItemsManager::get(itemId: "item.ffa", player: $player)):
                     new FFAForm(player: $player);
                     break;
-                    case $item->equals(item: ItemsManager::get(itemId: "item.disband", player: $player));
-                    $player->getSession()->unSetPartyMode();
+                case $item->equals(item: ItemsManager::get(itemId: "item.disband", player: $player)):
+                    $player->getPartyManager()->disbandParty();
+                    break;
+                case $item->equals(ItemsManager::get("item.partymember", $player)):
+                    $player->getPartyManager()->sendPartyMembersMsg();
                     break;
             }
             $this->itemCountDown[$player->getName()] = time();

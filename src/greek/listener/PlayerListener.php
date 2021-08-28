@@ -16,6 +16,7 @@ use greek\modules\database\mysql\query\InsertQuery;
 use greek\modules\database\mysql\query\SelectQuery;
 use greek\network\config\Settings;
 use greek\network\player\NetworkPlayer;
+use greek\network\session\Session;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\inventory\InventoryTransactionEvent;
@@ -85,7 +86,6 @@ class PlayerListener implements Listener
 
         $name = $player->getName();
         $player->setLangSession();
-        $player->setSession();
         $player->setScoreboardSession();
 
         AsyncQueue::submitQuery(new SelectQuery(sqlQuery: "SELECT * FROM settings WHERE ign='$name'"), function ($result, $data) {
@@ -120,7 +120,7 @@ class PlayerListener implements Listener
             $player = $data[0];
             $name = $player->getName();
 
-            NetworkPlayer::$data[$name] = $result[0];
+            Session::$data[$name] = $result[0];
             $this->updateLang(player: $player);
         }, [$player]);
 
@@ -139,22 +139,22 @@ class PlayerListener implements Listener
 
         $event->setJoinMessage(joinMessage: null);
         $player->setImmobile();
-
         if (!$player instanceof NetworkPlayer) return;
+
+        $player->teleportToLobby();
 
         if (isset($this->login[$name])) {
             unset($this->login[$name]);
             $this->join[$name] = 1;
         }
 
-        $player->getSession()->updateSession();
     }
 
     public function pQuit(PlayerQuitEvent $event): void
     {
         $player = $event->getPlayer();
         $player->getInventory()->clearAll();
-        if ($player instanceof NetworkPlayer) $player->getSession()->closeSession();
+
         $event->setQuitMessage(quitMessage: null);
     }
 

@@ -14,18 +14,32 @@ namespace greek\commands\lang;
 use greek\network\player\NetworkPlayer;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\utils\TextFormat;
+use const greek\PREFIX;
 
 class LangCmd extends Command
 {
 
     public function __construct()
     {
-        $this->setPermission("test");
-        parent::__construct(name: "lang", description: "Change your language", usageMessage: "/lang", aliases: ["idioma", "language"]);
+        $this->setPermission(permission: "test");
+
+        parent::__construct(name: "lang",
+            description: "Change your language",
+            usageMessage: "/lang",
+            aliases: ["idioma", "language"]);
     }
 
-    public function execute(CommandSender $sender, string $commandLabel, array $args)
+    /**
+     * @param CommandSender $sender
+     * @param string $commandLabel
+     * @param array $args
+     * @return void
+     */
+    public function execute(CommandSender $sender, string $commandLabel, array $args): void
     {
-        if ($sender instanceof NetworkPlayer) $sender->getLangSession()->showForm();
+        if ($sender instanceof NetworkPlayer) {
+            $sender->getLangSession()->showForm();
+        } else $sender->sendMessage(PREFIX . TextFormat::RED . "You cannot run this command.");
     }
 }

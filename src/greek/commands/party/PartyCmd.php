@@ -17,13 +17,21 @@ use pocketmine\command\CommandSender;
 class PartyCmd extends Command
 {
 
+    public function __construct()
+    {
+        parent::__construct(name: "party",
+            description: "Party Command",
+            usageMessage: "/party help",
+            aliases: ["p", "fiesta"]);
+    }
+
     /**
      * @param CommandSender $sender
      * @param string $commandLabel
      * @param array $args
      * @return void
      */
-    public function execute(CommandSender $sender, string $commandLabel, array $args)
+    public function execute(CommandSender $sender, string $commandLabel, array $args): void
     {
         // TODO: Implement execute() method.
     }

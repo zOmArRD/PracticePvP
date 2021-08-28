@@ -19,6 +19,8 @@ use greek\modules\form\lib\SimpleForm;
 use greek\network\config\Settings;
 use greek\network\config\SettingsForm;
 use greek\network\player\NetworkPlayer;
+use greek\network\session\Session;
+use greek\network\session\SessionFactory;
 use pocketmine\Server;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
@@ -35,8 +37,8 @@ class Scoreboard extends ScoreboardAPI
 
     public function setScore(): void
     {
-        if (isset(NetworkPlayer::$data[$this->player->getName()])) {
-            $scData = NetworkPlayer::$data[$this->player->getName()];
+        if (isset(Session::$data[$this->player->getName()])) {
+            $scData = Session::$data[$this->player->getName()];
 
             if ($scData["ShowScoreboard"] == false) {
                 return;
@@ -52,7 +54,9 @@ class Scoreboard extends ScoreboardAPI
     {
         $configSC = new Config(file: Loader::getInstance()->getDataFolder() . "scoreboard.yml", type: Config::YAML);
 
-        if ($this->getPlayer()->isPartyMode()) {
+        $session = SessionFactory::getSession($this->getPlayer());
+
+        if ($session->hasParty()) {
             $strings = $configSC->get(k: $this->player->getLangSession()->getLanguage())["party"];
         } else {
             $strings = $configSC->get(k: $this->player->getLangSession()->getLanguage())["normal"];
@@ -108,8 +112,8 @@ class Scoreboard extends ScoreboardAPI
             "{practice.players}" => count(Server::getInstance()->getOnlinePlayers()),
             "{practice.maxplayers}" => Server::getInstance()->getMaxPlayers(),
             "{practice.playing}" => 0, /* TODO: Get Down-Stream Server Players */
-            "{party.members}" => 0, /* TODO: Return the current players of the party. */
-            "{party.maxmembers}" => 0, /* TODO: Return the maximum players allowed in a party. */
+            "{party.members}" => $this->getPartyPlayers(),
+            "{party.maxmembers}" => $this->getPartySlots(),
             "{tps}" => Server::getInstance()->getTicksPerSecond(),
             "{days}" => $this->getUptime(),
             "{hours}" => $this->getUptime(type: "hours"),
@@ -157,7 +161,7 @@ class Scoreboard extends ScoreboardAPI
         $form = new SimpleForm(function (NetworkPlayer $player, $data) {
             if (isset($data)) {
                 try {
-                    $scData = NetworkPlayer::$data[$player->getName()];
+                    $scData = Session::$data[$player->getName()];
                     switch ($data) {
                         case "enable":
                             if ($scData["ShowScoreboard"] == true) {
@@ -180,7 +184,6 @@ class Scoreboard extends ScoreboardAPI
                             break;
                         default:
                             new SettingsForm(player: $player);
-                            var_dump(value: $scData);
                             break;
                     }
                 } catch (Exception $exception) {
@@ -203,5 +206,28 @@ class Scoreboard extends ScoreboardAPI
     public function setMysqlScore(int $bool, $ign)
     {
         AsyncQueue::submitQuery(asyncQuery: new InsertQuery(sqlQuery: "UPDATE settings SET ShowScoreboard = $bool WHERE ign = '$ign'"));
+    }
+
+
+    private function getPartyPlayers(): int
+    {
+        $session = SessionFactory::getSession($this->player);
+        if ($session->hasParty()) {
+            $party = $session->getParty();
+            return count($party->getMembers());
+        } else {
+            return 0;
+        }
+    }
+
+    private function getPartySlots(): int
+    {
+        $session = SessionFactory::getSession($this->player);
+        if ($session->hasParty()) {
+            $party = $session->getParty();
+            return $party->getSlots();
+        } else {
+            return 0;
+        }
     }
 }

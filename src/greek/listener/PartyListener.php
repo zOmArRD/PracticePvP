@@ -14,8 +14,15 @@ namespace greek\listener;
 use greek\event\party\PartyCreateEvent;
 use greek\event\party\PartyDisbandEvent;
 use greek\event\party\PartyInviteEvent;
-use greek\network\config\Settings;
+use greek\event\party\PartyJoinEvent;
+use greek\event\party\PartyLeaderPromoteEvent;
+use greek\event\party\PartyLeaveEvent;
+use greek\event\party\PartyMemberKickEvent;
+use greek\event\party\PartySetPrivateEvent;
+use greek\event\party\PartySetPublicEvent;
+use greek\event\party\PartyUpdateSlotsEvent;
 use pocketmine\event\Listener;
+use const greek\PREFIX;
 
 class PartyListener implements Listener
 {
@@ -28,7 +35,7 @@ class PartyListener implements Listener
     {
         $player = $event->getPlayer();
 
-        $player->sendMessage(Settings::$prefix . "You have created a party. To invite other players use '/p invite <player>'");
+        $player->sendMessage(PREFIX . "You have created a party. To invite other players use '/p invite <player>'");
     }
 
     /**
@@ -42,8 +49,8 @@ class PartyListener implements Listener
         $player = $event->getPlayer();
         $session = $event->getSession();
 
-        $player->sendMessage(Settings::$prefix . "§cYou have disbanded your party.");
-        $party->sendMessage(Settings::$prefix . "§cThis party has been disbanded because " . $party->getLeaderName() . "§cleft the party", $session);
+        $player->sendMessage(message: PREFIX . "§cYou have disbanded your party.");
+        $party->sendMessage(message: PREFIX . "§cThis party has been disbanded because §6{$party->getLeaderName()} §cleft the party", ignore_member: $session);
     }
 
     /**
@@ -56,6 +63,98 @@ class PartyListener implements Listener
         $player = $event->getPlayer();
         $target = $event->getTarget();
 
-        $player->sendMessage(Settings::$prefix . "§aYou have invited §6" . $target->getPlayerName() . " §ato the party, he has 1 minute to accept the invitation");
+        $player->sendMessage(message: PREFIX . "§aYou have invited §6{$target->getPlayerName()} §ato the party, he has 1 minute to accept the invitation");
+        $event->getParty()->sendMessage(message: PREFIX . "§6{$target->getPlayerName()} §has been invited to the party!");
+
+    }
+
+    /**
+     * @param PartyJoinEvent $event
+     * @ignoreCancelled
+     * @priority HIGHEST
+     */
+    public function onJoin(PartyJoinEvent $event): void
+    {
+        $player = $event->getPlayer();
+        $party = $event->getParty();
+
+        $player->sendMessage(PREFIX . "§aYou have joined §6{$party->getLeaderName()}§a's party!");
+        $party->sendMessage(PREFIX . "§6{$player->getName()} §ahas joined the party!");
+    }
+
+    /**
+     * @param PartyLeaderPromoteEvent $event
+     * @ignoreCancelled
+     * @priority HIGHEST
+     */
+    public function onLeaderPromote(PartyLeaderPromoteEvent $event): void
+    {
+        $session = $event->getSession();
+        $newLeader = $event->getNewLeader();
+        $party = $event->getParty();
+
+        $sessionName = $session->getPlayerName();
+        $newLeaderName = $newLeader->getPlayerName();
+
+        $session->sendMessage(message: PREFIX . "§aYou have made §6{$newLeaderName} §athe leader of the party. ");
+        $newLeader->sendMessage(message: PREFIX . "§6{$sessionName}§a promoted you to the leader of the party.");
+        $party->sendMessage(message: PREFIX . "§6{$sessionName} §ahas promoted §6{$newLeaderName}§a as the leader of the party", ignore_member: $session);
+    }
+
+    /**
+     * @param PartyLeaveEvent $event
+     * @ignoreCancelled
+     * @priority HIGHEST
+     */
+    public function onLeave(PartyLeaveEvent $event): void
+    {
+        $session = $event->getSession();
+        $party = $event->getParty();
+
+        $session->sendMessage(message: PREFIX . "§cYou have left §6{$party->getLeaderName()}§c's party!");
+        $party->sendMessage(message: PREFIX . "§6{$session->getPlayerName()} §chas left the party!", ignore_member: $session);
+    }
+
+    /**
+     * @param PartyMemberKickEvent $event
+     * @ignoreCancelled
+     * @priority HIGHEST
+     */
+    public function onMemberKick(PartyMemberKickEvent $event): void
+    {
+        $member = $event->getMember();
+
+        $member->sendMessage(PREFIX . "§cYou have been kicked from §6{$event->getSession()->getPlayerName()}§c's party!");
+        $event->getParty()->sendMessage(PREFIX . "§6{$member->getPlayerName()}");
+    }
+
+    /**
+     * @param PartySetPrivateEvent $event
+     * @ignoreCancelled
+     * @priority HIGHEST
+     */
+    public function onLock(PartySetPrivateEvent $event): void
+    {
+        $event->getParty()->sendMessage(PREFIX . "§aThe party is now private.");
+    }
+
+    /**
+     * @param PartySetPublicEvent $event
+     * @ignoreCancelled
+     * @priority HIGHEST
+     */
+    public function onUnlock(PartySetPublicEvent $event): void
+    {
+        $event->getParty()->sendMessage(PREFIX . "§aThe party is now public.");
+    }
+
+    /**
+     * @param PartyUpdateSlotsEvent $event
+     * @ignoreCancelled
+     * @priority HIGHEST
+     */
+    public function onUpdateSlots(PartyUpdateSlotsEvent $event): void
+    {
+        $event->getParty()->sendMessage(PREFIX . "§aThe party slots has been updated to {$event->getSlots()}!");
     }
 }
