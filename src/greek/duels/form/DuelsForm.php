@@ -37,7 +37,7 @@ class DuelsForm
         $form = new SimpleForm(function (NetworkPlayer $player, $data){
 
             /* TODO: Make a queue method, and transfer to the server player, also upload the data to MySQL */
-            if (isset($data) && $data == "close") return;
+            //if (isset($data) && $data == "close") return;
         });
 
         $images = [
@@ -53,19 +53,11 @@ class DuelsForm
         $imageType = $config->get("image.form.duel.type");
 
         try {
-            foreach ($config->get("downstream.modes") as $kits) {
-                $form->addButton("§7§l» §r§9" . $kits["Kit"] . " §l§7«" . "\n§r§fJoin in the queue",
-                    $imageType,
-                    $kits['Icon'],
-                    $kits["Kit"]);
-            }
+            foreach ($config->get("downstream.modes") as $kits) $form->addButton("§7§l» §r§9" . $kits["Kit"] . " §l§7«" . "\n§r§fJoin in the queue", $imageType, $kits['Icon'], $kits["Kit"]);
         } catch (Exception) {
         }
 
-        $form->addButton($player->getTranslatedMsg("form.button.close"),
-            $form::IMAGE_TYPE_PATH,
-            $images['close'],
-            "close");
+        $form->addButton($player->getTranslatedMsg("form.button.close"), $form::IMAGE_TYPE_PATH, $images['close'], "close");
         $player->sendForm($form);
     }
 
