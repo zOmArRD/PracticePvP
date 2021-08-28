@@ -81,8 +81,8 @@ abstract class ScoreboardAPI
         $packet->sortOrder = 0;
         $packet->displaySlot = "sidebar";
         $packet->criteriaName = "dummy";
-        $this->setObjectiveName(objectiveName:  $objectiveName);
-        $this->getPlayer()->sendDataPacket(packet: $packet);
+        $this->setObjectiveName($objectiveName);
+        $this->getPlayer()->sendDataPacket($packet);
     }
 
     #[NoReturn]
@@ -93,7 +93,7 @@ abstract class ScoreboardAPI
         }
 
         if ($score > 15 || $score < 0) {
-            Loader::$logger->error(message: "Score must be between the value of 1-15. $score out of range.");
+            Loader::$logger->error("Score must be between the value of 1-15. $score out of range.");
             return;
         }
 
@@ -104,10 +104,11 @@ abstract class ScoreboardAPI
             $packet1 = new SetScorePacket();
             $packet1->entries[] = $this->lines[$score];
             $packet1->type = $packet1::TYPE_REMOVE;
-            $this->getPlayer()->sendDataPacket(packet: $packet1);
+            $this->getPlayer()->sendDataPacket($packet1);
             unset($this->lines[$score]);
         }
         $entry->score = $score;
+
         $entry->scoreboardId = $score;
         $entry->customName = $message;
         $this->lines[$score] = $entry;
@@ -115,7 +116,7 @@ abstract class ScoreboardAPI
         $packet2 = new SetScorePacket();
         $packet2->entries[] = $entry;
         $packet2->type = $packet2::TYPE_CHANGE;
-        $this->getPlayer()->sendDataPacket(packet: $packet2);
+        $this->getPlayer()->sendDataPacket($packet2);
     }
 
     public function clear(): void
@@ -123,7 +124,7 @@ abstract class ScoreboardAPI
         $packet = new SetScorePacket();
         $packet->entries = $this->lines;
         $packet->type = $packet::TYPE_REMOVE;
-        $this->getPlayer()->sendDataPacket(packet: $packet);
+        $this->getPlayer()->sendDataPacket($packet);
         $this->lines = [];
     }
 
@@ -131,6 +132,6 @@ abstract class ScoreboardAPI
     {
         $packet = new RemoveObjectivePacket();
         $packet->objectiveName = $this->getObjectiveName();
-        $this->getPlayer()->sendDataPacket(packet: $packet);
+        $this->getPlayer()->sendDataPacket($packet);
     }
 }

@@ -14,7 +14,6 @@ namespace greek\network\session;
 use greek\modules\party\Party;
 use greek\modules\party\PartyInvitation;
 use greek\network\player\NetworkPlayer;
-use JetBrains\PhpStorm\Pure;
 
 class Session
 {
@@ -38,7 +37,7 @@ class Session
      */
     public function __construct(NetworkPlayer $player)
     {
-        $this->setPlayer(player: $player);
+        $this->setPlayer($player);
     }
 
     /**
@@ -60,7 +59,6 @@ class Session
     /**
      * @return string
      */
-    #[Pure]
     public function getPlayerName(): string
     {
         return $this->getPlayer()->getName();
@@ -69,7 +67,6 @@ class Session
     /**
      * @return bool
      */
-    #[Pure]
     public function isOnline(): bool
     {
         return SessionFactory::hasSession($this->getPlayer());
@@ -94,7 +91,6 @@ class Session
     /**
      * @return bool
      */
-    #[Pure]
     public function hasParty(): bool
     {
         return $this->getParty() !== null;
@@ -103,7 +99,6 @@ class Session
     /**
      * @return bool
      */
-    #[Pure]
     public function isPartyLeader(): bool
     {
         return $this->hasParty() && $this->getParty()->getLeaderName() === $this->getPlayerName();
@@ -144,7 +139,7 @@ class Session
      */
     public function hasInvitation(PartyInvitation $invitation): bool
     {
-        return in_array($invitation, $this->invitations, strict: true);
+        return in_array($invitation, $this->invitations, true);
     }
 
     /**
@@ -166,7 +161,7 @@ class Session
      */
     public function addInvitation(PartyInvitation $invitation): void
     {
-        $this->invitations[microtime(as_float: true)] = $invitation;
+        $this->invitations[microtime(true)] = $invitation;
     }
 
     /**
@@ -174,7 +169,7 @@ class Session
      */
     public function removeInvitation(PartyInvitation $invitation): void {
         if($this->hasInvitation($invitation)) {
-            unset($this->invitations[array_search($invitation, $this->invitations, strict: true)]);
+            unset($this->invitations[array_search($invitation, $this->invitations, true)]);
         }
     }
 

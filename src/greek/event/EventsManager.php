@@ -33,8 +33,6 @@ class EventsManager extends Events
                      new InteractListener(),
                      new NetworkListener(),
                      new PartyListener(),
-                     new SessionListener()] as $listener) {
-            $this->register(event: $listener);
-        }
+                     new SessionListener()] as $listener) $this->register($listener);
     }
 }

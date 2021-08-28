@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace greek\network\session;
 
 use greek\network\player\NetworkPlayer;
-use JetBrains\PhpStorm\Pure;
 
 class SessionFactory
 {
@@ -58,7 +57,6 @@ class SessionFactory
      * @param NetworkPlayer $player
      * @return bool
      */
-    #[Pure]
     public static function hasSession(NetworkPlayer $player): bool
     {
         return self::hasSessionByName($player->getName());

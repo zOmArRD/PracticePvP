@@ -31,9 +31,9 @@ class PersonaSkinAdapter extends LegacySkinAdapter
         if ($data->isPersona()) {
             $id = $data->getSkinId();
             $this->personaSkins[$id] = $data;
-            return new Skin(skinId: $id, skinData: str_repeat(string: random_bytes(length: 3) . "\xff", times: 2048));
+            return new Skin($id, str_repeat(random_bytes(3) . "\xff", 2048));
         }
-        return parent::fromSkinData(data: $data);
+        return parent::fromSkinData($data);
     }
 
     /**
@@ -42,6 +42,6 @@ class PersonaSkinAdapter extends LegacySkinAdapter
      */
     public function toSkinData(Skin $skin): SkinData
     {
-        return $this->personaSkins[$skin->getSkinId()] ?? parent::toSkinData(skin: $skin);
+        return $this->personaSkins[$skin->getSkinId()] ?? parent::toSkinData($skin);
     }
 }

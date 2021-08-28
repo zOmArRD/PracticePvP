@@ -25,7 +25,7 @@ class DuelsForm
      */
     public function __construct(NetworkPlayer $player, bool $isRanked = false)
     {
-        $this->showForm(player: $player, isRanked: $isRanked);
+        $this->showForm($player, $isRanked);
     }
 
     /**
@@ -34,7 +34,7 @@ class DuelsForm
      */
     public function showForm(NetworkPlayer $player, bool $isRanked = false): void
     {
-        $form = new SimpleForm(callable: function (NetworkPlayer $player, $data){
+        $form = new SimpleForm(function (NetworkPlayer $player, $data){
 
             /* TODO: Make a queue method, and transfer to the server player, also upload the data to MySQL */
             if (isset($data) && $data == "close") return;
@@ -46,31 +46,31 @@ class DuelsForm
 
         $getRanked = ($isRanked == true) ? "Ranked" : "UnRanked";
 
-        $form->setTitle(title: "§l§7» §1Queue for $getRanked §l§7«");
+        $form->setTitle("§l§7» §1Queue for $getRanked §l§7«");
 
         $config = $this->getConfig();
 
-        $imageType = $config->get(k: "image.form.duel.type");
+        $imageType = $config->get("image.form.duel.type");
 
         try {
-            foreach ($config->get(k: "downstream.modes") as $kits) {
-                $form->addButton(text: "§7§l» §r§9" . $kits["Kit"] . " §l§7«" . "\n§r§fJoin in the queue",
-                    imageType: $imageType,
-                    imagePath: $kits['Icon'],
-                    label: $kits["Kit"]);
+            foreach ($config->get("downstream.modes") as $kits) {
+                $form->addButton("§7§l» §r§9" . $kits["Kit"] . " §l§7«" . "\n§r§fJoin in the queue",
+                    $imageType,
+                    $kits['Icon'],
+                    $kits["Kit"]);
             }
         } catch (Exception) {
         }
 
-        $form->addButton(text: $player->getTranslatedMsg(idMsg: "form.button.close"),
-            imageType: $form::IMAGE_TYPE_PATH,
-            imagePath: $images['close'],
-            label: "close");
-        $player->sendForm(form: $form);
+        $form->addButton($player->getTranslatedMsg("form.button.close"),
+            $form::IMAGE_TYPE_PATH,
+            $images['close'],
+            "close");
+        $player->sendForm($form);
     }
 
     private function getConfig(): Config
     {
-        return Settings::getConfig(archive: "network.data.yml");
+        return Settings::getConfig("network.data.yml");
     }
 }

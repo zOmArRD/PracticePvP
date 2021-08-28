@@ -13,7 +13,6 @@ namespace greek\modules\party;
 
 use greek\network\session\Session;
 use greek\network\session\SessionFactory;
-use JetBrains\PhpStorm\Pure;
 
 class Party
 {
@@ -60,7 +59,6 @@ class Party
         return $this->leader;
     }
 
-    #[Pure]
     public function getLeaderName(): string
     {
         return $this->getLeader()->getPlayer()->getName();
@@ -79,7 +77,6 @@ class Party
         return $this->members;
     }
 
-    #[Pure]
     public function hasMember(Session $session): bool
     {
         return in_array($session, $this->getMembers(), true);
@@ -90,7 +87,6 @@ class Party
         return SessionFactory::hasSessionByName($username) && $this->hasMember(SessionFactory::getSessionByName($username));
     }
 
-    #[Pure]
     public function isFull(): bool
     {
         return count($this->getMembers()) >= $this->slots;

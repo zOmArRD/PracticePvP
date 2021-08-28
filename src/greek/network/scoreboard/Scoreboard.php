@@ -44,36 +44,36 @@ class Scoreboard extends ScoreboardAPI
                 return;
             }
         }
-        $configSC = new Config(file: Loader::getInstance()->getDataFolder() . "scoreboard.yml", type: Config::YAML);
+        $configSC = new Config(Loader::getInstance()->getDataFolder() . "scoreboard.yml", Config::YAML);
 
-        $this->new(objectiveName: "greek.practice", displayName: $configSC->get(k: "display.name", default: "§6§lGreek §8Network"));
+        $this->new("greek.practice", $configSC->get("display.name", "§6§lGreek §8Network"));
         $this->updateLine();
     }
 
     public function updateLine(): void
     {
-        $configSC = new Config(file: Loader::getInstance()->getDataFolder() . "scoreboard.yml", type: Config::YAML);
+        $configSC = new Config(Loader::getInstance()->getDataFolder() . "scoreboard.yml", Config::YAML);
 
         $session = SessionFactory::getSession($this->getPlayer());
 
         if ($session->hasParty()) {
-            $strings = $configSC->get(k: $this->player->getLangSession()->getLanguage())["party"];
+            $strings = $configSC->get($this->player->getLangSession()->getLanguage())["party"];
         } else {
-            $strings = $configSC->get(k: $this->player->getLangSession()->getLanguage())["normal"];
+            $strings = $configSC->get($this->player->getLangSession()->getLanguage())["normal"];
         }
 
         $data = [];
 
         foreach ($strings as $string => $message) {
             $line = $string + 1;
-            $msg = $this->replaceData(line: $line, message: $message);
+            $msg = $this->replaceData($line, $message);
 
             $data[] = $msg;
         }
 
         foreach ($data as $scLine => $message) {
             $line = $scLine +1;
-            $this->setLine(score: $line, message: $message);
+            $this->setLine($line, $message);
         }
     }
 
@@ -108,7 +108,7 @@ class Scoreboard extends ScoreboardAPI
             "{reset}" => TextFormat::RESET,
             "{eol}" => TextFormat::EOL,
             "{player.name}" => $this->getPlayer()->getName(),
-            "{date}" => date(format: "d/m/Y"),
+            "{date}" => date("d/m/Y"),
             "{practice.players}" => count(Server::getInstance()->getOnlinePlayers()),
             "{practice.maxplayers}" => Server::getInstance()->getMaxPlayers(),
             "{practice.playing}" => 0, /* TODO: Get Down-Stream Server Players */
@@ -116,15 +116,15 @@ class Scoreboard extends ScoreboardAPI
             "{party.maxmembers}" => $this->getPartySlots(),
             "{tps}" => Server::getInstance()->getTicksPerSecond(),
             "{days}" => $this->getUptime(),
-            "{hours}" => $this->getUptime(type: "hours"),
-            "{minutes}" => $this->getUptime(type: "minutes"),
+            "{hours}" => $this->getUptime("hours"),
+            "{minutes}" => $this->getUptime("minutes"),
         ];
 
-        $keys = array_keys(array: $data);
-        $values = array_values(array:  $data);
+        $keys = array_keys($data);
+        $values = array_values($data);
 
-        for ($i = 0; $i < count(value: $keys); $i++) {
-            $msg = str_replace(search: $keys[$i], replace: (string)$values[$i], subject: $msg);
+        for ($i = 0; $i < count($keys); $i++) {
+            $msg = str_replace($keys[$i], (string)$values[$i], $msg);
         }
 
         return $msg;
@@ -132,17 +132,17 @@ class Scoreboard extends ScoreboardAPI
 
     public function getUptime(string $type = "days"): string
     {
-        $time = (int) (microtime(as_float: true) - START_TIME);
+        $time = (int) (microtime(true) - START_TIME);
         $minutes = null;
         $hours = null;
         $days = null;
 
         if($time >= 60){
-            $minutes = floor(num: ($time % 3600) / 60);
+            $minutes = floor(($time % 3600) / 60);
             if($time >= 3600){
-                $hours = floor(num: ($time % (3600 * 24)) / 3600);
+                $hours = floor(($time % (3600 * 24)) / 3600);
                 if($time >= 3600 * 24){
-                    $days = floor(num: $time / (3600 * 24));
+                    $days = floor($time / (3600 * 24));
                 }
             }
         }
@@ -165,29 +165,29 @@ class Scoreboard extends ScoreboardAPI
                     switch ($data) {
                         case "enable":
                             if ($scData["ShowScoreboard"] == true) {
-                                $player->sendMessage(message: Settings::$prefix . $player->getTranslatedMsg(idMsg: "message.cantupdate"));
+                                $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.cantupdate"));
                             } else {
                                 $scData["ShowScoreboard"] = true;
-                                $this->setMysqlScore(bool: 1, ign: $this->getPlayer()->getName());
-                                $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg(idMsg: "message.scoreboard.updated"));
+                                $this->setMysqlScore(1, $this->getPlayer()->getName());
+                                $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.scoreboard.updated"));
                             }
                             break;
                         case "disable":
                             if ($scData["ShowScoreboard"] == false) {
-                                $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg(idMsg: "message.scoreboard.cantupdate"));
+                                $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.scoreboard.cantupdate"));
                             } else {
                                 $scData["ShowScoreboard"] = false;
-                                $this->setMysqlScore(bool:0, ign: $this->getPlayer()->getName());
+                                $this->setMysqlScore(0, $this->getPlayer()->getName());
                                 $this->remove();
-                                $player->sendMessage(message: Settings::$prefix . $player->getTranslatedMsg(idMsg: "message.scoreboard.updated"));
+                                $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.scoreboard.updated"));
                             }
                             break;
                         default:
-                            new SettingsForm(player: $player);
+                            new SettingsForm($player);
                             break;
                     }
                 } catch (Exception $exception) {
-                    var_dump(value: $exception->getMessage() . "\n" . $exception->getLine() . "\n" . $exception->getCode());
+                    var_dump($exception->getMessage() . "\n" . $exception->getLine() . "\n" . $exception->getCode());
                 }
             }
         });
@@ -196,16 +196,16 @@ class Scoreboard extends ScoreboardAPI
             "disable" => "textures/ui/cancel"
         ];
 
-        $form->setTitle(title: $player->getTranslatedMsg(idMsg: "form.title.scoreboard"));
-        $form->addButton(text: $player->getTranslatedMsg(idMsg: "form.button.enable"), imageType: $form::IMAGE_TYPE_PATH, imagePath: $images['enable'], label: "enable");
-        $form->addButton(text: $player->getTranslatedMsg(idMsg: "form.button.disable"), imageType: $form::IMAGE_TYPE_PATH, imagePath: $images['disable'], label: "disable");
-        $form->addButton(text: $player->getTranslatedMsg(idMsg: "form.button.back"));
-        $player->sendForm(form: $form);
+        $form->setTitle($player->getTranslatedMsg("form.title.scoreboard"));
+        $form->addButton($player->getTranslatedMsg("form.button.enable"), $form::IMAGE_TYPE_PATH, $images['enable'], "enable");
+        $form->addButton($player->getTranslatedMsg("form.button.disable"), $form::IMAGE_TYPE_PATH, $images['disable'], "disable");
+        $form->addButton($player->getTranslatedMsg("form.button.back"));
+        $player->sendForm($form);
     }
 
     public function setMysqlScore(int $bool, $ign)
     {
-        AsyncQueue::submitQuery(asyncQuery: new InsertQuery(sqlQuery: "UPDATE settings SET ShowScoreboard = $bool WHERE ign = '$ign'"));
+        AsyncQueue::submitQuery(new InsertQuery("UPDATE settings SET ShowScoreboard = $bool WHERE ign = '$ign'"));
     }
 
 

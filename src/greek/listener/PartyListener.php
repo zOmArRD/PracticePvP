@@ -49,8 +49,8 @@ class PartyListener implements Listener
         $player = $event->getPlayer();
         $session = $event->getSession();
 
-        $player->sendMessage(message: PREFIX . "§cYou have disbanded your party.");
-        $party->sendMessage(message: PREFIX . "§cThis party has been disbanded because §6{$party->getLeaderName()} §cleft the party", ignore_member: $session);
+        $player->sendMessage(PREFIX . "§cYou have disbanded your party.");
+        $party->sendMessage(PREFIX . "§cThis party has been disbanded because §6{$party->getLeaderName()} §cleft the party", $session);
     }
 
     /**
@@ -63,8 +63,8 @@ class PartyListener implements Listener
         $player = $event->getPlayer();
         $target = $event->getTarget();
 
-        $player->sendMessage(message: PREFIX . "§aYou have invited §6{$target->getPlayerName()} §ato the party, he has 1 minute to accept the invitation");
-        $event->getParty()->sendMessage(message: PREFIX . "§6{$target->getPlayerName()} §has been invited to the party!");
+        $player->sendMessage(PREFIX . "§aYou have invited §6{$target->getPlayerName()} §ato the party, he has 1 minute to accept the invitation");
+        $event->getParty()->sendMessage(PREFIX . "§6{$target->getPlayerName()} §has been invited to the party!");
 
     }
 
@@ -96,9 +96,9 @@ class PartyListener implements Listener
         $sessionName = $session->getPlayerName();
         $newLeaderName = $newLeader->getPlayerName();
 
-        $session->sendMessage(message: PREFIX . "§aYou have made §6{$newLeaderName} §athe leader of the party. ");
-        $newLeader->sendMessage(message: PREFIX . "§6{$sessionName}§a promoted you to the leader of the party.");
-        $party->sendMessage(message: PREFIX . "§6{$sessionName} §ahas promoted §6{$newLeaderName}§a as the leader of the party", ignore_member: $session);
+        $session->sendMessage(PREFIX . "§aYou have made §6{$newLeaderName} §athe leader of the party. ");
+        $newLeader->sendMessage(PREFIX . "§6{$sessionName}§a promoted you to the leader of the party.");
+        $party->sendMessage(PREFIX . "§6{$sessionName} §ahas promoted §6{$newLeaderName}§a as the leader of the party", $session);
     }
 
     /**
@@ -111,8 +111,8 @@ class PartyListener implements Listener
         $session = $event->getSession();
         $party = $event->getParty();
 
-        $session->sendMessage(message: PREFIX . "§cYou have left §6{$party->getLeaderName()}§c's party!");
-        $party->sendMessage(message: PREFIX . "§6{$session->getPlayerName()} §chas left the party!", ignore_member: $session);
+        $session->sendMessage(PREFIX . "§cYou have left §6{$party->getLeaderName()}§c's party!");
+        $party->sendMessage(PREFIX . "§6{$session->getPlayerName()} §chas left the party!", $session);
     }
 
     /**

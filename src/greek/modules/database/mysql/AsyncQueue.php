@@ -26,13 +26,13 @@ class AsyncQueue
      */
     static public function submitQuery(AsyncQuery $asyncQuery, ?callable $callbackFunction = null, ?array $valuesToPass = null): void
     {
-        self::$callbacks[spl_object_hash(object: $asyncQuery)] = $callbackFunction;
-        self::$values[spl_object_hash(object: $asyncQuery)] = $valuesToPass;
+        self::$callbacks[spl_object_hash($asyncQuery)] = $callbackFunction;
+        self::$values[spl_object_hash($asyncQuery)] = $valuesToPass;
         $asyncQuery->host = Settings::$database['host'];
         $asyncQuery->user = Settings::$database['user'];
         $asyncQuery->password = Settings::$database['password'];
         $asyncQuery->database = Settings::$database['database'];
-        Server::getInstance()->getAsyncPool()->submitTask(task: $asyncQuery);
+        Server::getInstance()->getAsyncPool()->submitTask($asyncQuery);
     }
 
     /**
@@ -40,7 +40,7 @@ class AsyncQueue
      */
     static public function activateCallback(AsyncQuery $asyncQuery): void
     {
-        $callable = self::$callbacks[spl_object_hash(object: $asyncQuery)] ?? null;
+        $callable = self::$callbacks[spl_object_hash($asyncQuery)] ?? null;
         $values = self::$values[spl_object_hash($asyncQuery)] ?? null;
         if (is_callable($callable)) $callable($asyncQuery["rows"], $values);
     }

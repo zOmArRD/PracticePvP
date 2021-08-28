@@ -45,7 +45,7 @@ class Settings
         self::$yaw = $world['Yaw'];
         self::$pitch = $world['Pitch'];
 
-        Loader::$logger->info(message: self::$prefix . "§a" . "config.yml data loaded successfully!");
+        Loader::$logger->info(self::$prefix . "§a" . "config.yml data loaded successfully!");
     }
 
     /**
@@ -63,7 +63,7 @@ class Settings
      */
     static public function getConfig(string $archive, int $type = Config::YAML): Config
     {
-        return new Config(file: Loader::getInstance()->getDataFolder() . $archive, type: $type);
+        return new Config(Loader::getInstance()->getDataFolder() . $archive, $type);
     }
 
     /**

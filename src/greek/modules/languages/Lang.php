@@ -40,7 +40,7 @@ class Lang
     public function setStringValue(string $key, string $value): void
     {
         $playerName = $this->getPlayer()->getName();
-        AsyncQueue::submitQuery(asyncQuery: new InsertQuery(sqlQuery: "UPDATE settings SET $key='$value' WHERE ign='{$playerName}'"));
+        AsyncQueue::submitQuery(new InsertQuery("UPDATE settings SET $key='$value' WHERE ign='{$playerName}'"));
     }
 
     public function setLanguage(string $language, bool $safe): void
@@ -49,7 +49,7 @@ class Lang
         self::$users[$playerName] = $language;
         if ($safe) {
             NetworkPlayer::$data[$playerName]["language"] = $language;
-            $this->setStringValue(key: "language", value: $language);
+            $this->setStringValue("language", $language);
         }
     }
 
@@ -59,7 +59,7 @@ class Lang
         if (isset(NetworkPlayer::$data[$player->getName()])) {
             $data = NetworkPlayer::$data[$player->getName()];
             if ($data["language"] !== null && $data["language"] !== "null") {
-                $this->setLanguage($data["language"], safe: false);
+                $this->setLanguage($data["language"], false);
             }
         }
     }
@@ -81,36 +81,36 @@ class Lang
     public function showForm(): void
     {
         $player = $this->getPlayer();
-        $form = new SimpleForm(callable: function (NetworkPlayer $player, $data) {
+        $form = new SimpleForm(function (NetworkPlayer $player, $data) {
             if (isset($data)) {
                 if ($data == "back") {
-                    new SettingsForm(player: $player);
+                    new SettingsForm($player);
                     return;
                 }
 
                 if ($this->getLanguage() !== $data) {
-                    $this->setLanguage($data, safe: true);
+                    $this->setLanguage($data, true);
                     $player->getInventory()->clearAll();
                     $player->giveLobbyItems();
-                    $player->sendMessage(message: $player->getTranslatedMsg(idMsg: "message.langselector.setlanguage"));
+                    $player->sendMessage($player->getTranslatedMsg("message.langselector.setlanguage"));
                 } else {
-                    $player->sendMessage(message: Settings::$prefix . $player->getTranslatedMsg(idMsg: "message.cantupdate"));
+                    $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.cantupdate"));
                 }
             }
         });
 
-        $form->setTitle(title: $player->getTranslatedMsg(idMsg: "form.title.langselector"));
+        $form->setTitle($player->getTranslatedMsg("form.title.langselector"));
 
         try {
-            foreach (Lang::$config->get(k: "languages") as $lang) {
-                $form->addButton(text: "§a" . $lang['name'], imageType: $form::IMAGE_TYPE_URL, imagePath: $lang['icon'], label: $lang['ISOCode']);
+            foreach (Lang::$config->get("languages") as $lang) {
+                $form->addButton("§a" . $lang['name'], $form::IMAGE_TYPE_URL, $lang['icon'], $lang['ISOCode']);
             }
         } catch (Exception $exception) {
-            var_dump(value: $exception->getMessage());
+            var_dump($exception->getMessage());
         }
 
-        $form->addButton(text: $player->getTranslatedMsg(idMsg: "form.button.back"), imageType: $form::IMAGE_TYPE_PATH, imagePath: "", label: "back");
-        $player->sendForm(form: $form);
+        $form->addButton($player->getTranslatedMsg("form.button.back"), $form::IMAGE_TYPE_PATH, "", "back");
+        $player->sendForm($form);
     }
 
     /**

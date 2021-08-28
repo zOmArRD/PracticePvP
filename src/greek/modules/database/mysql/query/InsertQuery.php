@@ -29,17 +29,17 @@ class InsertQuery extends AsyncQuery
 
     public function query(mysqli $mysqli): void
     {
-        $result = $mysqli->query(query: $this->query);
-        $this->res = serialize(value: $result);
+        $result = $mysqli->query($this->query);
+        $this->res = serialize($result);
     }
 
     public function onCompletion(Server $server)
     {
         try {
-            $this->res = unserialize(data: $this->res);
+            $this->res = unserialize($this->res);
         } catch (Exception) {
             $this->res = null;
         }
-        parent::onCompletion(server: $server);
+        parent::onCompletion($server);
     }
 }

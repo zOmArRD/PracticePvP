@@ -13,7 +13,6 @@ namespace greek\event\party;
 
 use greek\modules\party\Party;
 use greek\network\session\Session;
-use JetBrains\PhpStorm\Pure;
 
 class PartyInviteEvent extends PartyEvent
 {
@@ -25,7 +24,6 @@ class PartyInviteEvent extends PartyEvent
      * @param Session $session
      * @param Session $target
      */
-    #[Pure]
     public function __construct(Party $party, Session $session, Session $target)
     {
         $this->target = $target;

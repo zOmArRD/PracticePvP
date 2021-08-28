@@ -43,7 +43,7 @@ class NetworkListener implements Listener
         $pk = new NetworkStackLatencyPacket();
         $pk->timestamp = $ts;
         $pk->needResponse = true;
-        $player->sendDataPacket(packet: $pk);
+        $player->sendDataPacket($pk);
         $this->callbacks[$player->getId()][$ts] = $callback;
     }
 
@@ -72,8 +72,8 @@ class NetworkListener implements Listener
     {
         $pk = new UpdateAttributesPacket();
         $pk->entityRuntimeId = $player->getId();
-        $pk->entries[] = $player->getAttributeMap()->getAttribute(id: Attribute::EXPERIENCE_LEVEL);
-        $player->sendDataPacket(packet: $pk);
+        $pk->entries[] = $player->getAttributeMap()->getAttribute(Attribute::EXPERIENCE_LEVEL);
+        $player->sendDataPacket($pk);
     }
 
     /**
@@ -96,17 +96,17 @@ class NetworkListener implements Listener
                                 $handler = null;
                                 $handler = Loader::getInstance()->getScheduler()->scheduleRepeatingTask(new ClosureTask(function (int $currentTick) use ($player, $times, &$handler): void {
                                     if (--$times >= 0 && $player->isOnline()) {
-                                        $this->requestUpdate(player: $player);
+                                        $this->requestUpdate($player);
                                     } else {
                                         $handler->cancel();
                                         $handler = null;
                                     }
-                                }), period: 10);
+                                }), 10);
                             }
                         }
                     });
                 }
-            }), delay: 1);
+            }), 1);
         }
     }
 

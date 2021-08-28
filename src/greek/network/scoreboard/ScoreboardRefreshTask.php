@@ -21,8 +21,8 @@ class ScoreboardRefreshTask extends Task
 
     public function onRun(int $currentTick)
     {
-        if (Server::getInstance()->isLevelGenerated(name: Settings::$lobby)) {
-            $level = Server::getInstance()->getLevelByName(name: Settings::$lobby);
+        if (Server::getInstance()->isLevelGenerated(Settings::$lobby)) {
+            $level = Server::getInstance()->getLevelByName(Settings::$lobby);
         } else {
             $level = Server::getInstance()->getDefaultLevel();
         }

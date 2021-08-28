@@ -22,12 +22,12 @@ class LangCmd extends Command
 
     public function __construct()
     {
-        $this->setPermission(permission: "test");
+        $this->setPermission("test");
 
-        parent::__construct(name: "lang",
-            description: "Change your language",
-            usageMessage: "/lang",
-            aliases: ["idioma", "language"]);
+        parent::__construct("lang",
+            "Change your language",
+            "/lang",
+            ["idioma", "language"]);
     }
 
     /**

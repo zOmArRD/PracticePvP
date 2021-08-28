@@ -14,7 +14,6 @@ namespace greek\commands;
 use greek\commands\config\ConfigCmd;
 use greek\commands\lang\LangCmd;
 use greek\Loader;
-use JetBrains\PhpStorm\Pure;
 use pocketmine\command\Command as PMCommand;
 use pocketmine\Server;
 
@@ -26,10 +25,9 @@ abstract class CommandManager
      */
     public function registerCmd(string $prefix, PMCommand $command): void
     {
-        $this->getServer()->getCommandMap()->register(fallbackPrefix: $prefix, command: $command);
+        $this->getServer()->getCommandMap()->register($prefix, $command);
     }
 
-    #[Pure]
     public function getServer(): Server
     {
         return Loader::getInstance()->getServer();
@@ -41,8 +39,8 @@ abstract class CommandManager
     public function loadCommands(): void
     {
         foreach (["lang" => new LangCmd(), "config" => new ConfigCmd()] as $prefix => $command) {
-            $this->registerCmd(prefix: $prefix, command: $command);
-            Loader::$logger->info(message: "The command $prefix has been registered.");
+            $this->registerCmd($prefix, $command);
+            Loader::$logger->info("The command $prefix has been registered.");
         }
     }
 }

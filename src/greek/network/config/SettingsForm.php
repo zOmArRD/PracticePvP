@@ -13,7 +13,6 @@ namespace greek\network\config;
 
 use greek\modules\form\lib\SimpleForm;
 use greek\network\player\NetworkPlayer;
-use greek\network\scoreboard\Scoreboard;
 
 class SettingsForm
 {
@@ -22,7 +21,7 @@ class SettingsForm
 
     public function __construct(NetworkPlayer $player)
     {
-        $this->setPlayer(player: $player);
+        $this->setPlayer($player);
         $this->showForm();
     }
     
@@ -45,7 +44,7 @@ class SettingsForm
                         $this->showServerSettingsForm();
                         break;
                     default:
-                        $player->sendMessage(message: $player->getTranslatedMsg(idMsg: "message.error"));
+                        $player->sendMessage($player->getTranslatedMsg("message.error"));
                         break;
                 }
             }
@@ -55,12 +54,12 @@ class SettingsForm
             "close" => "textures/gui/newgui/anvil-crossout"
         ];
         
-        $form->setTitle(title: $player->getTranslatedMsg(idMsg: "form.title.settingsform"));
-        $form->addButton(text: $player->getTranslatedMsg(idMsg: "form.button.settingsform.changelanguage"), imageType: $form::IMAGE_TYPE_PATH, imagePath: $images['language'], label: "changelanguage");
-        $form->addButton(text: $player->getTranslatedMsg(idMsg: "form.button.settingsform.scoreboard"), imageType: $form::IMAGE_TYPE_URL, imagePath: "https://i.ibb.co/TY6MyrN/Hnet-com-image.png", label: "scoreboardsettings");
-        $form->addButton(text: "§9Server Settings", imageType: $form::IMAGE_TYPE_URL, imagePath: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1ZvlkYtyFsEfNG5Cl-Zh3O32hwir7J3LNXA&usqp=CAU", label: "serversettings");
-        $form->addButton(text: $player->getTranslatedMsg(idMsg: "form.button.close"), imageType: $form::IMAGE_TYPE_PATH, imagePath:  $images['close'], label: "close");
-        $player->sendForm(form: $form);
+        $form->setTitle($player->getTranslatedMsg("form.title.settingsform"));
+        $form->addButton($player->getTranslatedMsg("form.button.settingsform.changelanguage"), $form::IMAGE_TYPE_PATH, $images['language'], "changelanguage");
+        $form->addButton($player->getTranslatedMsg("form.button.settingsform.scoreboard"), $form::IMAGE_TYPE_URL, "https://i.ibb.co/TY6MyrN/Hnet-com-image.png", "scoreboardsettings");
+        $form->addButton("§9Server Settings", $form::IMAGE_TYPE_URL, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1ZvlkYtyFsEfNG5Cl-Zh3O32hwir7J3LNXA&usqp=CAU", "serversettings");
+        $form->addButton($player->getTranslatedMsg("form.button.close"), $form::IMAGE_TYPE_PATH, $images['close'], "close");
+        $player->sendForm($form);
     }
 
     public function showServerSettingsForm(): void
@@ -70,7 +69,7 @@ class SettingsForm
             /* TODO: Finalize */
         });
 
-        $player->sendForm(form: $form);
+        $player->sendForm($form);
     }
 
     /**

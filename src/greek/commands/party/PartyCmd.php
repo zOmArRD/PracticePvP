@@ -19,10 +19,10 @@ class PartyCmd extends Command
 
     public function __construct()
     {
-        parent::__construct(name: "party",
-            description: "Party Command",
-            usageMessage: "/party help",
-            aliases: ["p", "fiesta"]);
+        parent::__construct("party",
+            "Party Command",
+            "/party help",
+            ["p", "fiesta"]);
     }
 
     /**

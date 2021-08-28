@@ -14,7 +14,6 @@ namespace greek\event\party;
 use greek\modules\party\Party;
 use greek\network\player\NetworkPlayer;
 use greek\network\session\Session;
-use JetBrains\PhpStorm\Pure;
 use pocketmine\event\Cancellable;
 use pocketmine\event\Event;
 
@@ -55,7 +54,6 @@ abstract class PartyEvent extends Event implements Cancellable
     /**
      * @return NetworkPlayer
      */
-    #[Pure]
     public function getPlayer(): NetworkPlayer
     {
         return $this->getSession()->getPlayer();

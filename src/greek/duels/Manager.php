@@ -18,6 +18,6 @@ class Manager
 {
     public function changeFFAMode(string $mode, string $playerName): void
     {
-        AsyncQueue::submitQuery(new InsertQuery(sqlQuery: "UPDATE ffa_data SET mode = '$mode' WHERE ign = '$playerName'"));
+        AsyncQueue::submitQuery(new InsertQuery("UPDATE ffa_data SET mode = '$mode' WHERE ign = '$playerName'"));
     }
 }

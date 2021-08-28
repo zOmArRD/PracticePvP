@@ -13,7 +13,6 @@ namespace greek\event\party;
 
 use greek\modules\party\Party;
 use greek\network\session\Session;
-use JetBrains\PhpStorm\Pure;
 
 class PartyLeaderPromoteEvent extends PartyEvent
 {
@@ -25,7 +24,6 @@ class PartyLeaderPromoteEvent extends PartyEvent
      * @param Session $session
      * @param Session $newLeader
      */
-    #[Pure]
     public function __construct(Party $party, Session $session, Session $newLeader)
     {
         $this->newLeader = $newLeader;

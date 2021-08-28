@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace greek\event;
 
 use greek\Loader;
-use JetBrains\PhpStorm\Pure;
 use pocketmine\event\Listener;
 use pocketmine\plugin\PluginManager;
 
@@ -21,7 +20,6 @@ abstract class Events
     /**
      * @return PluginManager
      */
-    #[Pure]
     public function getPluginManager(): PluginManager
     {
         return Loader::$instance->getServer()->getPluginManager();
@@ -30,7 +28,6 @@ abstract class Events
     /**
      * @return Loader
      */
-    #[Pure]
     public function getPlugin(): Loader
     {
         return Loader::getInstance();
@@ -41,6 +38,6 @@ abstract class Events
      */
     public function register(Listener $event): void
     {
-        $this->getPluginManager()->registerEvents(listener: $event, plugin: $this->getPlugin());
+        $this->getPluginManager()->registerEvents($event, $this->getPlugin());
     }
 }

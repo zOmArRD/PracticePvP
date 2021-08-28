@@ -24,13 +24,13 @@ abstract class AsyncQuery extends AsyncTask
     public function onRun()
     {
         try {
-            $this->query($mysqli = new mysqli(hostname: $this->host,
-                username: $this->user,
-                password: $this->password,
-                database: $this->database));
+            $this->query($mysqli = new mysqli($this->host,
+                $this->user,
+                $this->password,
+                $this->database));
             $mysqli->close();
         } catch (Exception $exception) {
-            var_dump(value: $exception->getMessage());
+            var_dump($exception->getMessage());
         }
     }
 
@@ -39,8 +39,8 @@ abstract class AsyncQuery extends AsyncTask
      */
     public function onCompletion(Server $server)
     {
-        parent::onCompletion(server: $server);
-        AsyncQueue::activateCallback(asyncQuery: $this);
+        parent::onCompletion($server);
+        AsyncQueue::activateCallback($this);
     }
 
     /**

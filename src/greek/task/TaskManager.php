@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpNamedArgumentUsageInspection */
 /*
  * Created by PhpStorm
  *
@@ -22,6 +22,6 @@ class TaskManager extends TaskBase
 
     function loadTask(): void
     {
-        $this->registerTask(task: new ScoreboardRefreshTask(), period: 40);
+        $this->registerTask(new ScoreboardRefreshTask(), 40);
     }
 }

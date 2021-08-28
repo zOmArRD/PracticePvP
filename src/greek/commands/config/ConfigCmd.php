@@ -22,10 +22,10 @@ class ConfigCmd extends Command
 {
     public function __construct()
     {
-        parent::__construct(name: "config",
-            description: "Server configuration.",
-            usageMessage: "/config",
-            aliases: ['configuration']);
+        parent::__construct("config",
+            "Server configuration.",
+            "/config",
+            ['configuration']);
     }
 
     /**
@@ -36,7 +36,7 @@ class ConfigCmd extends Command
     public function execute(CommandSender $sender, string $commandLabel, array $args): void
     {
         if ($sender instanceof NetworkPlayer) {
-            new SettingsForm(player: $sender);
+            new SettingsForm($sender);
         } else $sender->sendMessage(PREFIX . TextFormat::RED . "You cannot run this command.");
     }
 }

@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace greek\modules\party;
 
-use JetBrains\PhpStorm\Pure;
-
 class PartyFactory
 {
     /** @var array */
@@ -28,7 +26,6 @@ class PartyFactory
         return self::$parties[$id];
     }
 
-    #[Pure]
     public static function existParty(Party $party): bool
     {
         return array_key_exists($party->getId(), self::$parties);
