@@ -126,4 +126,8 @@ class Party
             $member->sendMessage($message);
         }
     }
+
+    public function uploadToMySQL(){
+
+    }
 }
