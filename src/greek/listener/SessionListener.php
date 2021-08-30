@@ -39,6 +39,7 @@ class SessionListener implements Listener
      */
     public function onQuit(PlayerQuitEvent $event): void
     {
+        $event->setQuitMessage(null);
         $player = $event->getPlayer();
         if (!$player instanceof NetworkPlayer) return;
 

@@ -27,7 +27,6 @@ use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerPreLoginEvent;
-use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\EmotePacket;
 use pocketmine\network\mcpe\protocol\LoginPacket;
@@ -148,14 +147,6 @@ class PlayerListener implements Listener
             $this->join[$name] = 1;
         }
 
-    }
-
-    public function pQuit(PlayerQuitEvent $event): void
-    {
-        $player = $event->getPlayer();
-        $player->getInventory()->clearAll();
-
-        $event->setQuitMessage(null);
     }
 
     public function handleExhaust(PlayerExhaustEvent $event)

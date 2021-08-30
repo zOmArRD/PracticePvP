@@ -24,7 +24,6 @@ use greek\network\session\SessionFactory;
 use pocketmine\Server;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
-use const pocketmine\START_TIME;
 
 class Scoreboard extends ScoreboardAPI
 {
@@ -52,14 +51,19 @@ class Scoreboard extends ScoreboardAPI
 
     public function updateLine(): void
     {
+        $player = $this->player;
         $configSC = new Config(Loader::getInstance()->getDataFolder() . "scoreboard.yml", Config::YAML);
-
-        $session = SessionFactory::getSession($this->getPlayer());
+        $session = SessionFactory::getSession($player);
 
         if ($session->hasParty()) {
-            $strings = $configSC->get($this->player->getLangSession()->getLanguage())["party"];
+            $strings = $configSC->get($player->getLangSession()->getLanguage())["party"];
         } else {
-            $strings = $configSC->get($this->player->getLangSession()->getLanguage())["normal"];
+            $strings = $configSC->get($player->getLangSession()->getLanguage())["normal"];
+        }
+
+        if ($player->isPerformanceViewer()) {
+            $strings = null;
+            $strings = $configSC->get($player->getLangSession()->getLanguage())["performance"];
         }
 
         $data = [];
@@ -75,6 +79,17 @@ class Scoreboard extends ScoreboardAPI
             $line = $scLine +1;
             $this->setLine($line, $message);
         }
+    }
+
+    private function getTpsColor(): string
+    {
+        $color = TextFormat::GREEN;
+        if (Server::getInstance()->getTicksPerSecond() < 17) {
+            $color = TextFormat::GOLD;
+        } elseif (Server::getInstance()->getTicksPerSecond() < 12) {
+            $color = TextFormat::RED;
+        }
+        return $color;
     }
 
     public function replaceData(int $line, string $message): string
@@ -112,12 +127,11 @@ class Scoreboard extends ScoreboardAPI
             "{practice.players}" => count(Server::getInstance()->getOnlinePlayers()),
             "{practice.maxplayers}" => Server::getInstance()->getMaxPlayers(),
             "{practice.playing}" => 0, /* TODO: Get Down-Stream Server Players */
-            "{party.members}" => $this->getPartyPlayers(),
-            "{party.maxmembers}" => $this->getPartySlots(),
-            "{tps}" => Server::getInstance()->getTicksPerSecond(),
-            "{days}" => $this->getUptime(),
-            "{hours}" => $this->getUptime("hours"),
-            "{minutes}" => $this->getUptime("minutes"),
+            "{party.members}" => $this->getPartyData("members"),
+            "{party.maxmembers}" => $this->getPartyData("slots"),
+            "{party.leader}" => $this->getPartyData("leader"),
+            "{tps.current}" => $this->getTpsColor() . Server::getInstance()->getTicksPerSecond() . " (" . Server::getInstance()->getTickUsage() .")",
+            "{tps.average}" => $this->getTpsColor() . Server::getInstance()->getTicksPerSecondAverage() . " (" . Server::getInstance()->getTickUsageAverage() . ")",
         ];
 
         $keys = array_keys($data);
@@ -128,31 +142,6 @@ class Scoreboard extends ScoreboardAPI
         }
 
         return $msg;
-    }
-
-    public function getUptime(string $type = "days"): string
-    {
-        $time = (int) (microtime(true) - START_TIME);
-        $minutes = null;
-        $hours = null;
-        $days = null;
-
-        if($time >= 60){
-            $minutes = floor(($time % 3600) / 60);
-            if($time >= 3600){
-                $hours = floor(($time % (3600 * 24)) / 3600);
-                if($time >= 3600 * 24){
-                    $days = floor($time / (3600 * 24));
-                }
-            }
-        }
-
-        return match ($type) {
-            "days" => ($days !== null ? "$days" : "?"),
-            "hours" => ($days !== null ? "$hours" : "?"),
-            "minutes" => ($days !== null ? "$minutes" : "?"),
-            default => "?",
-        };
     }
 
     public function showForm(): void
@@ -193,7 +182,8 @@ class Scoreboard extends ScoreboardAPI
         });
         $images = [
             "enable" => "textures/ui/check",
-            "disable" => "textures/ui/cancel"
+            "disable" => "textures/ui/cancel",
+            "performance" => ""
         ];
 
         $form->setTitle($player->getTranslatedMsg("form.title.scoreboard"));
@@ -208,26 +198,24 @@ class Scoreboard extends ScoreboardAPI
         AsyncQueue::submitQuery(new InsertQuery("UPDATE settings SET ShowScoreboard = $bool WHERE ign = '$ign'"));
     }
 
-
-    private function getPartyPlayers(): int
+    /**
+     * @param string $type
+     * @return int|string
+     */
+    private function getPartyData(string $type): int|string
     {
         $session = SessionFactory::getSession($this->player);
         if ($session->hasParty()) {
             $party = $session->getParty();
-            return count($party->getMembers());
-        } else {
-            return 0;
+            switch ($type) {
+                case "slots":
+                    return $party->getSlots();
+                case "members":
+                    return count($party->getMembers());
+                case "leader":
+                    return $party->getLeaderName();
+            }
         }
-    }
-
-    private function getPartySlots(): int
-    {
-        $session = SessionFactory::getSession($this->player);
-        if ($session->hasParty()) {
-            $party = $session->getParty();
-            return $party->getSlots();
-        } else {
-            return 0;
-        }
+        return "";
     }
 }

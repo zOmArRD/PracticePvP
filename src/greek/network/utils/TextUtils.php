@@ -59,7 +59,7 @@ class TextUtils extends TextFormat
         return $m ?? "";
     }
 
-    public function replaceVars(string $msg, array $array): string
+    public static function replaceVars(string $msg, array $array): string
     {
         $m = $msg;
         $keys = array_keys($array);

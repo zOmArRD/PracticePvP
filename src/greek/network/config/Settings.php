@@ -15,6 +15,7 @@ use greek\Loader;
 use greek\network\utils\TextUtils;
 use pocketmine\Player;
 use pocketmine\utils\Config;
+use const greek\PREFIX;
 
 class Settings
 {
@@ -27,17 +28,22 @@ class Settings
     /** @var float */
     public static float $x, $y, $z, $pitch, $yaw;
 
+    /**
+     * It is responsible for giving the value to some important variables.
+     *
+     * @param Config $config
+     */
     static final public function init(Config $config): void
     {
         $general = $config->get('general');
         $world = $config->get('spawn-map');
 
-        // Saves in an array the data from the database provided by the config.
-        self::$database = $config->get('database');
-
         self::$prefix = TextUtils::replaceColor($general['prefix']);
 
-        // World Spawn Settings.
+        /* Saves in an array the data from the database provided by the config. */
+        self::$database = $config->get('database');
+
+        /* World Spawn Settings. */
         self::$lobby = $world['World-name'];
         self::$x = $world['X'];
         self::$y = $world['Y'];
@@ -45,7 +51,7 @@ class Settings
         self::$yaw = $world['Yaw'];
         self::$pitch = $world['Pitch'];
 
-        Loader::$logger->info(self::$prefix . "§a" . "config.yml data loaded successfully!");
+        Loader::$logger->info(self::$prefix . "§a" . "Variable values loaded correctly.");
     }
 
     /**
@@ -84,6 +90,6 @@ class Settings
 
         self::getDefaultConfig()->setAll($config);
         self::getDefaultConfig()->save();
-        $player->sendMessage(self::$prefix . "§a" ."You have successfully changed the spawn point.");
+        $player->sendMessage(PREFIX . "§a" ."You have successfully changed the spawn point.");
     }
 }
