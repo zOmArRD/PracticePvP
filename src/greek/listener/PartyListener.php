@@ -37,6 +37,8 @@ class PartyListener implements Listener
 
         $player->getPartyItems();
         $player->sendMessage(PREFIX . "§aYou have created a party. To invite other players use '/p invite <player>'");
+
+        $event->getParty()->uploadToMySQL();
     }
 
     /**
@@ -55,6 +57,8 @@ class PartyListener implements Listener
         }
         $player->sendMessage(PREFIX . "§cYou have disbanded your party.");
         $party->sendMessage(PREFIX . "§cThis party has been disbanded because §6{$party->getLeaderName()} §cleft the party", $session);
+
+        $event->getParty()->removeFromMySQL();
     }
 
     /**
@@ -70,6 +74,7 @@ class PartyListener implements Listener
         $player->sendMessage(PREFIX . "§aYou have invited §6{$target->getPlayerName()} §ato the party, he has 1 minute to accept the invitation");
         $event->getParty()->sendMessage(PREFIX . "§6{$target->getPlayerName()} §has been invited to the party!");
 
+        $event->getParty()->updateMySQL();
     }
 
     /**
@@ -85,6 +90,8 @@ class PartyListener implements Listener
         $player->getPartyItems();
         $player->sendMessage(PREFIX . "§aYou have joined §6{$party->getLeaderName()}§a's party!");
         $party->sendMessage(PREFIX . "§6{$player->getName()} §ahas joined the party!");
+
+        $event->getParty()->updateMySQL();
     }
 
     /**
@@ -104,6 +111,8 @@ class PartyListener implements Listener
         $session->sendMessage(PREFIX . "§aYou have made §6{$newLeaderName} §athe leader of the party. ");
         $newLeader->sendMessage(PREFIX . "§6{$sessionName}§a promoted you to the leader of the party.");
         $party->sendMessage(PREFIX . "§6{$sessionName} §ahas promoted §6{$newLeaderName}§a as the leader of the party", $session);
+
+        $event->getParty()->updateMySQL();
     }
 
     /**
@@ -119,6 +128,8 @@ class PartyListener implements Listener
         $session->getPlayer()->teleportToLobby();
         $session->sendMessage(PREFIX . "§cYou have left §6{$party->getLeaderName()}§c's party!");
         $party->sendMessage(PREFIX . "§6{$session->getPlayerName()} §chas left the party!", $session);
+
+        $event->getParty()->updateMySQL();
     }
 
     /**
@@ -133,6 +144,8 @@ class PartyListener implements Listener
         $member->getPlayer()->teleportToLobby();
         $member->sendMessage(PREFIX . "§cYou have been kicked from §6{$event->getSession()->getPlayerName()}§c's party!");
         $event->getParty()->sendMessage(PREFIX . "§6{$member->getPlayerName()}");
+
+        $event->getParty()->updateMySQL();
     }
 
     /**
@@ -143,6 +156,8 @@ class PartyListener implements Listener
     public function onLock(PartySetPrivateEvent $event): void
     {
         $event->getParty()->sendMessage(PREFIX . "§aThe party is now private.");
+
+        $event->getParty()->updateMySQL();
     }
 
     /**
@@ -153,6 +168,8 @@ class PartyListener implements Listener
     public function onUnlock(PartySetPublicEvent $event): void
     {
         $event->getParty()->sendMessage(PREFIX . "§aThe party is now public.");
+
+        $event->getParty()->updateMySQL();
     }
 
     /**
@@ -163,5 +180,7 @@ class PartyListener implements Listener
     public function onUpdateSlots(PartyUpdateSlotsEvent $event): void
     {
         $event->getParty()->sendMessage(PREFIX . "§aThe party slots has been updated to {$event->getSlots()}!");
+
+        $event->getParty()->updateMySQL();
     }
 }

@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace greek\modules\party;
 
+use greek\modules\database\mysql\AsyncQueue;
+use greek\modules\database\mysql\query\InsertQuery;
 use greek\network\session\Session;
 use greek\network\session\SessionFactory;
 
@@ -128,6 +130,24 @@ class Party
     }
 
     public function uploadToMySQL(){
+        $membersNames = "";
+        foreach ($this->members as $member) {
+            $membersNames .= $member->getPlayerName() . ",";
+        }
+        $isPublic = $this->public ? 1 : 0;
+        AsyncQueue::submitQuery(new InsertQuery("INSERT INTO parties(id, leader, members, slots, public) VALUES ('{$this->getId()}', '{$this->getLeaderName()}', '{$membersNames}', {$this->getSlots()}, {$isPublic})"));
+    }
 
+    public function updateMySQL(){
+        $membersNames = "";
+        foreach ($this->members as $member) {
+            $membersNames .= $member->getPlayerName() . ",";
+        }
+        $isPublic = $this->public ? 1 : 0;
+        AsyncQueue::submitQuery(new InsertQuery("UPDATE parties SET leader = '{$this->getLeaderName()}', members = '{$membersNames}', slots = {$this->getSlots()}, public = {$isPublic} WHERE id='{$this->getId()}'"));
+    }
+
+    public function removeFromMySQL(){
+        AsyncQueue::submitQuery(new InsertQuery("DELETE FROM parties WHERE id='{$this->getId()}'"));
     }
 }
