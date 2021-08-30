@@ -34,7 +34,7 @@ class ItemsManager
             "item.ffa" => self::load(ItemIds::GOLD_AXE, $player->getTranslatedMsg("item.ffa.name")),
             "item.party" => self::load(ItemIds::NAME_TAG, $player->getTranslatedMsg("item.party.name")),
             "item.hostevent" => self::load(ItemIds::ENDER_EYE, $player->getTranslatedMsg("item.hostevent.name")),
-            "item.disband" => self::load(ItemIds::REDSTONE_DUST, $player->getTranslatedMsg("item.disband.name")),
+            "item.disband" => self::load(ItemIds::NETHERSTAR, $player->getTranslatedMsg("item.disband.name")),
             "item.partyevent" => self::load(ItemIds::IRON_AXE, $player->getTranslatedMsg("item.partyevent.name")),
             "item.partymember" => self::load(ItemIds::PAPER, $player->getTranslatedMsg("item.partymember.name")),
             default => Item::get(BlockIds::AIR),

@@ -22,6 +22,7 @@ class PInvite implements ISubCommand
     public function executeSub(CommandSender $player, array $args): void
     {
         if (!$player instanceof NetworkPlayer) return;
+
         if (!isset($args[0])) {
             $player->sendMessage(PREFIX . "§cUse: §a/party invite §6<player>");
             return;

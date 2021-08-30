@@ -21,7 +21,7 @@ class PHelp implements ISubCommand
 
     public function executeSub(CommandSender $player, array $args): void
     {
-        $player->sendMessage(PREFIX . "§aList of subcommands for party!");
+        $player->sendMessage(PREFIX . "§bList of subcommands for party!");
         foreach (array_keys(PartyCmd::$subCmd) as $subCmd) {
             $player->sendMessage("§7- §a/party {$subCmd}");
         }

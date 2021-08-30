@@ -47,7 +47,6 @@ class PartyManager
             if (!$event->isCancelled()) {
                 $party->add($this->session);
                 PartyFactory::addParty($party);
-                $this->session->getPlayer()->getPartyItems();
             }
         } else {
             $this->session->sendMessage(PREFIX . $this->session->getPlayer()->getTranslatedMsg("message.party.exist"));
@@ -67,7 +66,6 @@ class PartyManager
 
             foreach ($party->getMembers() as $member) {
                 $party->remove($member);
-                $member->getPlayer()->teleportToLobby();
             }
             PartyFactory::removeParty($party);
         } else {
@@ -77,12 +75,21 @@ class PartyManager
 
     public function sendPartyMembersMsg(): void
     {
-        $members = $this->session->getParty()->getMembers();
+        $session = $this->session;
+
+        if (!$session->hasParty()) {
+            $session->sendMessage(PREFIX . $session->getPlayer()->getTranslatedMsg("message.party.noparty"));
+            return;
+        }
+
+        $party = $session->getParty();
+        $members = $party->getMembers();
+        $leaderName = $party->getLeaderName();
 
         if ($this->session->isPartyLeader()) {
-            $this->session->sendMessage(PREFIX . "§6Party Members:");
+            $this->session->sendMessage(PREFIX . "§a{$leaderName}'s party §6members §7(§a" . count($members) . "§7/§a{$party->getSlots()}§7)");
             foreach ($members as $member) {
-                $this->session->sendMessage("§a - {$member->getPlayerName()}");
+                $this->session->sendMessage("§7 - §a{$member->getPlayerName()}");
             }
         }
     }

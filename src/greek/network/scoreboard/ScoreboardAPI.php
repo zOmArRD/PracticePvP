@@ -13,8 +13,6 @@ namespace greek\network\scoreboard;
 
 use greek\Loader;
 use greek\network\player\NetworkPlayer;
-use JetBrains\PhpStorm\NoReturn;
-use JetBrains\PhpStorm\Pure;
 use pocketmine\network\mcpe\protocol\RemoveObjectivePacket;
 use pocketmine\network\mcpe\protocol\SetDisplayObjectivePacket;
 use pocketmine\network\mcpe\protocol\SetScorePacket;
@@ -49,7 +47,6 @@ abstract class ScoreboardAPI
         $this->objectiveName[$this->getPlayer()->getName()] = $objectiveName;
     }
 
-    #[Pure]
     public function getObjectiveName(): string
     {
         return $this->objectiveName[$this->getPlayer()->getName()];
@@ -60,7 +57,6 @@ abstract class ScoreboardAPI
         unset($this->objectiveName[$this->getPlayer()->getName()]);
     }
 
-    #[Pure]
     public function isObjectiveName(): bool
     {
         return isset($this->objectiveName[$this->getPlayer()->getName()]);
@@ -85,7 +81,6 @@ abstract class ScoreboardAPI
         $this->getPlayer()->sendDataPacket($packet);
     }
 
-    #[NoReturn]
     public function setLine(int $score, string $message): void
     {
         if (!$this->isObjectiveName()) {

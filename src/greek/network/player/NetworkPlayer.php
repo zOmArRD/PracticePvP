@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace greek\network\player;
 
+use Exception;
 use greek\items\ItemsManager;
 use greek\Loader;
 use greek\manager\PartyManager;
@@ -29,6 +30,10 @@ use pocketmine\Server;
 
 class NetworkPlayer extends Player
 {
+
+    /** @var bool  */
+    public bool $isPerformanceViewer = false;
+
     /** @var Lang */
     public Lang $langSession;
 
@@ -37,6 +42,22 @@ class NetworkPlayer extends Player
 
     /** @var Scoreboard  */
     public Scoreboard $scoreboardSession;
+
+    /**
+     * @param bool $isPerformanceViewer
+     */
+    public function setIsPerformanceViewer(bool $isPerformanceViewer): void
+    {
+        $this->isPerformanceViewer = $isPerformanceViewer;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPerformanceViewer(): bool
+    {
+        return $this->isPerformanceViewer;
+    }
 
     /**
      * Sets the Language Session to the player.
@@ -141,15 +162,24 @@ class NetworkPlayer extends Player
      */
     public function giveLobbyItems(): void
     {
-        $this->getInventory()->clearAll();
+        try {
+            $this->getInventory()->clearAll();
+        } catch (Exception) {
+        }
         foreach (["item.unranked" => 0, "item.ranked" => 1, "item.ffa" => 2, "item.party" => 4, "item.hostevent" => 6, "item.cosmetics" => 7, "item.settings" => 8] as $item => $index) {
             $this->setItem($index, ItemsManager::get($item, $this));
         }
     }
 
+    /**
+     * TODO: ASDKADAD
+     */
     public function getPartyItems(): void
     {
-        $this->getInventory()->clearAll();
+        try {
+            $this->getInventory()->clearAll();
+        } catch (Exception) {
+        }
         foreach (['item.partyevent' => 0, 'item.partymember' => 7, 'item.disband' => 8] as $item => $index) {
             $this->setItem($index, ItemsManager::get($item, $this));
         }

@@ -36,7 +36,7 @@ class Party
         $this->id = $id;
         $this->leader = $leader;
         $this->members[] = $leader;
-        $this->slots = 4;
+        $this->slots = 12;
     }
 
     public function getId(): string

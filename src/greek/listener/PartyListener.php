@@ -35,6 +35,7 @@ class PartyListener implements Listener
     {
         $player = $event->getPlayer();
 
+        $player->getPartyItems();
         $player->sendMessage(PREFIX . "§aYou have created a party. To invite other players use '/p invite <player>'");
     }
 
@@ -49,6 +50,9 @@ class PartyListener implements Listener
         $player = $event->getPlayer();
         $session = $event->getSession();
 
+        foreach ($party->getMembers() as $member) {
+            $member->getPlayer()->teleportToLobby();
+        }
         $player->sendMessage(PREFIX . "§cYou have disbanded your party.");
         $party->sendMessage(PREFIX . "§cThis party has been disbanded because §6{$party->getLeaderName()} §cleft the party", $session);
     }
@@ -78,6 +82,7 @@ class PartyListener implements Listener
         $player = $event->getPlayer();
         $party = $event->getParty();
 
+        $player->getPartyItems();
         $player->sendMessage(PREFIX . "§aYou have joined §6{$party->getLeaderName()}§a's party!");
         $party->sendMessage(PREFIX . "§6{$player->getName()} §ahas joined the party!");
     }
@@ -111,6 +116,7 @@ class PartyListener implements Listener
         $session = $event->getSession();
         $party = $event->getParty();
 
+        $session->getPlayer()->teleportToLobby();
         $session->sendMessage(PREFIX . "§cYou have left §6{$party->getLeaderName()}§c's party!");
         $party->sendMessage(PREFIX . "§6{$session->getPlayerName()} §chas left the party!", $session);
     }
@@ -124,6 +130,7 @@ class PartyListener implements Listener
     {
         $member = $event->getMember();
 
+        $member->getPlayer()->teleportToLobby();
         $member->sendMessage(PREFIX . "§cYou have been kicked from §6{$event->getSession()->getPlayerName()}§c's party!");
         $event->getParty()->sendMessage(PREFIX . "§6{$member->getPlayerName()}");
     }

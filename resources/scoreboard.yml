@@ -3,7 +3,7 @@
 # the one at http://yaml-online-parser.appspot.com                                        #
 ###########################################################################################
 ---
-display.name: "§6§lPractice"
+display.name: "§6§lGreekPvP §r§7(NA)"
 
 # Scoreboards:
 # - As you might know, scoreboards is bla bla bla...
@@ -36,27 +36,29 @@ display.name: "§6§lPractice"
 en_ENG:
   normal:
     - "{gray}──────────────"
-    - " {gold}Online: {green}{practice.players}{gray}/{green}{practice.maxplayers}"
-    - " {gold}Playing: {green}{practice.playing}"
+    - " {white}Online: {gold}{practice.players}{gray}/{gold}{practice.maxplayers}"
+    - " {white}Playing: {gold}{practice.playing}"
     - ""
     - "{gold} play.greekmc.net"
     - "{red}{gray}──────────────"
   party:
     - "{gray}──────────────"
-    - " {gold}Online: {green}{practice.players}{gray}/{green}{practice.maxplayers}"
-    - " {gold}Playing: {green}{practice.playing}"
+    - " {white}Online: {gold}{practice.players}{gray}/{gold}{practice.maxplayers}"
+    - " {white}Playing: {gold}{practice.playing}"
     - ""
-    - " {gold}Party:"
-    - "  {gold}Members: {green}{party.members}{gray}/{green}{party.maxmembers}"
+    - " {white}Party:"
+    - "  {white}Leader: {gold}{party.leader}"
+    - "  {white}Members: {green}{party.members}{gray}/{green}{party.maxmembers}"
     - ""
     - "{gold} play.greekmc.net"
     - "{red}{gray}──────────────"
-  admin:
+  performance:
     - "{gray}──────────────"
-    - " {gold}Online: {green}{practice.players}{gray}/{green}{practice.maxplayers}"
-    - " {gold}TPS: {green}{tps}"
-    - " {gold}Uptime: {green}{days}{gray}:{green}{hours}{gray}:{green}{minutes}"
+    - " {white}Online: {gold}{practice.players}{gray}/{gold}{practice.maxplayers}"
     - ""
-    - "{gray} play.greekmc.net"
+    - " {white}Current TPS: {tps.current}"
+    - " {white}Average TPS: {tps.average}"
+    - ""
+    - "{gold} play.greekmc.net"
     - "{red}{gray}──────────────"
 ...

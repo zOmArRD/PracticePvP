@@ -14,6 +14,7 @@ namespace greek\commands\party\subcmd;
 use greek\commands\ISubCommand;
 use greek\network\player\NetworkPlayer;
 use pocketmine\command\CommandSender;
+use const greek\PREFIX;
 
 class PKick implements ISubCommand
 {
@@ -21,6 +22,11 @@ class PKick implements ISubCommand
     public function executeSub(CommandSender $player, array $args): void
     {
         if (!$player instanceof NetworkPlayer) return;
+
+        if (!isset($args[0])) {
+            $player->sendMessage(PREFIX . "§cUse: §a/party kick §6<player>");
+            return;
+        }
 
         $player->getPartyManager()->kickPlayer($args[0]);
     }

@@ -4,7 +4,7 @@ config.version: "1.0.0"
 
 # For the colors, please read the documentation on TextUtils. {greek/network/utils/TextUtils.php}
 general:
-  prefix: "{bold}{red}Practice {gray}»{reset} "
+  prefix: "{bold}{gold}Practice {gray}»{reset} "
 
 # Array with available languages.
 # If you want to add any other, you must also add the strings in the lang folder

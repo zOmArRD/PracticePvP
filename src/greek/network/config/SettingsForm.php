@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace greek\network\config;
 
+use greek\modules\form\lib\CustomForm;
 use greek\modules\form\lib\SimpleForm;
 use greek\network\player\NetworkPlayer;
 
@@ -57,7 +58,7 @@ class SettingsForm
         $form->setTitle($player->getTranslatedMsg("form.title.settingsform"));
         $form->addButton($player->getTranslatedMsg("form.button.settingsform.changelanguage"), $form::IMAGE_TYPE_PATH, $images['language'], "changelanguage");
         $form->addButton($player->getTranslatedMsg("form.button.settingsform.scoreboard"), $form::IMAGE_TYPE_URL, "https://i.ibb.co/TY6MyrN/Hnet-com-image.png", "scoreboardsettings");
-        $form->addButton("§9Server Settings", $form::IMAGE_TYPE_URL, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1ZvlkYtyFsEfNG5Cl-Zh3O32hwir7J3LNXA&usqp=CAU", "serversettings");
+        $form->addButton("§l§9Server Settings", $form::IMAGE_TYPE_URL, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1ZvlkYtyFsEfNG5Cl-Zh3O32hwir7J3LNXA&usqp=CAU", "serversettings");
         $form->addButton($player->getTranslatedMsg("form.button.close"), $form::IMAGE_TYPE_PATH, $images['close'], "close");
         $player->sendForm($form);
     }
@@ -66,8 +67,59 @@ class SettingsForm
     {
         $player = $this->getPlayer();
         $form = new SimpleForm(function (NetworkPlayer $player, $data){
-            /* TODO: Finalize */
+            if (isset($data)) {
+                switch ($data) {
+                    case "sethub":
+                        Settings::updateSpawn($player);
+                        break;
+                    case "scoreboard":
+                        $this->showFormScoreboard();
+                        break;
+                    default:
+                        $this->showForm();
+                        break;
+                }
+            }
         });
+
+        $form->setTitle("§l§6Server Settings");
+        $form->setContent("In this menu you can configure certain settings.");
+
+        $form->addButton("§bSet Hub" . "\n" . "§7In your current position", $form::IMAGE_TYPE_PATH, "", "sethub");
+        $form->addButton("§bScoreboard Viewer" . "\n" . "§7Look at the performance.", $form::IMAGE_TYPE_PATH, "", "scoreboard");
+        $form->addButton($player->getTranslatedMsg("form.button.back"));
+
+        $player->sendForm($form);
+    }
+
+    private function showFormScoreboard()
+    {
+        $player = $this->getPlayer();
+        $form = new CustomForm(function (NetworkPlayer $player, array $data = null) {
+
+            if (isset($data)) {
+                if ($data[0] == true) {
+                    if (!$player->isPerformanceViewer()) {
+                        $player->setIsPerformanceViewer(true);
+                        $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.scoreboard.updated"));
+                    } else {
+                        $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.cantupdate"));
+                    }
+                } else {
+                    if ($player->isPerformanceViewer()) {
+                        $player->setIsPerformanceViewer(false);
+                        $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.scoreboard.updated"));
+                    } else {
+                        $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.cantupdate"));
+                    }
+                }
+            }
+        });
+
+        $value = $player->isPerformanceViewer();
+
+        $form->setTitle("§6Scoreboard Viewer");
+        $form->addToggle("Performance Viewer", $value);
 
         $player->sendForm($form);
     }
