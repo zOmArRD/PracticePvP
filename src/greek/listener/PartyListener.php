@@ -35,7 +35,7 @@ class PartyListener implements Listener
     {
         $player = $event->getPlayer();
 
-        $player->sendMessage(PREFIX . "You have created a party. To invite other players use '/p invite <player>'");
+        $player->sendMessage(PREFIX . "§aYou have created a party. To invite other players use '/p invite <player>'");
     }
 
     /**

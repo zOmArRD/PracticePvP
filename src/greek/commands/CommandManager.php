@@ -13,6 +13,7 @@ namespace greek\commands;
 
 use greek\commands\config\ConfigCmd;
 use greek\commands\lang\LangCmd;
+use greek\commands\party\PartyCmd;
 use greek\Loader;
 use pocketmine\command\Command as PMCommand;
 use pocketmine\Server;
@@ -38,7 +39,7 @@ abstract class CommandManager
      */
     public function loadCommands(): void
     {
-        foreach (["lang" => new LangCmd(), "config" => new ConfigCmd()] as $prefix => $command) {
+        foreach (["lang" => new LangCmd(), "config" => new ConfigCmd(), "party" => new PartyCmd()] as $prefix => $command) {
             $this->registerCmd($prefix, $command);
             Loader::$logger->info("The command $prefix has been registered.");
         }

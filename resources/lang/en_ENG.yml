@@ -5,6 +5,8 @@ strings:
   message.server.connecting: "{green}Connecting to the server..."
   message.server.connect.error: "{red}We have not connected to the server, please try later"
   message.cantupdate: "{red}Apparently you already have this option activated."
+  message.player.notonline: "{red}The player {gold}{player.name} {red}isn't Online!"
+  message.player.stupid: "{red}Its serious? I didn't think you were such a stupid."
 
   # Global Forms Strings
   form.button.close: "{red}Close"
@@ -47,5 +49,8 @@ strings:
   message.party.noid: "{red}An error has occurred, apparently this party no longer exists!"
   message.party.cantjoin: "{red}An error has occurred, you cannot enter this party"
   message.party.deleted: "{red}This party has disbanded."
+  message.party.invite.haveparty: "{gold}{player.name} {red}is already at a party!"
+  message.party.invite.haveinvite: "{red}You have already invited {gold}{player.name} {red}to you party!"
+  message.party.player.noexist: "{gold}{player.name} {red}Isn't in your party!"
 
   # FFA Strings
