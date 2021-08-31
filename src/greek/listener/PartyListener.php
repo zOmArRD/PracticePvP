@@ -72,8 +72,8 @@ class PartyListener implements Listener
         $target = $event->getTarget();
 
         $player->sendMessage(PREFIX . "§aYou have invited §6{$target->getPlayerName()} §ato the party, he has 1 minute to accept the invitation");
-        $event->getParty()->sendMessage(PREFIX . "§6{$target->getPlayerName()} §has been invited to the party!");
-
+        $event->getParty()->sendMessage(PREFIX . "§6{$target->getPlayerName()} §has been invited to the party!", $event->getSession());
+        $target->sendMessage(PREFIX . "§aYou have received an invitation to join §6{$event->getSession()->getPlayerName()}§a's party!");
         $event->getParty()->updateMySQL();
     }
 
@@ -143,7 +143,7 @@ class PartyListener implements Listener
 
         $member->getPlayer()->teleportToLobby();
         $member->sendMessage(PREFIX . "§cYou have been kicked from §6{$event->getSession()->getPlayerName()}§c's party!");
-        $event->getParty()->sendMessage(PREFIX . "§6{$member->getPlayerName()}");
+        $event->getParty()->sendMessage(PREFIX . "§6{$member->getPlayerName()} §chas been kicked from the party!", $member);
 
         $event->getParty()->updateMySQL();
     }

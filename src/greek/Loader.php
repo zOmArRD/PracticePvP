@@ -116,8 +116,6 @@ final class Loader extends PluginBase
 
         Settings::init(new Config($this->getDataFolder() . "config.yml", Config::YAML));
 
-        define('greek\PREFIX', Settings::$prefix);
-
         /* I define the variable here below for reasons that if the configuration changes, the variable is updated. */
         Lang::$config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 

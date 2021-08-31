@@ -26,7 +26,7 @@ class Session
     /** @var bool */
     private bool $partyChat = false;
 
-    /** @var array */
+    /** @var PartyInvitation[] */
     private array $invitations = [];
 
     /** @var array */
@@ -121,7 +121,7 @@ class Session
     }
 
     /**
-     * @return array
+     * @return PartyInvitation[]
      */
     public function getInvitations(): array
     {
@@ -149,7 +149,7 @@ class Session
     public function hasSessionInvitation(Session $session): bool
     {
         foreach ($this->getInvitations() as $invitation) {
-            if ($invitation->getSender->getPlayerName() === $session->getPlayerName()) {
+            if ($invitation->getSender()->getPlayerName() === $session->getPlayerName()) {
                 return true;
             }
         }

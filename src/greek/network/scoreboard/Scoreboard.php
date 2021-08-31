@@ -207,14 +207,12 @@ class Scoreboard extends ScoreboardAPI
         $session = SessionFactory::getSession($this->player);
         if ($session->hasParty()) {
             $party = $session->getParty();
-            switch ($type) {
-                case "slots":
-                    return $party->getSlots();
-                case "members":
-                    return count($party->getMembers());
-                case "leader":
-                    return $party->getLeaderName();
-            }
+            return match ($type) {
+                "slots" => $party->getSlots(),
+                "members" => count($party->getMembers()),
+                "leader" => $party->getLeaderName(),
+                default => "",
+            };
         }
         return "";
     }

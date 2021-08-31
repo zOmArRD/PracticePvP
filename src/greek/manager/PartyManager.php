@@ -16,6 +16,7 @@ use greek\event\party\PartyDisbandEvent;
 use greek\event\party\PartyInviteEvent;
 use greek\event\party\PartyLeaveEvent;
 use greek\event\party\PartyMemberKickEvent;
+use greek\modules\form\lib\ModalForm;
 use greek\modules\party\Party;
 use greek\modules\party\PartyFactory;
 use greek\modules\party\PartyInvitation;
@@ -44,10 +45,8 @@ class PartyManager
             $event = new PartyCreateEvent($party, $this->session);
             $event->call();
 
-            if (!$event->isCancelled()) {
-                $party->add($this->session);
-                PartyFactory::addParty($party);
-            }
+            $party->add($this->session);
+            PartyFactory::addParty($party);
         } else {
             $this->session->sendMessage(PREFIX . $this->session->getPlayer()->getTranslatedMsg("message.party.exist"));
         }
@@ -61,8 +60,6 @@ class PartyManager
         if ($session->isPartyLeader()) {
             $event = new PartyDisbandEvent($party, $session);
             $event->call();
-
-            if ($event->isCancelled()) return;
 
             foreach ($party->getMembers() as $member) {
                 $party->remove($member);
@@ -86,21 +83,18 @@ class PartyManager
         $members = $party->getMembers();
         $leaderName = $party->getLeaderName();
 
-        if ($this->session->isPartyLeader()) {
-            $this->session->sendMessage(PREFIX . "§a{$leaderName}'s party §6members §7(§a" . count($members) . "§7/§a{$party->getSlots()}§7)");
-            foreach ($members as $member) {
-                $this->session->sendMessage("§7 - §a{$member->getPlayerName()}");
-            }
+        $this->session->sendMessage(PREFIX . "§a{$leaderName}'s party §6members §7(§a" . count($members) . "§7/§a{$party->getSlots()}§7)");
+        foreach ($members as $member) {
+            $this->session->sendMessage("§7 - §a{$member->getPlayerName()}");
         }
     }
 
-    public function isCancelled(Session $target): bool
+    public function inviteEvent(Session $target)
     {
         $session = $this->session;
 
         $event = new PartyInviteEvent($session->getParty(), $session, $target);
         $event->call();
-        return $event->isCancelled();
     }
 
     public function invitePlayer(string $name)
@@ -132,15 +126,39 @@ class PartyManager
         if ($sTarget === null) {
             $translatedMsg = $player->getTranslatedMsg("message.player.notonline");
             $player->sendMessage(PREFIX . TextUtils::replaceVars($translatedMsg, ["{player.name}" => $name]));
-        } elseif ($sTarget->hasParty()) {
+            return;
+        }
+
+        if ($sTarget->hasParty()) {
             $translatedMsg = $player->getTranslatedMsg("message.party.invite.haveparty");
             $player->sendMessage(PREFIX . TextUtils::replaceVars($translatedMsg, ["{player.name}" => $name]));
-        } elseif ($sTarget->hasSessionInvitation($sPlayer)) {
+            return;
+        }
+
+        if ($sTarget->hasSessionInvitation($sPlayer)) {
             $translatedMsg = $player->getTranslatedMsg("message.party.invite.haveinvite");
             $player->sendMessage(PREFIX . TextUtils::replaceVars($translatedMsg, ["{player.name}" => $name]));
-        } elseif ($this->isCancelled($sTarget)) {
-            $sTarget->addInvitation(new PartyInvitation($sPlayer, $sTarget, $sPlayer->getParty()->getId()));
+            return;
         }
+
+        $sTarget->addInvitation(new PartyInvitation($sPlayer, $sTarget, $sPlayer->getParty()->getId()));
+        $this->inviteEvent($sTarget);
+
+        $form = new ModalForm(function (NetworkPlayer $target, $data) {
+            if (isset($data)) {
+                if ($data == true) {
+                    $this->acceptParty(SessionFactory::getSession($target));
+                } else {
+                    $target->sendMessage(PREFIX . "§aYou have declined this invitation, you can accept it by putting /p accept <party>");
+                }
+            }
+        });
+
+        $form->setTitle("§a§lInvitation to Party!");
+        $form->setContent("You want to join §6{$sPlayer->getParty()->getLeaderName()}§f's party");
+        $form->setButton1("§aYes");
+        $form->setButton2("§cNo");
+        $target->sendForm($form);
     }
 
     public function leaveParty()
@@ -158,9 +176,7 @@ class PartyManager
             $event = new PartyLeaveEvent($party, $session);
             $event->call();
 
-            if (!$event->isCancelled()) {
-                $party->remove($session);
-            }
+            $party->remove($session);
         }
     }
 
@@ -181,22 +197,52 @@ class PartyManager
             $this->disbandParty();
         } else {
             foreach ($members as $member) {
-                if ($member->getPlayerName() === $target) {
+                if ($member->getPlayerName() == $target) {
                     if ($member->isOnline()) {
                         $party = $session->getParty();
 
                         $event = new PartyMemberKickEvent($party, $session, $member);
                         $event->call();
 
-                        if (!$event->isCancelled()) {
-                            $party->remove($member);
-                        }
+                        $party->remove($member);
                     }
                 } else {
                     $translatedMsg = $player->getTranslatedMsg("message.party.player.noexist");
                     $player->sendMessage(PREFIX . TextUtils::replaceVars($translatedMsg, ["{player.name}" => $target]));
                 }
             }
+        }
+    }
+
+    public function acceptParty(Session $target): void
+    {
+        $session = $target;
+        $invitations = $session->getInvitations();
+
+        if (!empty($invitations)) {
+            foreach ($invitations as $invitation) {
+                $invitation->attemptToAccept();
+            }
+        } else {
+            $session->sendMessage(PREFIX . "§cYou dont have any invitations!");
+        }
+    }
+
+    public function acceptPartyCmd(string $party): void
+    {
+        $session = $this->session;
+        $invitations = $session->getInvitations();
+
+        if (!empty($invitations)) {
+            foreach ($invitations as $invitation) {
+                if ($invitation->getSender()->getPlayerName() == $party) {
+                    $invitation->attemptToAccept();
+                } else {
+                    $session->sendMessage(PREFIX . "§cYou dont have any invitations!");
+                }
+            }
+        } else {
+            $session->sendMessage(PREFIX . "§cYou dont have any invitations!");
         }
     }
 }

@@ -51,6 +51,9 @@ class Settings
         self::$yaw = $world['Yaw'];
         self::$pitch = $world['Pitch'];
 
+        define('greek\PREFIX', Settings::$prefix);
+        define('greek\DATABASE', Settings::$database);
+
         Loader::$logger->info(self::$prefix . "§a" . "Variable values loaded correctly.");
     }
 

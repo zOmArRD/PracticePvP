@@ -37,25 +37,16 @@ class PartyInvitation
         $this->partyId = $partyId;
     }
 
-    /**
-     * @return Session
-     */
     public function getSender(): Session
     {
         return $this->sender;
     }
 
-    /**
-     * @return Session
-     */
     public function getTarget(): Session
     {
         return $this->target;
     }
 
-    /**
-     * @return string
-     */
     public function getPartyId(): string
     {
         return $this->partyId;
@@ -87,9 +78,9 @@ class PartyInvitation
 
         $event = new PartyJoinEvent($party, $this->target);
         $event->call();
-        if (!$event->isCancelled()) {
-            $party->add($this->target);
-            $this->target->removeInvitationsFromParty($party);
-        }
+        $party->add($this->target);
+        $this->target->removeInvitationsFromParty($party);
     }
+
+
 }
