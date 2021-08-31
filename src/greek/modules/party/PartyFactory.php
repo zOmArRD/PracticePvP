@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace greek\modules\party;
 
+use pocketmine\Player;
+
 class PartyFactory
 {
     /** @var array */
@@ -45,8 +47,8 @@ class PartyFactory
         }
     }
 
-    public static function getPartyFromMySQL()
+    public static function getPartyFromMySQL(Player $player)
     {
-
+        // TODO
     }
 }
