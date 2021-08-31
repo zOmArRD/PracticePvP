@@ -14,8 +14,8 @@ namespace greek\modules\invmenu\metadata;
 
 use greek\modules\invmenu\inventory\InvMenuInventory;
 use greek\modules\invmenu\session\MenuExtradata;
+use greek\network\player\NetworkPlayer;
 use pocketmine\math\Vector3;
-use pocketmine\Player;
 
 abstract class MenuMetadata
 {
@@ -56,7 +56,7 @@ abstract class MenuMetadata
         return new InvMenuInventory($this);
     }
 
-    protected function calculateGraphicOffset(Player $player): Vector3
+    protected function calculateGraphicOffset(NetworkPlayer $player): Vector3
     {
         $offset = $player->getDirectionVector();
         $offset->x *= -(1 + $player->width);
@@ -65,12 +65,12 @@ abstract class MenuMetadata
         return $offset;
     }
 
-    public function calculateGraphicPosition(Player $player): Vector3
+    public function calculateGraphicPosition(NetworkPlayer $player): Vector3
     {
         return $player->getPosition()->add($this->calculateGraphicOffset($player))->floor();
     }
 
-    abstract public function sendGraphic(Player $player, MenuExtradata $metadata): bool;
+    abstract public function sendGraphic(NetworkPlayer $player, MenuExtradata $metadata): bool;
 
-    abstract public function removeGraphic(Player $player, MenuExtradata $extradata): void;
+    abstract public function removeGraphic(NetworkPlayer $player, MenuExtradata $extradata): void;
 }

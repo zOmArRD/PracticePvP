@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace greek\modules\invmenu;
 
+use greek\Loader;
 use greek\modules\invmenu\metadata\DoubleBlockActorMenuMetadata;
 use greek\modules\invmenu\metadata\MenuMetadata;
 use greek\modules\invmenu\metadata\SingleBlockActorMenuMetadata;
@@ -20,38 +21,28 @@ use InvalidArgumentException;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockIds;
 use pocketmine\network\mcpe\protocol\types\WindowTypes;
-use pocketmine\plugin\Plugin;
 use pocketmine\tile\Tile;
 
 final class InvMenuHandler
 {
 
-    /** @var Plugin|null */
-    private static ?Plugin $registrant;
+    /** @var Loader|null  */
+    private static ?Loader $registrant;
 
     /** @var MenuMetadata[] */
     private static array $menu_types = [];
 
-    public static function getRegistrant(): ?Plugin
+    public static function getRegistrant(): ?Loader
     {
         return self::$registrant;
     }
 
-    public static function register(Plugin $plugin): void
+    public static function register(Loader $plugin): void
     {
-        if (self::isRegistered()) {
-            throw new InvalidArgumentException("{$plugin->getName()} attempted to register " . self::class . " twice.");
-        }
-
         self::$registrant = $plugin;
         self::registerDefaultMenuTypes();
         PlayerNetworkHandlerRegistry::init();
         $plugin->getServer()->getPluginManager()->registerEvents(new InvMenuEventHandler($plugin), $plugin);
-    }
-
-    public static function isRegistered(): bool
-    {
-        return self::$registrant instanceof Plugin;
     }
 
     private static function registerDefaultMenuTypes(): void

@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace greek\modules\invmenu;
 
+use greek\Loader;
 use greek\modules\invmenu\session\PlayerManager;
+use greek\network\player\NetworkPlayer;
 use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
@@ -21,8 +23,6 @@ use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\inventory\transaction\action\SlotChangeAction;
 use pocketmine\network\mcpe\protocol\LoginPacket;
 use pocketmine\network\mcpe\protocol\NetworkStackLatencyPacket;
-use pocketmine\Player;
-use pocketmine\plugin\Plugin;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\utils\UUID;
 
@@ -32,7 +32,7 @@ class InvMenuEventHandler implements Listener
     /** @var int[] */
     private static array $cached_device_os = [];
 
-    public static function pullCachedDeviceOS(Player $player): int
+    public static function pullCachedDeviceOS(NetworkPlayer $player): int
     {
         if (isset(self::$cached_device_os[$uuid = $player->getRawUniqueId()])) {
             $device_os = self::$cached_device_os[$uuid];
@@ -43,7 +43,7 @@ class InvMenuEventHandler implements Listener
         return -1;
     }
 
-    public function __construct(Plugin $plugin)
+    public function __construct(Loader $plugin)
     {
         $server = $plugin->getServer();
         $plugin->getScheduler()->scheduleRepeatingTask(new ClosureTask(static function (int $currentTick) use ($server): void {
@@ -61,7 +61,9 @@ class InvMenuEventHandler implements Listener
      */
     public function onPlayerJoin(PlayerJoinEvent $event): void
     {
-        PlayerManager::create($event->getPlayer());
+        $player = $event->getPlayer();
+        if (!$player instanceof NetworkPlayer) return;
+        PlayerManager::create($player);
     }
 
     /**
@@ -70,7 +72,9 @@ class InvMenuEventHandler implements Listener
      */
     public function onPlayerQuit(PlayerQuitEvent $event): void
     {
-        PlayerManager::destroy($event->getPlayer());
+        $player = $event->getPlayer();
+        if (!$player instanceof NetworkPlayer) return;
+        PlayerManager::destroy($player);
     }
 
     /**
@@ -80,12 +84,12 @@ class InvMenuEventHandler implements Listener
      */
     public function onDataPacketReceive(DataPacketReceiveEvent $event): void
     {
+        $player = $event->getPlayer();
+        if (!$player instanceof NetworkPlayer) return;
         $packet = $event->getPacket();
         if ($packet instanceof NetworkStackLatencyPacket) {
-            $session = PlayerManager::get($event->getPlayer());
-            if ($session !== null) {
-                $session->getNetwork()->notify($packet->timestamp);
-            }
+            $session = PlayerManager::get($player);
+            $session?->getNetwork()->notify($packet->timestamp);
         } elseif ($packet instanceof LoginPacket) {
             self::$cached_device_os[UUID::fromString($packet->clientUUID)->toBinary()] = $packet->clientData["DeviceOS"] ?? -1;
         }
@@ -100,7 +104,7 @@ class InvMenuEventHandler implements Listener
     {
         $transaction = $event->getTransaction();
         $player = $transaction->getSource();
-
+        if (!$player instanceof NetworkPlayer) return;
         $player_instance = PlayerManager::getNonNullable($player);
         $menu = $player_instance->getCurrentMenu();
         if ($menu !== null) {

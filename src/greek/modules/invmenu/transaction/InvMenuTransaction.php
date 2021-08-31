@@ -12,16 +12,16 @@ declare(strict_types=1);
 
 namespace greek\modules\invmenu\transaction;
 
+use greek\network\player\NetworkPlayer;
 use pocketmine\inventory\transaction\action\SlotChangeAction;
 use pocketmine\inventory\transaction\InventoryTransaction;
 use pocketmine\item\Item;
-use pocketmine\Player;
 
 class InvMenuTransaction
 {
 
-    /** @var Player */
-    private Player $player;
+    /** @var NetworkPlayer */
+    private NetworkPlayer $player;
 
     /** @var Item */
     private Item $out;
@@ -35,7 +35,7 @@ class InvMenuTransaction
     /** @var InventoryTransaction */
     private InventoryTransaction $transaction;
 
-    public function __construct(Player $player, Item $out, Item $in, SlotChangeAction $action, InventoryTransaction $transaction)
+    public function __construct(NetworkPlayer $player, Item $out, Item $in, SlotChangeAction $action, InventoryTransaction $transaction)
     {
         $this->player = $player;
         $this->out = $out;
@@ -44,7 +44,7 @@ class InvMenuTransaction
         $this->transaction = $transaction;
     }
 
-    public function getPlayer(): Player
+    public function getPlayer(): NetworkPlayer
     {
         return $this->player;
     }

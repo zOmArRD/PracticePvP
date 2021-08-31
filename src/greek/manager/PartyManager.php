@@ -16,6 +16,7 @@ use greek\event\party\PartyDisbandEvent;
 use greek\event\party\PartyInviteEvent;
 use greek\event\party\PartyLeaveEvent;
 use greek\event\party\PartyMemberKickEvent;
+use greek\gui\PartyMembersGui;
 use greek\modules\form\lib\ModalForm;
 use greek\modules\party\Party;
 use greek\modules\party\PartyFactory;
@@ -87,6 +88,21 @@ class PartyManager
         foreach ($members as $member) {
             $this->session->sendMessage("§7 - §a{$member->getPlayerName()}");
         }
+    }
+
+    public function openPartyMembersGui(): void
+    {
+        $session = $this->session;
+        $party = $session->getParty();
+        $members = $party->getMembers();
+
+        $gui = new PartyMembersGui($party->getLeaderName() . "'s party members");
+
+        foreach ($members as $member) {
+            $gui->addPlayerToGui($member->getPlayerName());
+        }
+        $session->sendMessage(PREFIX . "§a{$party->getLeaderName()}'s party §6members §7(§a" . count($members) . "§7/§a{$party->getSlots()}§7)");
+        $gui->sendTo($session->getPlayer());
     }
 
     public function inviteEvent(Session $target)

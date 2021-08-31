@@ -14,7 +14,7 @@ namespace greek\modules\invmenu\session;
 
 use greek\modules\invmenu\InvMenuEventHandler;
 use greek\modules\invmenu\session\network\handler\PlayerNetworkHandlerRegistry;
-use pocketmine\Player;
+use greek\network\player\NetworkPlayer;
 
 final class PlayerManager
 {
@@ -22,7 +22,7 @@ final class PlayerManager
     /** @var PlayerSession[] */
     private static array $sessions = [];
 
-    public static function create(Player $player): void
+    public static function create(NetworkPlayer $player): void
     {
         self::$sessions[$player->getRawUniqueId()] = new PlayerSession(
             $player,
@@ -33,7 +33,7 @@ final class PlayerManager
         );
     }
 
-    public static function destroy(Player $player): void
+    public static function destroy(NetworkPlayer $player): void
     {
         if (isset(self::$sessions[$uuid = $player->getRawUniqueId()])) {
             self::$sessions[$uuid]->finalize();
@@ -41,12 +41,12 @@ final class PlayerManager
         }
     }
 
-    public static function get(Player $player): ?PlayerSession
+    public static function get(NetworkPlayer $player): ?PlayerSession
     {
         return self::$sessions[$player->getRawUniqueId()] ?? null;
     }
 
-    public static function getNonNullable(Player $player): PlayerSession
+    public static function getNonNullable(NetworkPlayer $player): PlayerSession
     {
         return self::$sessions[$player->getRawUniqueId()];
     }

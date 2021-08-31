@@ -19,12 +19,11 @@ use greek\modules\invmenu\session\PlayerManager;
 use greek\modules\invmenu\transaction\DeterministicInvMenuTransaction;
 use greek\modules\invmenu\transaction\InvMenuTransaction;
 use greek\modules\invmenu\transaction\InvMenuTransactionResult;
-use InvalidStateException;
+use greek\network\player\NetworkPlayer;
 use pocketmine\inventory\Inventory;
 use pocketmine\inventory\transaction\action\SlotChangeAction;
 use pocketmine\inventory\transaction\InventoryTransaction;
 use pocketmine\item\Item;
-use pocketmine\Player;
 
 class InvMenu implements MenuIds
 {
@@ -68,9 +67,6 @@ class InvMenu implements MenuIds
 
     public function __construct(MenuMetadata $type)
     {
-        if (!InvMenuHandler::isRegistered()) {
-            throw new InvalidStateException("Tried creating menu before calling " . InvMenuHandler::class . "::register()");
-        }
         $this->type = $type;
         $this->inventory = $this->type->createInventory();
     }
@@ -107,7 +103,7 @@ class InvMenu implements MenuIds
      * @param Closure|null $listener
      * @return self
      *
-     * @phpstan-param Closure(Player, Inventory) : void $listener
+     * @phpstan-param Closure(NetworkPlayer, Inventory) : void $listener
      */
     public function setInventoryCloseListener(?Closure $listener): self
     {
@@ -116,13 +112,13 @@ class InvMenu implements MenuIds
     }
 
     /**
-     * @param Player $player
+     * @param NetworkPlayer $player
      * @param string|null $name
      * @param Closure|null $callback
      *
      * @phpstan-param Closure(bool) : void $callback
      */
-    final public function send(Player $player, ?string $name = null, ?Closure $callback = null): void
+    final public function send(NetworkPlayer $player, ?string $name = null, ?Closure $callback = null): void
     {
         $session = PlayerManager::getNonNullable($player);
         $network = $session->getNetwork();
@@ -155,23 +151,23 @@ class InvMenu implements MenuIds
     }
 
     /**
-     * @param Player $player
+     * @param NetworkPlayer $player
      * @return bool
      * @internal use InvMenu::send() instead.
      *
      */
-    public function sendInventory(Player $player): bool
+    public function sendInventory(NetworkPlayer $player): bool
     {
         return $player->addWindow($this->getInventory()) !== -1;
     }
 
-    public function handleInventoryTransaction(Player $player, Item $out, Item $in, SlotChangeAction $action, InventoryTransaction $transaction): InvMenuTransactionResult
+    public function handleInventoryTransaction(NetworkPlayer $player, Item $out, Item $in, SlotChangeAction $action, InventoryTransaction $transaction): InvMenuTransactionResult
     {
         $inv_menu_txn = new InvMenuTransaction($player, $out, $in, $action, $transaction);
         return $this->listener !== null ? ($this->listener)($inv_menu_txn) : $inv_menu_txn->continue();
     }
 
-    public function onClose(Player $player): void
+    public function onClose(NetworkPlayer $player): void
     {
         if ($this->inventory_close_listener !== null) {
             ($this->inventory_close_listener)($player, $this->getInventory());

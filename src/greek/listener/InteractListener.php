@@ -58,7 +58,7 @@ class InteractListener implements Listener
                     $player->getPartyManager()->disbandParty();
                     break;
                 case $item->equals(ItemsManager::get("item.partymember", $player)):
-                    $player->getPartyManager()->sendPartyMembersMsg();
+                    $player->getPartyManager()->openPartyMembersGui();
                     break;
             }
             $this->itemCountDown[$player->getName()] = time();

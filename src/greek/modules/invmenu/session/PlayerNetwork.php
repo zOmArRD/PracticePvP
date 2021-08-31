@@ -15,17 +15,17 @@ namespace greek\modules\invmenu\session;
 use Closure;
 use greek\modules\invmenu\session\network\handler\PlayerNetworkHandler;
 use greek\modules\invmenu\session\network\NetworkStackLatencyEntry;
+use greek\network\player\NetworkPlayer;
 use InvalidArgumentException;
 use pocketmine\network\mcpe\protocol\NetworkStackLatencyPacket;
-use pocketmine\Player;
 use RuntimeException;
 use SplQueue;
 
 final class PlayerNetwork
 {
 
-    /** @var Player */
-    private Player $session;
+    /** @var NetworkPlayer */
+    private NetworkPlayer $session;
 
     /** @var SplQueue<NetworkStackLatencyEntry> */
     private SplQueue $queued;
@@ -39,7 +39,7 @@ final class PlayerNetwork
     /** @var int */
     private int|float $graphic_wait_duration = 50 * 5;
 
-    public function __construct(Player $session, PlayerNetworkHandler $handler)
+    public function __construct(NetworkPlayer $session, PlayerNetworkHandler $handler)
     {
         $this->session = $session;
         $this->handler = $handler;

@@ -13,11 +13,11 @@ declare(strict_types=1);
 namespace greek\modules\invmenu\metadata;
 
 use greek\modules\invmenu\session\MenuExtradata;
+use greek\network\player\NetworkPlayer;
 use pocketmine\block\Block;
 use pocketmine\level\Level;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\UpdateBlockPacket;
-use pocketmine\Player;
 
 class SingleBlockMenuMetadata extends MenuMetadata
 {
@@ -31,7 +31,7 @@ class SingleBlockMenuMetadata extends MenuMetadata
         $this->block = $block;
     }
 
-    public function sendGraphic(Player $player, MenuExtradata $metadata): bool
+    public function sendGraphic(NetworkPlayer $player, MenuExtradata $metadata): bool
     {
         $positions = $this->getBlockPositions($metadata);
         if (count($positions) > 0) {
@@ -43,7 +43,7 @@ class SingleBlockMenuMetadata extends MenuMetadata
         return false;
     }
 
-    protected function sendGraphicAt(Vector3 $pos, Player $player, MenuExtradata $metadata): void
+    protected function sendGraphicAt(Vector3 $pos, NetworkPlayer $player, MenuExtradata $metadata): void
     {
         $packet = new UpdateBlockPacket();
         $packet->x = $pos->x;
@@ -54,7 +54,7 @@ class SingleBlockMenuMetadata extends MenuMetadata
         $player->sendDataPacket($packet);
     }
 
-    public function removeGraphic(Player $player, MenuExtradata $extradata): void
+    public function removeGraphic(NetworkPlayer $player, MenuExtradata $extradata): void
     {
         $level = $player->getLevel();
         foreach ($this->getBlockPositions($extradata) as $pos) {

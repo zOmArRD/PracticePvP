@@ -14,6 +14,7 @@ namespace greek\modules\invmenu\inventory;
 
 use greek\modules\invmenu\metadata\MenuMetadata;
 use greek\modules\invmenu\session\PlayerManager;
+use greek\network\player\NetworkPlayer;
 use pocketmine\inventory\ContainerInventory;
 use pocketmine\level\Position;
 use pocketmine\Player;
@@ -58,7 +59,7 @@ class InvMenuInventory extends ContainerInventory
         return $this->menu_metadata->getWindowType();
     }
 
-    public function onClose(Player $who): void
+    public function onClose(NetworkPlayer|Player $who): void
     {
         if (isset($this->viewers[spl_object_hash($who)])) {
             parent::onClose($who);

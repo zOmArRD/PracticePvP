@@ -27,7 +27,7 @@ class Party
     /** @var Session */
     private Session $leader;
 
-    /** @var array */
+    /** @var Session[] */
     private array $members = [];
 
     /** @var bool */
@@ -57,11 +57,17 @@ class Party
         $this->updateMySQL();
     }
 
+    /**
+     * @return Session
+     */
     public function getLeader(): Session
     {
         return $this->leader;
     }
 
+    /**
+     * @return string
+     */
     public function getLeaderName(): string
     {
         return $this->getLeader()->getPlayer()->getName();
@@ -74,7 +80,7 @@ class Party
     }
 
     /**
-     * @return array
+     * @return Session[]
      */
     public function getMembers(): array
     {

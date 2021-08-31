@@ -13,12 +13,12 @@ declare(strict_types=1);
 namespace greek\modules\invmenu\metadata;
 
 use greek\modules\invmenu\session\MenuExtradata;
+use greek\network\player\NetworkPlayer;
 use pocketmine\block\Block;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\NetworkLittleEndianNBTStream;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\protocol\BlockActorDataPacket;
-use pocketmine\Player;
 use pocketmine\tile\Nameable;
 use pocketmine\tile\Tile;
 
@@ -35,20 +35,18 @@ class SingleBlockActorMenuMetadata extends SingleBlockMenuMetadata
     {
         parent::__construct($identifier, $size, $window_type, $block);
 
-        if (self::$serializer === null) {
-            self::$serializer = new NetworkLittleEndianNBTStream();
-        }
+        self::$serializer = new NetworkLittleEndianNBTStream();
 
         $this->tile_id = $tile_id;
     }
 
-    protected function sendGraphicAt(Vector3 $pos, Player $player, MenuExtradata $metadata): void
+    protected function sendGraphicAt(Vector3 $pos, NetworkPlayer $player, MenuExtradata $metadata): void
     {
         parent::sendGraphicAt($pos, $player, $metadata);
-        $player->sendDataPacket($this->getBlockActorDataPacketAt($player, $pos, $metadata->getName()));
+        $player->sendDataPacket($this->getBlockActorDataPacketAt($pos, $metadata->getName()));
     }
 
-    protected function getBlockActorDataPacketAt(Player $player, Vector3 $pos, ?string $name): BlockActorDataPacket
+    protected function getBlockActorDataPacketAt(Vector3 $pos, ?string $name): BlockActorDataPacket
     {
         $packet = new BlockActorDataPacket();
         $packet->x = $pos->x;

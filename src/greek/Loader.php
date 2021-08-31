@@ -69,9 +69,7 @@ final class Loader extends PluginBase
         SkinAdapterSingleton::set(new PersonaSkinAdapter());
 
         /* Register the InvMenu */
-        if (!InvMenuHandler::isRegistered()) {
-            InvMenuHandler::register($this);
-        }
+        InvMenuHandler::register($this);
 
         self::$logger->info(PREFIX . "§a" . TextUtils::uDecode("-<&QU9VEN(&QO861E9````"));
     }

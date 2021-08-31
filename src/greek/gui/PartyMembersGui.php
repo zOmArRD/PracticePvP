@@ -11,10 +11,11 @@ declare(strict_types=1);
 
 namespace greek\gui;
 
-use Closure;
 use greek\modules\invmenu\InvMenu;
 use greek\modules\invmenu\MenuIds;
-use pocketmine\item\Item;
+use greek\network\player\NetworkPlayer;
+use pocketmine\item\ItemFactory;
+use pocketmine\item\ItemIds;
 
 class PartyMembersGui
 {
@@ -24,15 +25,17 @@ class PartyMembersGui
     {
         $this->menu = InvMenu::create(MenuIds::TYPE_CHEST)
             ->setName($title)
-            ->setListener(InvMenu::readonly(Closure::fromCallable([$this, "onTransaction"])));
+            ->setListener(InvMenu::readonly());
     }
 
-    public function addPlayersToGui(Item $item, string $playerName): void
+    public function addPlayerToGui(string $name): void
     {
-        $nbt = $item->getNamedTag();
-        $nbt->setString("Player", $playerName);
-        $item->setNamedTag($nbt);
-        $item->setCustomName($playerName);
+        $item = ItemFactory::get(ItemIds::MOB_HEAD, 3)->setCustomName($name);
+        $this->menu->getInventory()->addItem($item);
+    }
 
+    public function sendTo(NetworkPlayer $player): void
+    {
+        $this->menu->send($player);
     }
 }
