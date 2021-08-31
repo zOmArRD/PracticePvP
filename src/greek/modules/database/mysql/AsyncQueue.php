@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace greek\modules\database\mysql;
 
-use greek\network\config\Settings;
 use pocketmine\Server;
+use const greek\DATABASE;
 
 class AsyncQueue
 {
@@ -28,10 +28,10 @@ class AsyncQueue
     {
         self::$callbacks[spl_object_hash($asyncQuery)] = $callbackFunction;
         self::$values[spl_object_hash($asyncQuery)] = $valuesToPass;
-        $asyncQuery->host = Settings::$database['host'];
-        $asyncQuery->user = Settings::$database['user'];
-        $asyncQuery->password = Settings::$database['password'];
-        $asyncQuery->database = Settings::$database['database'];
+        $asyncQuery->host = DATABASE['host'];
+        $asyncQuery->user = DATABASE['user'];
+        $asyncQuery->password = DATABASE['password'];
+        $asyncQuery->database = DATABASE['database'];
         Server::getInstance()->getAsyncPool()->submitTask($asyncQuery);
     }
 

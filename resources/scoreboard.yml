@@ -26,10 +26,8 @@ display.name: "§6§lGreekPvP §r§7(NA)"
 #   - {practice.playing}      Return the players who are in an arena.
 #   - {party.member}          Returns the current players of the party.
 #   - {party.maxmembers}      Returns the maximum players per party.
-#   - {tps}                   Returns the ticks per seconds.
-#   - {days}                  :V
-#   - {hours}                 :V
-#   - {minutes}               :V
+#   - {tps.current}           Returns the ticks per seconds.
+#   - {tps.average}           Returns the average of ticks per seconds.
 #
 # Note: For the colors you can use "§" or use {gray}, {dark.blue},
 #       for more examples read the documentation at greek/network/utils/TextUtils.php
