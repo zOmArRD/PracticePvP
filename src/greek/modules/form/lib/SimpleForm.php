@@ -13,10 +13,13 @@ namespace greek\modules\form\lib;
 
 class SimpleForm extends Form
 {
+    /** @var int  */
     const IMAGE_TYPE_PATH = 0, IMAGE_TYPE_URL = 1;
 
+    /** @var string  */
     private string $content = "";
 
+    /** @var array  */
     private array $labelMap = [];
 
     public function __construct(?callable $callable)
@@ -25,6 +28,7 @@ class SimpleForm extends Form
         $this->data["type"] = "form";
         $this->data["title"] = "";
         $this->data["content"] = $this->content;
+        $this->data["buttons"] = [];
     }
 
     public function processData(&$data): void

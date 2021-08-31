@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace greek\commands\party;
 
+use greek\commands\party\subcmd\PAccept;
 use greek\commands\party\subcmd\PCreate;
 use greek\commands\party\subcmd\PDisband;
 use greek\commands\party\subcmd\PHelp;
@@ -18,7 +19,6 @@ use greek\commands\party\subcmd\PInvite;
 use greek\commands\party\subcmd\PKick;
 use greek\commands\party\subcmd\PLeave;
 use greek\commands\party\subcmd\PMembers;
-use greek\items\custom\TestItem;
 use greek\network\player\NetworkPlayer;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
@@ -45,7 +45,8 @@ class PartyCmd extends Command
                      "players" => new PMembers(),
                      "invite" => new PInvite(),
                      "kick" => new PKick(),
-                     "leave" => new PLeave()] as $prefix => $subCmd) self::$subCmd[$prefix] = $subCmd;
+                     "leave" => new PLeave(),
+                     "accept" => new PAccept()] as $prefix => $subCmd) self::$subCmd[$prefix] = $subCmd;
     }
 
     /**
@@ -85,6 +86,7 @@ class PartyCmd extends Command
             "invite" => "invite",
             "kick" => "kick",
             "leave" => "leave",
+            "accept" => "accept",
             default => null,
         };
     }
