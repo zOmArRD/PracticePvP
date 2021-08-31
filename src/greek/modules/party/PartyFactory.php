@@ -44,4 +44,9 @@ class PartyFactory
             unset(self::$parties[$party->getId()]);
         }
     }
+
+    public static function getPartyFromMySQL()
+    {
+
+    }
 }
