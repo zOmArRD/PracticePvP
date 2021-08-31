@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace greek\modules\invmenu\transaction;
 
 use Closure;
-use greek\network\player\NetworkPlayer;
+use pocketmine\Player;
 
 final class InvMenuTransactionResult
 {
@@ -22,7 +22,7 @@ final class InvMenuTransactionResult
     private bool $cancelled;
 
     /** @var Closure|null */
-    private ?Closure $post_transaction_callback;
+    private ?Closure $post_transaction_callback = null;
 
     public function __construct(bool $cancelled)
     {
@@ -43,7 +43,7 @@ final class InvMenuTransactionResult
      * @param Closure|null $callback
      * @return self
      *
-     * @phpstan-param Closure(NetworkPlayer) : void $callback
+     * @phpstan-param Closure(Player) : void $callback
      */
     public function then(?Closure $callback): self
     {

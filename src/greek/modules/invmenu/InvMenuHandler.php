@@ -27,7 +27,7 @@ final class InvMenuHandler
 {
 
     /** @var Loader|null  */
-    private static ?Loader $registrant;
+    private static ?Loader $registrant = null;
 
     /** @var MenuMetadata[] */
     private static array $menu_types = [];

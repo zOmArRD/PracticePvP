@@ -15,16 +15,16 @@ namespace greek\modules\invmenu\session;
 use Closure;
 use greek\modules\invmenu\InvMenu;
 use greek\modules\invmenu\InvMenuHandler;
-use greek\network\player\NetworkPlayer;
 use InvalidArgumentException;
 use InvalidStateException;
 use pocketmine\network\mcpe\protocol\types\ContainerIds;
+use pocketmine\Player;
 
 class PlayerSession
 {
 
-    /** @var NetworkPlayer */
-    protected NetworkPlayer $player;
+    /** @var Player */
+    protected Player $player;
 
     /** @var PlayerNetwork */
     protected PlayerNetwork $network;
@@ -33,12 +33,12 @@ class PlayerSession
     protected MenuExtradata $menu_extradata;
 
     /** @var InvMenu|null */
-    protected ?InvMenu $current_menu;
+    protected ?InvMenu $current_menu = null;
 
     /** @var int */
     protected int $current_window_id = ContainerIds::NONE;
 
-    public function __construct(NetworkPlayer $player, PlayerNetwork $network)
+    public function __construct(Player $player, PlayerNetwork $network)
     {
         $this->player = $player;
         $this->network = $network;

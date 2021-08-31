@@ -13,10 +13,10 @@ declare(strict_types=1);
 namespace greek\modules\invmenu\metadata;
 
 use greek\modules\invmenu\session\MenuExtradata;
-use greek\network\player\NetworkPlayer;
 use pocketmine\level\Level;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\Player;
 
 class DoubleBlockActorMenuMetadata extends SingleBlockActorMenuMetadata{
 
@@ -32,7 +32,7 @@ class DoubleBlockActorMenuMetadata extends SingleBlockActorMenuMetadata{
 		return $pos->y >= 0 && $pos->y < Level::Y_MAX ? [$pos, ($pos->x & 1) ? $pos->east() : $pos->west()] : [];
 	}
 
-	protected function calculateGraphicOffset(NetworkPlayer $player) : Vector3{
+	protected function calculateGraphicOffset(Player $player) : Vector3{
 		$offset = parent::calculateGraphicOffset($player);
 		$offset->x *= 2;
 		$offset->z *= 2;

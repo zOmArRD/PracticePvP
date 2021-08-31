@@ -13,12 +13,12 @@ declare(strict_types=1);
 namespace greek\modules\invmenu\metadata;
 
 use greek\modules\invmenu\session\MenuExtradata;
-use greek\network\player\NetworkPlayer;
 use pocketmine\block\Block;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\NetworkLittleEndianNBTStream;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\protocol\BlockActorDataPacket;
+use pocketmine\Player;
 use pocketmine\tile\Nameable;
 use pocketmine\tile\Tile;
 
@@ -40,7 +40,7 @@ class SingleBlockActorMenuMetadata extends SingleBlockMenuMetadata
         $this->tile_id = $tile_id;
     }
 
-    protected function sendGraphicAt(Vector3 $pos, NetworkPlayer $player, MenuExtradata $metadata): void
+    protected function sendGraphicAt(Vector3 $pos, Player $player, MenuExtradata $metadata): void
     {
         parent::sendGraphicAt($pos, $player, $metadata);
         $player->sendDataPacket($this->getBlockActorDataPacketAt($pos, $metadata->getName()));

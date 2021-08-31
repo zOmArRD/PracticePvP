@@ -18,10 +18,10 @@ class MenuExtradata
 {
 
     /** @var Vector3|null */
-    protected ?Vector3 $position;
+    protected ?Vector3 $position = null;
 
     /** @var string|null */
-    protected ?string $name;
+    protected ?string $name = null;
 
     public function getPosition(): ?Vector3
     {

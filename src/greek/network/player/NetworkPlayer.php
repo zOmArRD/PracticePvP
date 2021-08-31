@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace greek\network\player;
 
-use Exception;
 use greek\items\ItemsManager;
 use greek\Loader;
 use greek\manager\PartyManager;
@@ -31,7 +30,7 @@ use pocketmine\Server;
 class NetworkPlayer extends Player
 {
 
-    /** @var bool  */
+    /** @var bool */
     public bool $isPerformanceViewer = false;
 
     /** @var Lang */
@@ -40,7 +39,7 @@ class NetworkPlayer extends Player
     /** @var Session */
     public Session $session;
 
-    /** @var Scoreboard  */
+    /** @var Scoreboard */
     public Scoreboard $scoreboardSession;
 
     /**
@@ -162,24 +161,26 @@ class NetworkPlayer extends Player
      */
     public function giveLobbyItems(): void
     {
-        try {
-            $this->getInventory()->clearAll();
-        } catch (Exception) {
+        $inventory = $this->getInventory();
+        if ($inventory->getSize() !== null) {
+            $inventory->clearAll();
         }
+
         foreach (["item.unranked" => 0, "item.ranked" => 1, "item.ffa" => 2, "item.party" => 4, "item.hostevent" => 6, "item.cosmetics" => 7, "item.settings" => 8] as $item => $index) {
             $this->setItem($index, ItemsManager::get($item, $this));
         }
     }
 
     /**
-     * TODO: ASDKADAD
+     * 300 Reaciones?
      */
     public function getPartyItems(): void
     {
-        try {
-            $this->getInventory()->clearAll();
-        } catch (Exception) {
+        $inventory = $this->getInventory();
+        if ($inventory->getSize() !== null) {
+            $inventory->clearAll();
         }
+
         foreach (['item.partyevent' => 0, 'item.partymember' => 7, 'item.disband' => 8] as $item => $index) {
             $this->setItem($index, ItemsManager::get($item, $this));
         }

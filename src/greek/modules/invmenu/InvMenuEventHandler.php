@@ -14,7 +14,6 @@ namespace greek\modules\invmenu;
 
 use greek\Loader;
 use greek\modules\invmenu\session\PlayerManager;
-use greek\network\player\NetworkPlayer;
 use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
@@ -23,6 +22,7 @@ use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\inventory\transaction\action\SlotChangeAction;
 use pocketmine\network\mcpe\protocol\LoginPacket;
 use pocketmine\network\mcpe\protocol\NetworkStackLatencyPacket;
+use pocketmine\Player;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\utils\UUID;
 
@@ -32,7 +32,7 @@ class InvMenuEventHandler implements Listener
     /** @var int[] */
     private static array $cached_device_os = [];
 
-    public static function pullCachedDeviceOS(NetworkPlayer $player): int
+    public static function pullCachedDeviceOS(Player $player): int
     {
         if (isset(self::$cached_device_os[$uuid = $player->getRawUniqueId()])) {
             $device_os = self::$cached_device_os[$uuid];
@@ -62,7 +62,6 @@ class InvMenuEventHandler implements Listener
     public function onPlayerJoin(PlayerJoinEvent $event): void
     {
         $player = $event->getPlayer();
-        if (!$player instanceof NetworkPlayer) return;
         PlayerManager::create($player);
     }
 
@@ -73,7 +72,6 @@ class InvMenuEventHandler implements Listener
     public function onPlayerQuit(PlayerQuitEvent $event): void
     {
         $player = $event->getPlayer();
-        if (!$player instanceof NetworkPlayer) return;
         PlayerManager::destroy($player);
     }
 
@@ -85,7 +83,6 @@ class InvMenuEventHandler implements Listener
     public function onDataPacketReceive(DataPacketReceiveEvent $event): void
     {
         $player = $event->getPlayer();
-        if (!$player instanceof NetworkPlayer) return;
         $packet = $event->getPacket();
         if ($packet instanceof NetworkStackLatencyPacket) {
             $session = PlayerManager::get($player);
@@ -104,7 +101,6 @@ class InvMenuEventHandler implements Listener
     {
         $transaction = $event->getTransaction();
         $player = $transaction->getSource();
-        if (!$player instanceof NetworkPlayer) return;
         $player_instance = PlayerManager::getNonNullable($player);
         $menu = $player_instance->getCurrentMenu();
         if ($menu !== null) {
