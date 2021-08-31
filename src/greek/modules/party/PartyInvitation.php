@@ -77,10 +77,9 @@ class PartyInvitation
         }
 
         $event = new PartyJoinEvent($party, $this->target);
+
         $event->call();
         $party->add($this->target);
         $this->target->removeInvitationsFromParty($party);
     }
-
-
 }

@@ -13,9 +13,11 @@ namespace greek;
 
 use greek\commands\Command;
 use greek\event\EventsManager;
+use greek\manager\PartyManager;
 use greek\modules\database\mysql\AsyncQueue;
 use greek\modules\database\mysql\query\InsertQuery;
 use greek\modules\languages\Lang;
+use greek\modules\party\PartyFactory;
 use greek\network\config\Settings;
 use greek\network\player\skin\PersonaSkinAdapter;
 use greek\network\utils\TextUtils;
@@ -126,5 +128,12 @@ final class Loader extends PluginBase
             $this->getLogger()->notice(PREFIX . "$iso " . TextUtils::uDecode("0:&%S(&)E96X@;&]A9&5D(0```"));
         }
         self::$logger->notice(TextUtils::uDecode("M5&AE(&-O;F9I9W5R871I;VX@:&%S(&)E96X@;&]A9&5D('-U8V-E<W-F=6QL !>0```"));
+    }
+
+    public function onDisable()
+    {
+        foreach (PartyFactory::getParties() as $party){
+            $party->removeFromMySQL();
+        }
     }
 }

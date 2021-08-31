@@ -54,6 +54,7 @@ class Party
     public function setSlots(int $slots): void
     {
         $this->slots = $slots;
+        $this->updateMySQL();
     }
 
     public function getLeader(): Session
@@ -69,6 +70,7 @@ class Party
     public function setLeader(Session $leader): void
     {
         $this->leader = $leader;
+        $this->updateMySQL();
     }
 
     /**
@@ -102,6 +104,7 @@ class Party
     public function setPublic(bool $value = false)
     {
         $this->public = $value;
+        $this->updateMySQL();
     }
 
     public function add(Session $session): void
@@ -110,6 +113,7 @@ class Party
             $this->members[] = $session;
         }
         $session->setParty($this);
+        $this->updateMySQL();
     }
 
     public function remove(Session $session): void
@@ -119,6 +123,7 @@ class Party
         }
         $session->setParty(null);
         $session->setPartyChat(false);
+        $this->updateMySQL();
     }
 
     public function sendMessage(string $message, ?Session $ignore_member = null): void

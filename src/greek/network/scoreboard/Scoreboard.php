@@ -56,14 +56,14 @@ class Scoreboard extends ScoreboardAPI
         $session = SessionFactory::getSession($player);
 
         if ($session->hasParty()) {
-            $strings = $configSC->get($player->getLangSession()->getLanguage())["party"];
+            $strings = $configSC->get($player->getLangSession()->getLanguage());
         } else {
-            $strings = $configSC->get($player->getLangSession()->getLanguage())["normal"];
+            $strings = $configSC->get($player->getLangSession()->getLanguage());
         }
 
         if ($player->isPerformanceViewer()) {
             $strings = null;
-            $strings = $configSC->get($player->getLangSession()->getLanguage())["performance"];
+            $strings = $configSC->get($player->getLangSession()->getLanguage());
         }
 
         $data = [];
