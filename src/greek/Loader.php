@@ -13,9 +13,9 @@ namespace greek;
 
 use greek\commands\Command;
 use greek\event\EventsManager;
-use greek\manager\PartyManager;
 use greek\modules\database\mysql\AsyncQueue;
 use greek\modules\database\mysql\query\InsertQuery;
+use greek\modules\invmenu\InvMenuHandler;
 use greek\modules\languages\Lang;
 use greek\modules\party\PartyFactory;
 use greek\network\config\Settings;
@@ -67,6 +67,11 @@ final class Loader extends PluginBase
 
         /* It is responsible for supporting the skin person. */
         SkinAdapterSingleton::set(new PersonaSkinAdapter());
+
+        /* Register the InvMenu */
+        if (!InvMenuHandler::isRegistered()) {
+            InvMenuHandler::register($this);
+        }
 
         self::$logger->info(PREFIX . "§a" . TextUtils::uDecode("-<&QU9VEN(&QO861E9````"));
     }
