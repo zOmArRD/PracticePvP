@@ -14,11 +14,11 @@ namespace greek\listener;
 use greek\modules\database\mysql\AsyncQueue;
 use greek\modules\database\mysql\query\InsertQuery;
 use greek\modules\database\mysql\query\SelectQuery;
-use greek\network\config\Settings;
 use greek\network\player\NetworkPlayer;
 use greek\network\session\Session;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
+use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerCreationEvent;
@@ -28,11 +28,13 @@ use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerPreLoginEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
+use pocketmine\level\Position;
 use pocketmine\network\mcpe\protocol\EmotePacket;
 use pocketmine\network\mcpe\protocol\LoginPacket;
 use pocketmine\Server;
 use ReflectionClass;
 use ReflectionException;
+use const greek\SPAWN_OPTIONS;
 
 class PlayerListener implements Listener
 {
@@ -173,13 +175,20 @@ class PlayerListener implements Listener
             $player->setImmobile(false);
             unset($this->move[$name]);
         }
+
+        if ($player->getY() == SPAWN_OPTIONS["min.void"]) {
+            if (SPAWN_OPTIONS['enabled'] == true) {
+                $spawn = SPAWN_OPTIONS;
+                $player->teleport(new Position($spawn['x'], $spawn['y'], $spawn["z"], $spawn['world.name']), $spawn['yaw'], $spawn['pitch']);
+            } else $player->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn());
+        }
     }
 
     public function slotChange(InventoryTransactionEvent $event): void
     {
         $entity = $event->getTransaction()->getSource();
 
-        if ($entity->getLevel()->getName() === Settings::$lobby || $entity->getLevel()->getName() === Server::getInstance()->getDefaultLevel()->getName()) {
+        if ($entity->getLevel()->getName() === SPAWN_OPTIONS['world.name'] || $entity->getLevel()->getName() === Server::getInstance()->getDefaultLevel()->getName()) {
             if (!$entity->isOp()) {
                 $event->setCancelled();
             }
@@ -190,7 +199,7 @@ class PlayerListener implements Listener
     {
         $player = $event->getPlayer();
 
-        if ($player->getLevel()->getName() === Settings::$lobby || $player->getLevel()->getName() === Server::getInstance()->getDefaultLevel()->getName()) {
+        if ($player->getLevel()->getName() === SPAWN_OPTIONS['world.name'] || $player->getLevel()->getName() === Server::getInstance()->getDefaultLevel()->getName()) {
             if (!$player->isOp()) {
                 $event->setCancelled();
             }
@@ -201,10 +210,15 @@ class PlayerListener implements Listener
     {
         $player = $event->getPlayer();
 
-        if ($player->getLevel()->getName() === Settings::$lobby || $player->getLevel()->getName() === Server::getInstance()->getDefaultLevel()->getName()) {
+        if ($player->getLevel()->getName() === SPAWN_OPTIONS['world.name'] || $player->getLevel()->getName() === Server::getInstance()->getDefaultLevel()->getName()) {
             if (!$player->isOp()) {
                 $event->setCancelled();
             }
         }
+    }
+
+    public function onDmg(EntityDamageEvent $event): void
+    {
+        $event->setCancelled();
     }
 }

@@ -16,17 +16,15 @@ use greek\network\utils\TextUtils;
 use pocketmine\Player;
 use pocketmine\utils\Config;
 use const greek\PREFIX;
+use const greek\SPAWN_OPTIONS;
 
 class Settings
 {
     /** @var string */
-    public static string $prefix, $lobby, $serverName;
+    public static string $prefix, $serverName;
 
     /** @var array */
-    public static array $database;
-
-    /** @var float */
-    public static float $x, $y, $z, $pitch, $yaw;
+    public static array $database, $spawn_options;
 
     /**
      * It is responsible for giving the value to some important variables.
@@ -36,23 +34,18 @@ class Settings
     static final public function init(Config $config): void
     {
         $general = $config->get('general');
-        $world = $config->get('spawn-map');
 
         self::$prefix = TextUtils::replaceColor($general['prefix']);
 
         /* Saves in an array the data from the database provided by the config. */
         self::$database = $config->get('database');
 
-        /* World Spawn Settings. */
-        self::$lobby = $world['World-name'];
-        self::$x = $world['X'];
-        self::$y = $world['Y'];
-        self::$z = $world['Z'];
-        self::$yaw = $world['Yaw'];
-        self::$pitch = $world['Pitch'];
+        /* Array Options for spawn */
+        self::$spawn_options = $config->get('spawn.options');
 
         define('greek\PREFIX', Settings::$prefix);
         define('greek\DATABASE', Settings::$database);
+        define('greek\SPAWN_OPTIONS', Settings::$spawn_options);
 
         Loader::$logger->info(self::$prefix . "§a" . "Variable values loaded correctly.");
     }
@@ -83,13 +76,16 @@ class Settings
     static public function updateSpawn(Player $player)
     {
         $config = self::getDefaultConfig()->getAll();
+        $k = $config["spawn.options"];
 
-        $config['spawn-map']['Word-name'] = $player->getLevel()->getName();
-        $config['spawn-map']['X'] = $player->getX();
-        $config['spawn-map']['Y'] = $player->getY();
-        $config['spawn-map']['Z'] = $player->getZ();
-        $config['spawn-map']['Yaw'] = $player->getYaw();
-        $config['spawn-map']['Pitch'] = $player->getPitch();
+        $k['enabled'] = true;
+        $k['world.name'] = $player->level->getName();
+        $k['x'] = $player->getX();
+        $k['y'] = $player->getY();
+        $k['z'] = $player->getZ();
+        $k['yaw'] = $player->getYaw();
+        $k['pitch'] = $player->getPitch();
+        $k['min.void'] = SPAWN_OPTIONS['min.void'];
 
         self::getDefaultConfig()->setAll($config);
         self::getDefaultConfig()->save();

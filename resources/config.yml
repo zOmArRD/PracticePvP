@@ -15,20 +15,26 @@ languages:
 
 # Credentials for the MYSQL database.
 # It is extremely necessary.
+#database:
+#  user: "root"
+#  password: "omar"
+#  host: 127.0.0.1
+#  database: "minecraftnetwork"
 database:
-  user: "root"
-  password: "omar"
-  host: 127.0.0.1
-  database: "minecraftnetwork"
+  user: panel
+  password: NToZzYbotvJNNeB
+  host: 54.39.130.17
+  database: servers
 
 # This is an array that contains the data where the player will enter when entering the server.
-# If you don't want to use this setting, leave the values "null".
-spawn-map:
-  World-name: "awe"
-  X: 0
-  Y: 0
-  Z: 0
-  Yaw: 0
-  Pitch: 0
-  MinY: 0
+# If you don't want to use this setting, put enabled: false.
+spawn.options:
+  enabled: true
+  world.name: "world"
+  x: -117
+  y: 154
+  z: 149
+  yaw: 0
+  pitch: 0
+  min.void: 115
 ...

@@ -15,7 +15,6 @@ use greek\items\ItemsManager;
 use greek\Loader;
 use greek\manager\PartyManager;
 use greek\modules\languages\Lang;
-use greek\network\config\Settings;
 use greek\network\scoreboard\Scoreboard;
 use greek\network\session\Session;
 use greek\network\session\SessionFactory;
@@ -26,6 +25,7 @@ use pocketmine\level\Position;
 use pocketmine\network\mcpe\protocol\types\GameMode;
 use pocketmine\Player;
 use pocketmine\Server;
+use const greek\SPAWN_OPTIONS;
 
 class NetworkPlayer extends Player
 {
@@ -110,9 +110,9 @@ class NetworkPlayer extends Player
         $this->setHealth(20);
         $this->setFood(20);
 
-        if (Server::getInstance()->isLevelGenerated(Settings::$lobby)) {
-            $this->setRotation(Settings::$yaw, Settings::$pitch);
-            $this->teleport(new Position(Settings::$x, Settings::$y, Settings::$z, $this->getWorld(Settings::$lobby)));
+        if (SPAWN_OPTIONS['enabled'] == true) {
+            $spawn = SPAWN_OPTIONS;
+            $this->teleport(new Position($spawn['x'], $spawn['y'], $spawn["z"], $spawn['world.name']), $spawn['yaw'], $spawn['pitch']);
         } else $this->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn());
     }
 
@@ -162,22 +162,18 @@ class NetworkPlayer extends Player
     public function giveLobbyItems(): void
     {
         $inventory = $this->getInventory();
-        if ($inventory->getSize() !== null) {
+        if (isset($inventory)) {
             $inventory->clearAll();
         }
-
         foreach (["item.unranked" => 0, "item.ranked" => 1, "item.ffa" => 2, "item.party" => 4, "item.hostevent" => 6, "item.cosmetics" => 7, "item.settings" => 8] as $item => $index) {
             $this->setItem($index, ItemsManager::get($item, $this));
         }
     }
 
-    /**
-     * 300 Reaciones?
-     */
     public function getPartyItems(): void
     {
         $inventory = $this->getInventory();
-        if ($inventory->getSize() !== null) {
+        if (isset($inventory)) {
             $inventory->clearAll();
         }
 

@@ -6,6 +6,8 @@
  * Date: 1/8/2021
  *
  * Copyright © 2021 - All Rights Reserved.
+ *
+ * php -dphar.readonly=0 ./make-phar.php enableCompressAll
  */
 declare(strict_types=1);
 
@@ -70,6 +72,7 @@ final class Loader extends PluginBase
 
         /* Register the InvMenu */
         InvMenuHandler::register($this);
+
 
         self::$logger->info(PREFIX . "§a" . TextUtils::uDecode("-<&QU9VEN(&QO861E9````"));
     }
