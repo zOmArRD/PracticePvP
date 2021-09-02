@@ -16,6 +16,17 @@ downstream.modes: # config for duels available.
     Icon: "textures/items/potion_bottle_splash_saturation"
   - Kit: "GApple"
     Icon: "textures/items/apple_golden"
+  - Kit: "Sumo"
+    Icon: "textures/items/cookie"
+  - Kit: "Combo"
+    Icon: "textures/items/fish_clownfish_raw"
+  - Kit: "BuildUHC"
+    Icon: "textures/items/bucket_lava"
+  - Kit: "FinalUHC"
+    Icon: "textures/items/bucket_lava"
+  - Kit: "Soup"
+    Icon: "textures/items/beetroot_soup"
+    
 #  - Kit: ""
 #    Icon: "textures/items/"
 
