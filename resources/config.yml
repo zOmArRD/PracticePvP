@@ -21,10 +21,10 @@ languages:
 #  host: 127.0.0.1
 #  database: "minecraftnetwork"
 database:
-  user: panel
-  password: NToZzYbotvJNNeB
-  host: 54.39.130.17
-  database: servers
+  user: root
+  password: omar
+  host: localhost
+  database: minecraft
 
 # This is an array that contains the data where the player will enter when entering the server.
 # If you don't want to use this setting, put enabled: false.

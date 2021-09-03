@@ -29,7 +29,6 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\plugin\PluginLogger;
 use pocketmine\utils\Config;
 
-
 final class Loader extends PluginBase
 {
 

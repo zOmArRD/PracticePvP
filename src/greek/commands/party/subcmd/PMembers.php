@@ -20,6 +20,6 @@ class PMembers implements ISubCommand
 
     public function executeSub(CommandSender $player, array $args): void
     {
-        if ($player instanceof NetworkPlayer) $player->getPartyManager()->sendPartyMembersMsg();
+        if ($player instanceof NetworkPlayer) $player->getPartyManager()->openPartyMembersGui();
     }
 }

@@ -112,7 +112,7 @@ class NetworkPlayer extends Player
 
         if (SPAWN_OPTIONS['enabled'] == true) {
             $spawn = SPAWN_OPTIONS;
-            $this->teleport(new Position($spawn['x'], $spawn['y'], $spawn["z"], $spawn['world.name']), $spawn['yaw'], $spawn['pitch']);
+            $this->teleport(new Position($spawn['x'], $spawn['y'], $spawn["z"], Server::getInstance()->getLevelByName($spawn['world.name'])), $spawn['yaw'], $spawn['pitch']);
         } else $this->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn());
     }
 

@@ -71,37 +71,22 @@ class PartyManager
         }
     }
 
-    public function sendPartyMembersMsg(): void
-    {
-        $session = $this->session;
-
-        if (!$session->hasParty()) {
-            $session->sendMessage(PREFIX . $session->getPlayer()->getTranslatedMsg("message.party.noparty"));
-            return;
-        }
-
-        $party = $session->getParty();
-        $members = $party->getMembers();
-        $leaderName = $party->getLeaderName();
-
-        $this->session->sendMessage(PREFIX . "§a{$leaderName}'s party §6members §7(§a" . count($members) . "§7/§a{$party->getSlots()}§7)");
-        foreach ($members as $member) {
-            $this->session->sendMessage("§7 - §a{$member->getPlayerName()}");
-        }
-    }
-
     public function openPartyMembersGui(): void
     {
         $session = $this->session;
         $party = $session->getParty();
         $members = $party->getMembers();
 
+        if (!$session->hasParty()) {
+            $session->sendMessage(PREFIX . $session->getPlayer()->getTranslatedMsg("message.party.noparty"));
+            return;
+        }
+
         $gui = new PartyMembersGui($party->getLeaderName() . "'s party members");
 
         foreach ($members as $member) {
             $gui->addPlayerToGui($member->getPlayerName());
         }
-        $session->sendMessage(PREFIX . "§a{$party->getLeaderName()}'s party §6members §7(§a" . count($members) . "§7/§a{$party->getSlots()}§7)");
         $gui->sendTo($session->getPlayer());
     }
 
