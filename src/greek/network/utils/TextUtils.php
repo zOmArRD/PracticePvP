@@ -21,7 +21,9 @@ class TextUtils extends TextFormat
      * and replaces them with the colors of PocketMine-MP.
      *
      * @param string $text
-     * @return string
+     *
+     * @return string The text with the color applied.
+     * @example TextUtils::replaceColor("{green}Hi Sir, how are u today");
      */
     static public function replaceColor(string $text): string
     {
@@ -59,6 +61,16 @@ class TextUtils extends TextFormat
         return $m ?? "";
     }
 
+    /**
+     * It can help you change something in a text | message
+     *
+     * @param string $msg
+     * @param array  $array
+     *
+     * @return string
+     * @example TextUtils::replaceVars("Hi my name is {player.name}", ["{player.name}" => "Pedro"]);
+     *
+     */
     public static function replaceVars(string $msg, array $array): string
     {
         $m = $msg;
@@ -69,9 +81,9 @@ class TextUtils extends TextFormat
         return $m;
     }
 
-
     /**
      * @param string $id
+     *
      * @return bool|string
      */
     public static function uDecode(string $id): bool|string

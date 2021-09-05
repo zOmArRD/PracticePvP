@@ -22,6 +22,7 @@ use greek\network\utils\TextUtils;
 use pocketmine\item\Item;
 use pocketmine\level\Level;
 use pocketmine\level\Position;
+use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\network\mcpe\protocol\types\GameMode;
 use pocketmine\Player;
 use pocketmine\Server;
@@ -110,16 +111,19 @@ class NetworkPlayer extends Player
         $this->setHealth(20);
         $this->setFood(20);
 
-        if (SPAWN_OPTIONS['enabled'] == true) {
+        if (SPAWN_OPTIONS['enabled']) {
             $spawn = SPAWN_OPTIONS;
             $this->teleport(new Position($spawn['x'], $spawn['y'], $spawn["z"], Server::getInstance()->getLevelByName($spawn['world.name'])), $spawn['yaw'], $spawn['pitch']);
-        } else $this->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn());
+        } else {
+            $this->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn());
+        }
     }
 
     /**
      * It is responsible for obtaining the world by entering the name.
      *
      * @param string $world
+     *
      * @return Level|null
      */
     public function getWorld(string $world): Level|null
@@ -131,6 +135,7 @@ class NetworkPlayer extends Player
      * It is responsible for returning the translated message and with the colors.
      *
      * @param string $idMsg
+     *
      * @return string
      */
     public function getTranslatedMsg(string $idMsg): string
@@ -147,7 +152,7 @@ class NetworkPlayer extends Player
     /**
      * This function is used to simplify the use of adding something to the player's inventory.
      *
-     * @param int $index
+     * @param int  $index
      * @param Item $item
      */
     public function setItem(int $index, Item $item)
@@ -176,9 +181,13 @@ class NetworkPlayer extends Player
         if (isset($inventory)) {
             $inventory->clearAll();
         }
-
         foreach (['item.partyevent' => 0, 'item.partymember' => 7, 'item.disband' => 8] as $item => $index) {
             $this->setItem($index, ItemsManager::get($item, $this));
         }
+    }
+
+    public function handleLevelSoundEvent(LevelSoundEventPacket $packet): bool
+    {
+        return true;
     }
 }

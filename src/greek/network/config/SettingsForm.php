@@ -71,9 +71,9 @@ class SettingsForm
         $form = new SimpleForm(function (NetworkPlayer $player, $data){
             if (isset($data)) {
                 switch ($data) {
-                    case "sethub":
-                        Settings::updateSpawn($player);
-                        break;
+                    /*case "sethub":
+                        Settings::updateSpawn($player->level->getName(), [$player->getX(), $player->getY(), $player->getZ(), $player->getYaw(), $player->getPitch()]);
+                        break;*/
                     case "scoreboard":
                         $this->showFormScoreboard();
                         break;
@@ -87,7 +87,7 @@ class SettingsForm
         $form->setTitle("§l§6Server Settings");
         $form->setContent("In this menu you can configure certain settings.");
 
-        $form->addButton("§bSet Hub" . "\n" . "§7In your current position", $form::IMAGE_TYPE_PATH, "", "sethub");
+        //$form->addButton("§bSet Hub" . "\n" . "§7In your current position", $form::IMAGE_TYPE_PATH, "", "sethub");
         $form->addButton("§bScoreboard Viewer" . "\n" . "§7Look at the performance.", $form::IMAGE_TYPE_PATH, "", "scoreboard");
         $form->addButton($player->getTranslatedMsg("form.button.back"));
 

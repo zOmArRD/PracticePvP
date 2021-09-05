@@ -14,7 +14,7 @@ $exclusions = ["vendor", ".target", "make-phar.php", "github", ".gitignore", "co
 foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir)) as $path => $file) {
     $bool = true;
     foreach ($exclusions as $exclusion) {
-        if (strpos($path, $exclusion) !== false) {
+        if (str_contains($path, $exclusion)) {
             $bool = false;
         }
     }
@@ -35,15 +35,7 @@ $phar->startBuffering();
 $phar->setSignatureAlgorithm(Phar::SHA1);
 $phar->buildFromIterator(new ArrayIterator($files));
 $phar->setStub('<?php __HALT_COMPILER();');
-if (isset($argv[1]) && $argv[1] === "enableCompressAll") {
-    $phar->compressFiles(Phar::GZ);
-} else {
-    foreach ($phar as $file => $finfo) {
-        /** @var PharFileInfo $finfo */
-        if ($finfo->getSize() > (1024 * 512)) {
-            $finfo->compress(Phar::GZ);
-        }
-    }
-}
+$phar->compressFiles(Phar::GZ);
+
 $phar->stopBuffering();
 echo "end." . PHP_EOL;

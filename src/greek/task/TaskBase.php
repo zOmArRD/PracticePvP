@@ -28,7 +28,8 @@ abstract class TaskBase
 
     /**
      * @param Task $task
-     * @param int $period
+     * @param int  $period
+     *
      * @return TaskHandler
      */
     public function registerTask(Task $task, int $period): TaskHandler

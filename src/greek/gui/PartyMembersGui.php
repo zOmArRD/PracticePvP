@@ -13,8 +13,11 @@ namespace greek\gui;
 
 use greek\modules\invmenu\InvMenu;
 use greek\modules\invmenu\MenuIds;
+use greek\network\player\NetworkPlayer;
+use greek\network\session\SessionFactory;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
+use pocketmine\Server;
 
 class PartyMembersGui extends BaseGui
 {
@@ -33,7 +36,15 @@ class PartyMembersGui extends BaseGui
 
     public function addPlayerToGui(string $name): void
     {
-        $item = ItemFactory::get(ItemIds::MOB_HEAD, 3)->setCustomName($name);
+        $session = SessionFactory::getSessionByName($name);
+        $item = ItemFactory::get(ItemIds::MOB_HEAD, 3);
+        if ($session->getParty()->getLeaderName() == $name) {
+            $item->setCustomName("§7[§cLeader§7] §a$name");
+        } else {
+            $item->setCustomName("§7[§aMember§7] §a$name");
+        }
+
         $this->getMenu()->getInventory()->addItem($item);
+
     }
 }

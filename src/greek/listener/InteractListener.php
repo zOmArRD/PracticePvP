@@ -35,6 +35,10 @@ class InteractListener implements Listener
         $item = $event->getItem();
         $countdown = 1.5;
 
+        if (!$player->isOp()) {
+            $event->setCancelled(true);
+        }
+
         if (!$player instanceof NetworkPlayer) return;
 
         if (!isset($this->itemCountDown[$player->getName()]) or time() - $this->itemCountDown[$player->getName()] >= $countdown) {

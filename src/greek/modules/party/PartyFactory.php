@@ -15,7 +15,7 @@ use pocketmine\Player;
 
 class PartyFactory
 {
-    /** @var array */
+    /** @var Party[] */
     private static array $parties = [];
 
     public static function getParties(): array

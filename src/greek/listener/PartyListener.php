@@ -21,6 +21,7 @@ use greek\event\party\PartyMemberKickEvent;
 use greek\event\party\PartySetPrivateEvent;
 use greek\event\party\PartySetPublicEvent;
 use greek\event\party\PartyUpdateSlotsEvent;
+use greek\Loader;
 use pocketmine\event\Listener;
 use const greek\PREFIX;
 

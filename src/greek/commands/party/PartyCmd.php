@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace greek\commands\party;
 
+use greek\commands\ISubCommand;
 use greek\commands\party\subcmd\PAccept;
 use greek\commands\party\subcmd\PCreate;
 use greek\commands\party\subcmd\PDisband;
@@ -25,7 +26,7 @@ use pocketmine\command\CommandSender;
 
 class PartyCmd extends Command
 {
-    /** @var array  */
+    /** @var ISubCommand[] */
     public static array $subCmd = [];
 
     public function __construct()
@@ -51,8 +52,9 @@ class PartyCmd extends Command
 
     /**
      * @param CommandSender $sender
-     * @param string $commandLabel
-     * @param array $args
+     * @param string        $commandLabel
+     * @param array         $args
+     *
      * @return void
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args): void
@@ -60,20 +62,20 @@ class PartyCmd extends Command
         if (!$sender instanceof NetworkPlayer) return;
 
         if (!isset($args[0])) {
-            self::$subCmd[$this->getSubCmd("help")]->executeSub($sender, [], "help");
+            self::$subCmd[$this->getSubCmd("help")]->executeSub($sender, []);
             return;
         }
         $prefix = $args[0];
 
         if ($this->getSubCmd($prefix) === null) {
-            self::$subCmd[$this->getSubCmd("help")]->executeSub($sender, [], "help");
+            self::$subCmd[$this->getSubCmd("help")]->executeSub($sender, []);
             return;
         }
 
         array_shift($args);
         $subCmd = self::$subCmd[$this->getSubCmd($prefix)];
 
-        $subCmd->executeSub($sender, $args, $this->getSubCmd($prefix));
+        $subCmd->executeSub($sender, $args);
     }
 
     public function getSubCmd(string $prefix): ?string

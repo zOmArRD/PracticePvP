@@ -176,10 +176,10 @@ class PlayerListener implements Listener
             unset($this->move[$name]);
         }
 
-        if ($player->getY() == SPAWN_OPTIONS["min.void"]) {
+        if ($player->getY() <= SPAWN_OPTIONS["min.void"]) {
             if (SPAWN_OPTIONS['enabled'] == true) {
                 $spawn = SPAWN_OPTIONS;
-                $player->teleport(new Position($spawn['x'], $spawn['y'], $spawn["z"], $spawn['world.name']), $spawn['yaw'], $spawn['pitch']);
+                $player->teleport(new Position($spawn['x'], $spawn['y'], $spawn["z"], Server::getInstance()->getLevelByName($spawn['world.name'])), $spawn['yaw'], $spawn['pitch']);
             } else $player->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn());
         }
     }

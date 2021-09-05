@@ -26,7 +26,6 @@ downstream.modes: # config for duels available.
     Icon: "textures/items/bucket_lava"
   - Kit: "Soup"
     Icon: "textures/items/beetroot_soup"
-    
 #  - Kit: ""
 #    Icon: "textures/items/"
 

@@ -72,7 +72,6 @@ final class Loader extends PluginBase
         /* Register the InvMenu */
         InvMenuHandler::register($this);
 
-
         self::$logger->info(PREFIX . "§a" . TextUtils::uDecode("-<&QU9VEN(&QO861E9````"));
     }
 
@@ -108,7 +107,7 @@ final class Loader extends PluginBase
         @mkdir($this->getDataFolder());
         $archive = self::ARCHIVE_STRING;
 
-        foreach (['config.yml', 'scoreboard.yml', 'network.data.yml'] as $dataCfg) $this->saveResource($dataCfg);
+        foreach (['config.yml', 'scoreboard.yml', 'network.data.yml', 'spawn.options.json'] as $dataCfg) $this->saveResource($dataCfg);
 
         $cfg = new Config($this->getDataFolder() . $archive, Config::YAML);
 
@@ -135,9 +134,14 @@ final class Loader extends PluginBase
         self::$logger->notice(TextUtils::uDecode("M5&AE(&-O;F9I9W5R871I;VX@:&%S(&)E96X@;&]A9&5D('-U8V-E<W-F=6QL !>0```"));
     }
 
+    public function getResourcesFolder(): string
+    {
+        return $this->getFile() . 'resources/';
+    }
+
     public function onDisable()
     {
-        foreach (PartyFactory::getParties() as $party){
+        foreach (PartyFactory::getParties() as $party) {
             $party->removeFromMySQL();
         }
     }
