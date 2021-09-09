@@ -14,10 +14,12 @@ namespace greek\manager;
 use greek\event\party\PartyCreateEvent;
 use greek\event\party\PartyDisbandEvent;
 use greek\event\party\PartyInviteEvent;
+use greek\event\party\PartyLeaderPromoteEvent;
 use greek\event\party\PartyLeaveEvent;
 use greek\event\party\PartyMemberKickEvent;
 use greek\gui\PartyMembersGui;
 use greek\modules\form\lib\ModalForm;
+use greek\modules\form\lib\SimpleForm;
 use greek\modules\party\Party;
 use greek\modules\party\PartyFactory;
 use greek\modules\party\PartyInvitation;
@@ -38,7 +40,7 @@ class PartyManager
         $this->session = $session;
     }
 
-    public function createParty(): void
+    public function create(): void
     {
         if (!$this->session->hasParty()) {
             $party = new Party(uniqid(), $this->session);
@@ -53,7 +55,7 @@ class PartyManager
         }
     }
 
-    public function disbandParty(): void
+    public function disband(): void
     {
         $session = $this->session;
         $party = $session->getParty();
@@ -71,7 +73,7 @@ class PartyManager
         }
     }
 
-    public function openPartyMembersGui(): void
+    public function openMembersGui(): void
     {
         $session = $this->session;
         $party = $session->getParty();
@@ -90,7 +92,7 @@ class PartyManager
         $gui->sendTo($session->getPlayer());
     }
 
-    public function inviteEvent(Session $target)
+    public function inviteEvent(Session $target): void
     {
         $session = $this->session;
 
@@ -98,7 +100,7 @@ class PartyManager
         $event->call();
     }
 
-    public function invitePlayer(string $name)
+    public function invite(string $name): void
     {
         $sPlayer = $this->session;
         $player = $sPlayer->getPlayer();
@@ -162,7 +164,7 @@ class PartyManager
         $target->sendForm($form);
     }
 
-    public function leaveParty()
+    public function leave(): void
     {
         $session = $this->session;
         $player = $session->getPlayer();
@@ -170,7 +172,7 @@ class PartyManager
         if (!$session->hasParty()) {
             $player->sendMessage(PREFIX . $player->getTranslatedMsg("message.player.stupid"));
         } elseif ($session->isPartyLeader()) {
-            $this->disbandParty();
+            $this->disband();
         } else {
             $party = $session->getParty();
 
@@ -181,7 +183,7 @@ class PartyManager
         }
     }
 
-    public function kickPlayer(string $target)
+    public function kick(string $target): void
     {
         $session = $this->session;
         $player = $session->getPlayer();
@@ -195,7 +197,7 @@ class PartyManager
         $members = $session->getParty()->getMembers();
 
         if ($target === $player->getName()) {
-            $this->disbandParty();
+            $this->disband();
         } else {
             foreach ($members as $member) {
                 if ($member->getPlayerName() == $target) {
@@ -206,6 +208,41 @@ class PartyManager
                         $event->call();
 
                         $party->remove($member);
+                    }
+                } else {
+                    $translatedMsg = $player->getTranslatedMsg("message.party.player.noexist");
+                    $player->sendMessage(PREFIX . TextUtils::replaceVars($translatedMsg, ["{player.name}" => $target]));
+                }
+            }
+        }
+    }
+
+    public function setLeader(string $target): void
+    {
+        $session = $this->session;
+        $player = $session->getPlayer();
+
+        if (!$session->hasParty()) {
+            $translatedMsg = $player->getTranslatedMsg("message.party.noparty");
+            $player->sendMessage(PREFIX . $translatedMsg);
+            return;
+        }
+
+        $members = $session->getParty()->getMembers();
+
+        if ($target === $player->getName()) {
+            $translatedMsg = $player->getTranslatedMsg("message.party.setleader.idiot");
+            $player->sendMessage(PREFIX . $translatedMsg);
+        } else {
+            foreach ($members as $member) {
+                if ($member->getPlayerName() == $target) {
+                    if ($member->isOnline()) {
+                        $party = $session->getParty();
+
+                        $event = new PartyLeaderPromoteEvent($party, $session, $member);
+                        $event->call();
+
+                        $party->setLeader($member);
                     }
                 } else {
                     $translatedMsg = $player->getTranslatedMsg("message.party.player.noexist");
@@ -244,6 +281,51 @@ class PartyManager
             }
         } else {
             $session->sendMessage(PREFIX . "§cYou dont have any invitations!");
+        }
+    }
+
+    /**
+     * @todo: Finish | Possibly I should change the Forms api.
+     *
+     * @param string $target
+     */
+    public function openPartyPlayerForm(string $target): void
+    {
+        $session = $this->session;
+        $player = $session->getPlayer();
+        $player->getInventory()->close($player);
+
+        $form = new SimpleForm(function (NetworkPlayer $player, $data) {
+            if (isset($data)) {
+                if ($data === "back") {
+                    $this->openMembersGui();
+                    return;
+                }
+                $split = explode("-", $data);
+                $this->executeAction($split[0], $split[1]);
+            }
+        });
+        $form->setTitle("§7Party Manager");
+        $form->setContent("§aWhat do you want to do with §6{$target}§a?");
+
+        //$form->addButton($target, 0, "", "player_$target");
+
+        $form->addButton("§cKick from the party", 0, "", "kick-$target");
+        $form->addButton("§bSet Leader", 0, "", "setleader-$target");
+
+        $form->addButton($player->getTranslatedMsg("form.button.back"), 0, "", "back");
+        $player->sendForm($form);
+    }
+
+    public function executeAction(string $action, string $target): void
+    {
+        switch ($action) {
+            case "kick":
+                $this->kick($target);
+                break;
+            case "setleader":
+                $this->setLeader($target);
+                break;
         }
     }
 }

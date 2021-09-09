@@ -14,6 +14,7 @@ namespace greek\network\player;
 use greek\items\ItemsManager;
 use greek\Loader;
 use greek\manager\PartyManager;
+use greek\modules\cosmetics\MCosmetic;
 use greek\modules\languages\Lang;
 use greek\network\scoreboard\Scoreboard;
 use greek\network\session\Session;
@@ -23,6 +24,7 @@ use pocketmine\item\Item;
 use pocketmine\level\Level;
 use pocketmine\level\Position;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
+use pocketmine\network\mcpe\protocol\SetTimePacket;
 use pocketmine\network\mcpe\protocol\types\GameMode;
 use pocketmine\Player;
 use pocketmine\Server;
@@ -42,6 +44,9 @@ class NetworkPlayer extends Player
 
     /** @var Scoreboard */
     public Scoreboard $scoreboardSession;
+
+    /** @var MCosmetic */
+    public MCosmetic $MCosmetic;
 
     /**
      * @param bool $isPerformanceViewer
@@ -99,6 +104,19 @@ class NetworkPlayer extends Player
     public function getPartyManager(): PartyManager
     {
         return new PartyManager(SessionFactory::getSession($this));
+    }
+
+    public function setMCosmetic(): void
+    {
+        $this->MCosmetic = new MCosmetic($this);
+    }
+
+    /**
+     * @return MCosmetic
+     */
+    public function getMCosmetic(): MCosmetic
+    {
+        return $this->MCosmetic;
     }
 
     /**
@@ -189,5 +207,20 @@ class NetworkPlayer extends Player
     public function handleLevelSoundEvent(LevelSoundEventPacket $packet): bool
     {
         return true;
+    }
+
+    /**
+     * Changes the time of the world where the player is (Only applies to this player)
+     * @param int $time
+     */
+    public function changeTime(int $time)
+    {
+        $player = $this;
+        $pk = new SetTimePacket();
+        $pk->time = $time & 0xffffffff;
+        $player->dataPacket($pk);
+//        if ($player instanceof Player) {
+//            $this->getServer()->broadcastPacket([$player], $pk);
+//        }
     }
 }

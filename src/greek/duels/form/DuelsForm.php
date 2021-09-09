@@ -12,16 +12,17 @@ declare(strict_types=1);
 namespace greek\duels\form;
 
 use Exception;
+use greek\duels\Manager;
 use greek\modules\form\lib\SimpleForm;
 use greek\network\config\Settings;
 use greek\network\player\NetworkPlayer;
 use pocketmine\utils\Config;
 
-class DuelsForm
+class DuelsForm extends Manager
 {
     /**
      * @param NetworkPlayer $player
-     * @param bool $isRanked
+     * @param bool          $isRanked
      */
     public function __construct(NetworkPlayer $player, bool $isRanked = false)
     {
@@ -30,14 +31,19 @@ class DuelsForm
 
     /**
      * @param NetworkPlayer $player
-     * @param false $isRanked
+     * @param false         $isRanked
      */
     public function showForm(NetworkPlayer $player, bool $isRanked = false): void
     {
-        $form = new SimpleForm(function (NetworkPlayer $player, $data){
+        $form = new SimpleForm(function (NetworkPlayer $player, $data) {
 
             /* TODO: Make a queue method, and transfer to the server player, also upload the data to MySQL */
-            //if (isset($data) && $data == "close") return;
+            if (isset($data)) {
+                if ($data === "close") return;
+                $split = explode("-", $data);
+                $this->updateDownStreamData($player->getName(), $split[0], $split[1]);
+                var_dump($split);
+            }
         });
 
         $images = [
@@ -53,7 +59,7 @@ class DuelsForm
         $imageType = $config->get("image.form.duel.type");
 
         try {
-            foreach ($config->get("downstream.modes") as $kits) $form->addButton("§7§l» §r§9" . $kits["Kit"] . " §l§7«" . "\n§r§fJoin in the queue", $imageType, $kits['Icon'], $kits["Kit"]);
+            foreach ($config->get("downstream.modes") as $kits) $form->addButton("§7§l» §r§9" . $kits["Kit"] . " §l§7«" . "\n§r§fJoin in the queue", $imageType, $kits['Icon'], "$getRanked-" . $kits["Kit"]);
         } catch (Exception) {
         }
 

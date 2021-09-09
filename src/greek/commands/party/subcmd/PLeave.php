@@ -22,6 +22,6 @@ class PLeave implements ISubCommand
     {
         if (!$player instanceof NetworkPlayer) return;
 
-        $player->getPartyManager()->leaveParty();
+        $player->getPartyManager()->leave();
     }
 }

@@ -101,7 +101,7 @@ class NetworkListener implements Listener
                                         $handler->cancel();
                                         $handler = null;
                                     }
-                                }), 10);
+                                }), 20);
                             }
                         }
                     });

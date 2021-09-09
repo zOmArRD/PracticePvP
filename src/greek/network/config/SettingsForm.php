@@ -14,6 +14,7 @@ namespace greek\network\config;
 use greek\modules\form\lib\CustomForm;
 use greek\modules\form\lib\SimpleForm;
 use greek\network\player\NetworkPlayer;
+use pocketmine\level\Level;
 
 class SettingsForm
 {
@@ -44,6 +45,9 @@ class SettingsForm
                     case "serversettings":
                         $this->showServerSettingsForm();
                         break;
+                    case "timechanger":
+                        $this->showTimeChanger();
+                        break;
                     default:
                         $player->sendMessage($player->getTranslatedMsg("message.error"));
                         break;
@@ -52,12 +56,14 @@ class SettingsForm
         });
         $images = [
             "language" => "textures/ui/language_glyph_color",
-            "close" => "textures/gui/newgui/anvil-crossout"
+            "close" => "textures/gui/newgui/anvil-crossout",
+            "time" => "textures/ui/icon_timer"
         ];
         
         $form->setTitle($player->getTranslatedMsg("form.title.settingsform"));
         $form->addButton($player->getTranslatedMsg("form.button.settingsform.changelanguage"), $form::IMAGE_TYPE_PATH, $images['language'], "changelanguage");
         $form->addButton($player->getTranslatedMsg("form.button.settingsform.scoreboard"), $form::IMAGE_TYPE_URL, "https://i.ibb.co/TY6MyrN/Hnet-com-image.png", "scoreboardsettings");
+        $form->addButton($player->getTranslatedMsg("form.button.settingsform.timechanger"), $form::IMAGE_TYPE_PATH, $images['time'], "timechanger");
         if ($player->isOp()) {
             $form->addButton("§l§9Server Settings", $form::IMAGE_TYPE_URL, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1ZvlkYtyFsEfNG5Cl-Zh3O32hwir7J3LNXA&usqp=CAU", "serversettings");
         }
@@ -123,6 +129,37 @@ class SettingsForm
         $form->setTitle("§6Scoreboard Viewer");
         $form->addToggle("Performance Viewer", $value);
 
+        $player->sendForm($form);
+    }
+    
+    private function showTimeChanger()
+    {
+        $player = $this->getPlayer();
+        $form = new SimpleForm(function (NetworkPlayer $player, $data) {
+            if (isset($data)) {
+                switch ($data) {
+                    case "back":
+                        $this->showForm();
+                        break;
+                    case "day":
+                        $player->changeTime(Level::TIME_DAY);
+                        break;
+                    case "night":
+                        $player->changeTime(Level::TIME_NIGHT);
+                        break;
+                }
+            }
+        });
+
+        $images = ["day" => "textures/ui/time_2day", "night" => "textures/ui/time_6midnight"];
+
+        $form->setTitle($player->getTranslatedMsg("form.title.timechanger"));
+        $form->setContent($player->getTranslatedMsg("form.content.timechanger"));
+
+        $form->addButton($player->getTranslatedMsg("form.button.day") . "\n" . $player->getTranslatedMsg("form.button.day.subtitle"), 0, $images['day'], 'day');
+        $form->addButton($player->getTranslatedMsg("form.button.night") . "\n" . $player->getTranslatedMsg("form.button.night.subtitle"), 0, $images['day'], 'night');
+
+        $form->addButton($player->getTranslatedMsg("form.button.back"), 0,"", "back");
         $player->sendForm($form);
     }
 

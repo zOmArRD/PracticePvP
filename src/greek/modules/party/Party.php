@@ -146,7 +146,7 @@ class Party
             $membersNames .= $member->getPlayerName() . ",";
         }
         $isPublic = $this->public ? 1 : 0;
-        AsyncQueue::submitQuery(new InsertQuery("INSERT INTO parties(id, leader, members, slots, public) VALUES ('{$this->getId()}', '{$this->getLeaderName()}', '{$membersNames}', {$this->getSlots()}, {$isPublic})"));
+        AsyncQueue::submitQuery(new InsertQuery("INSERT INTO parties(id, leader, members, slots, public) VALUES ('{$this->getId()}', '{$this->getLeaderName()}', '{$membersNames}', {$this->getSlots()}, {$isPublic});"));
     }
 
     public function updateMySQL(){
@@ -155,10 +155,10 @@ class Party
             $membersNames .= $member->getPlayerName() . ",";
         }
         $isPublic = $this->public ? 1 : 0;
-        AsyncQueue::submitQuery(new InsertQuery("UPDATE parties SET leader = '{$this->getLeaderName()}', members = '{$membersNames}', slots = {$this->getSlots()}, public = {$isPublic} WHERE id='{$this->getId()}'"));
+        AsyncQueue::submitQuery(new InsertQuery("UPDATE parties SET leader = '{$this->getLeaderName()}', members = '{$membersNames}', slots = {$this->getSlots()}, public = {$isPublic} WHERE id='{$this->getId()}';"));
     }
 
     public function removeFromMySQL(){
-        AsyncQueue::submitQuery(new InsertQuery("DELETE FROM parties WHERE id='{$this->getId()}'"));
+        AsyncQueue::submitQuery(new InsertQuery("DELETE FROM parties WHERE id='{$this->getId()}';"));
     }
 }

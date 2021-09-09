@@ -14,6 +14,7 @@ namespace greek\listener;
 use greek\duels\form\DuelsForm;
 use greek\duels\form\FFAForm;
 use greek\items\ItemsManager;
+use greek\modules\cosmetics\forms\CosmeticsMenu;
 use greek\network\config\SettingsForm;
 use greek\network\player\NetworkPlayer;
 use pocketmine\event\Listener;
@@ -53,16 +54,19 @@ class InteractListener implements Listener
                     new DuelsForm($player, true);
                     break;
                 case $item->equals(ItemsManager::get("item.party", $player)):
-                    $player->getPartyManager()->createParty();
+                    $player->getPartyManager()->create();
                     break;
                 case $item->equals(ItemsManager::get("item.ffa", $player)):
                     new FFAForm($player);
                     break;
                 case $item->equals(ItemsManager::get("item.disband", $player)):
-                    $player->getPartyManager()->disbandParty();
+                    $player->getPartyManager()->disband();
                     break;
                 case $item->equals(ItemsManager::get("item.partymember", $player)):
-                    $player->getPartyManager()->openPartyMembersGui();
+                    $player->getPartyManager()->openMembersGui();
+                    break;
+                case $item->equals(ItemsManager::get("item.cosmetics", $player)):
+                    new CosmeticsMenu($player);
                     break;
             }
             $this->itemCountDown[$player->getName()] = time();

@@ -13,7 +13,9 @@ namespace greek\network\config;
 
 use greek\Loader;
 use greek\network\utils\TextUtils;
+use pocketmine\level\Level;
 use pocketmine\Player;
+use pocketmine\Server;
 use pocketmine\utils\Config;
 use const greek\PREFIX;
 use const greek\SPAWN_OPTIONS;
@@ -49,6 +51,17 @@ class Settings
         define('greek\PREFIX', Settings::$prefix);
         define('greek\DATABASE', Settings::$database);
         define('greek\SPAWN_OPTIONS', Settings::$spawn_options);
+
+        if (SPAWN_OPTIONS['enabled']) {
+            $spawn = SPAWN_OPTIONS;
+            if (!Server::getInstance()->isLevelLoaded($spawn['world.name'])) {
+                Server::getInstance()->loadLevel($spawn['world.name']);
+            }
+            Server::getInstance()->getLevelByName($spawn['world.name'])->setTime(Level::TIME_DAY);
+            Server::getInstance()->getLevelByName($spawn['world.name'])->stopTime();
+        } else {
+            Server::getInstance()->getDefaultLevel()->stopTime();
+        }
 
         Loader::$logger->info(self::$prefix . "§a" . "Variable values loaded correctly.");
     }

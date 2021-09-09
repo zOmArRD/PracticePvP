@@ -36,10 +36,10 @@ class Scoreboard extends ScoreboardAPI
 
     public function setScore(): void
     {
-        if (isset(Session::$data[$this->player->getName()])) {
-            $scData = Session::$data[$this->player->getName()];
+        if (isset(Session::$playerData[$this->player->getName()]["scoreboard"])) {
+            $scData = Session::$playerData[$this->player->getName()];
 
-            if ($scData["ShowScoreboard"] == false) {
+            if (!$scData["scoreboard"]) {
                 return;
             }
         }
@@ -150,23 +150,23 @@ class Scoreboard extends ScoreboardAPI
         $form = new SimpleForm(function (NetworkPlayer $player, $data) {
             if (isset($data)) {
                 try {
-                    $scData = Session::$data[$player->getName()];
+                    $scData = Session::$playerData[$player->getName()];
                     switch ($data) {
                         case "enable":
-                            if ($scData["ShowScoreboard"] == true) {
+                            if ($scData["scoreboard"] == true) {
                                 $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.cantupdate"));
                             } else {
-                                $scData["ShowScoreboard"] = true;
-                                $this->setMysqlScore(1, $this->getPlayer()->getName());
+                                $scData["scoreboard"] = true;
+                                $this->setMysqlScore($this->getPlayer()->getName());
                                 $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.scoreboard.updated"));
                             }
                             break;
                         case "disable":
-                            if ($scData["ShowScoreboard"] == false) {
-                                $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.scoreboard.cantupdate"));
+                            if ($scData["scoreboard"] == false) {
+                                $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.cantupdate"));
                             } else {
-                                $scData["ShowScoreboard"] = false;
-                                $this->setMysqlScore(0, $this->getPlayer()->getName());
+                                $scData["scoreboard"] = false;
+                                $this->setMysqlScore($this->getPlayer()->getName(), 0);
                                 $this->remove();
                                 $player->sendMessage(Settings::$prefix . $player->getTranslatedMsg("message.scoreboard.updated"));
                             }
@@ -193,9 +193,9 @@ class Scoreboard extends ScoreboardAPI
         $player->sendForm($form);
     }
 
-    public function setMysqlScore(int $bool, $ign)
+    public function setMysqlScore($ign, int $bool = 1)
     {
-        AsyncQueue::submitQuery(new InsertQuery("UPDATE settings SET ShowScoreboard = $bool WHERE ign = '$ign'"));
+        AsyncQueue::submitQuery(new InsertQuery("UPDATE settings SET scoreboard = $bool WHERE ign ='$ign';"));
     }
 
     /**

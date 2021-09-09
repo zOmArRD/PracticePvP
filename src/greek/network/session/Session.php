@@ -30,7 +30,7 @@ class Session
     private array $invitations = [];
 
     /** @var array */
-    public static array $data;
+    public static array $playerData = [];
 
     /**
      * @param NetworkPlayer $player

@@ -41,9 +41,8 @@ final class InvMenuTransactionResult
      * after closing inventory.
      *
      * @param Closure|null $callback
-     * @return self
      *
-     * @phpstan-param Closure(Player) : void $callback
+     * @return self
      */
     public function then(?Closure $callback): self
     {

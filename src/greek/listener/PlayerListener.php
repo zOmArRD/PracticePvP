@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace greek\listener;
 
+use greek\modules\cosmetics\MCosmetic;
 use greek\modules\database\mysql\AsyncQueue;
 use greek\modules\database\mysql\query\InsertQuery;
 use greek\modules\database\mysql\query\SelectQuery;
@@ -88,23 +89,39 @@ class PlayerListener implements Listener
         $name = $player->getName();
         $player->setLangSession();
         $player->setScoreboardSession();
+        $player->setMCosmetic();
 
-        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM settings WHERE ign='$name'"), function ($result, $data) {
+        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM settings WHERE ign='$name';"), function ($result, $data) {
             $player = $data[0];
+            if (!$player instanceof NetworkPlayer) return;
+
             $name = $player->getName();
             $lang = "en_ENG";
 
             if (sizeof($result) === 0) {
-                AsyncQueue::submitQuery(new InsertQuery("INSERT INTO settings(ign, language, ShowScoreboard) VALUES ('$name', '$lang', 1);"));
+                AsyncQueue::submitQuery(new InsertQuery("INSERT INTO settings(ign, language, scoreboard) VALUES ('$name', '$lang', 1);"));
             }
         }, [$player]);
 
-        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM practice_downstream WHERE ign='$name'"), function ($result, $data) {
+        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM duel_data WHERE ign='$name';"), function ($result, $data) {
             $player = $data[0];
+            if (!$player instanceof NetworkPlayer) return;
+
             $name = $player->getName();
 
             if (sizeof($result) === 0) {
-                AsyncQueue::submitQuery(new InsertQuery("INSERT INTO practice_downstream(ign) VALUES ('$name');"));
+                AsyncQueue::submitQuery(new InsertQuery("INSERT INTO duel_data(ign) VALUES ('$name');"));
+            }
+        }, [$player]);
+        
+        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM cosmetics WHERE ign='$name';"), function ($result, $data){
+            $player = $data[0];
+            if (!$player instanceof NetworkPlayer) return;
+
+            $name = $player->getName();
+
+            if (sizeof($result) === 0) {
+                AsyncQueue::insertQuery("INSERT INTO cosmetics(ign) VALUES ('$name');");
             }
         }, [$player]);
     }
@@ -117,12 +134,25 @@ class PlayerListener implements Listener
 
         $name = $player->getName();
 
-        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM settings WHERE ign='$name'"), function ($result, $data) {
+        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM settings WHERE ign='$name';"), function ($result, $data) {
             $player = $data[0];
+            if (!$player instanceof NetworkPlayer) return;
+
             $name = $player->getName();
 
-            Session::$data[$name] = $result[0];
+            Session::$playerData[$name] = $result[0];
             $this->updateLang($player);
+            var_dump($result[0]);
+        }, [$player]);
+
+        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM cosmetics WHERE ign='$name';"), function ($result, $data) {
+            $player = $data[0];
+            if (!$player instanceof NetworkPlayer) return;
+
+            $name = $player->getName();
+            MCosmetic::$cosmeticsData[$name] = $result[0];
+            var_dump($result[0]);
+            $player->getMCosmetic()->applyCosmetics();
         }, [$player]);
 
         $this->login[$name] = 1;
@@ -142,13 +172,13 @@ class PlayerListener implements Listener
         $player->setImmobile();
         if (!$player instanceof NetworkPlayer) return;
 
+        if ($player->hasPermission("practice.fly")) $player->setAllowFlight(true);
         $player->teleportToLobby();
 
         if (isset($this->login[$name])) {
             unset($this->login[$name]);
             $this->join[$name] = 1;
         }
-
     }
 
     public function handleExhaust(PlayerExhaustEvent $event)

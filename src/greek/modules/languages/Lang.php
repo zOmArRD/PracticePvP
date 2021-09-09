@@ -17,6 +17,7 @@ use greek\modules\form\lib\SimpleForm;
 use greek\network\config\Settings;
 use greek\network\config\SettingsForm;
 use greek\network\player\NetworkPlayer;
+use greek\network\session\Session;
 use greek\network\utils\TextUtils;
 use JetBrains\PhpStorm\Pure;
 use pocketmine\utils\Config;
@@ -40,7 +41,7 @@ class Lang
     public function setStringValue(string $key, string $value): void
     {
         $playerName = $this->getPlayer()->getName();
-        AsyncQueue::submitQuery(new InsertQuery("UPDATE settings SET $key='$value' WHERE ign='{$playerName}'"));
+        AsyncQueue::insertQuery("UPDATE settings SET $key='$value' WHERE ign='{$playerName}';");
     }
 
     public function setLanguage(string $language, bool $safe): void
@@ -48,7 +49,7 @@ class Lang
         $playerName = $this->getPlayer()->getName();
         self::$users[$playerName] = $language;
         if ($safe) {
-            NetworkPlayer::$data[$playerName]["language"] = $language;
+            Session::$playerData[$playerName]["language"] = $language;
             $this->setStringValue("language", $language);
         }
     }
@@ -56,15 +57,14 @@ class Lang
     public function applyLanguage(): void
     {
         $player = self::getPlayer();
-        if (isset(NetworkPlayer::$data[$player->getName()])) {
-            $data = NetworkPlayer::$data[$player->getName()];
+        if (isset(Session::$playerData[$player->getName()])) {
+            $data = Session::$playerData[$player->getName()];
             if ($data["language"] !== null && $data["language"] !== "null") {
                 $this->setLanguage($data["language"], false);
             }
         }
     }
 
-    #[Pure]
     public function getLanguage(): string
     {
         $player = $this->getPlayer();

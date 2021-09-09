@@ -47,12 +47,7 @@ final class Loader extends PluginBase
         self::setLogger($this->getLogger());
 
         $this->verifySettings();
-
-        /* Check in the database if the necessary Practice tables have been created. */
-        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS settings(ign VARCHAR(50) UNIQUE, language TEXT, ShowScoreboard INT)"));
-        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS practice_downstream(ign VARCHAR(50) UNIQUE, DuelType TEXT, QueueKit TEXT, isInviteDuel bool, playerInvited TEXT)"));
-        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS ffa_data(ign TEXT, mode TEXT)"));
-        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS parties(id VARCHAR(50) UNIQUE, leader VARCHAR(50), members TEXT, slots INT DEFAULT 4, public SMALLINT DEFAULT 0)"));
+        $this->verifyDatabases();
     }
 
     public function onEnable(): void
@@ -144,5 +139,17 @@ final class Loader extends PluginBase
         foreach (PartyFactory::getParties() as $party) {
             $party->removeFromMySQL();
         }
+    }
+
+    /**
+     * Check in the database if the necessary Practice tables have been created.
+     */
+    private function verifyDatabases(): void
+    {
+        AsyncQueue::insertQuery("CREATE TABLE IF NOT EXISTS settings(ign TEXT, language TEXT, scoreboard SMALLINT DEFAULT 1);");
+        AsyncQueue::insertQuery("CREATE TABLE IF NOT EXISTS duel_data(ign TEXT, DuelType TEXT, QueueKit TEXT, isInviteDuel SMALLINT DEFAULT 0, playerInvited TEXT);");
+        AsyncQueue::insertQuery("CREATE TABLE IF NOT EXISTS ffa_data(ign TEXT, mode TEXT);");
+        AsyncQueue::insertQuery("CREATE TABLE IF NOT EXISTS parties(id TEXT, leader VARCHAR(50), members TEXT, slots INT DEFAULT 12, public SMALLINT DEFAULT 0);");
+        AsyncQueue::insertQuery("CREATE TABLE IF NOT EXISTS cosmetics(ign TEXT, particles TEXT);");
     }
 }

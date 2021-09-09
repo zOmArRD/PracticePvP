@@ -28,6 +28,6 @@ class PInvite implements ISubCommand
             return;
         }
 
-        $player->getPartyManager()->invitePlayer($args[0]);
+        $player->getPartyManager()->invite($args[0]);
     }
 }

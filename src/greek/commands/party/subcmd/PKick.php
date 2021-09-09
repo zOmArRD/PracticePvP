@@ -28,6 +28,6 @@ class PKick implements ISubCommand
             return;
         }
 
-        $player->getPartyManager()->kickPlayer($args[0]);
+        $player->getPartyManager()->kick($args[0]);
     }
 }

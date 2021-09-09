@@ -20,6 +20,6 @@ class PCreate implements ISubCommand
 
     public function executeSub(CommandSender $player, array $args): void
     {
-        if ($player instanceof NetworkPlayer) $player->getPartyManager()->createParty();
+        if ($player instanceof NetworkPlayer) $player->getPartyManager()->create();
     }
 }

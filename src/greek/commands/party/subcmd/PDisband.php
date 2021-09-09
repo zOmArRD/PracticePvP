@@ -20,6 +20,6 @@ class PDisband implements ISubCommand
 
     public function executeSub(CommandSender $player, array $args): void
     {
-        if ($player instanceof NetworkPlayer) $player->getPartyManager()->disbandParty();
+        if ($player instanceof NetworkPlayer) $player->getPartyManager()->disband();
     }
 }
