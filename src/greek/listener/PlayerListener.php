@@ -91,39 +91,30 @@ class PlayerListener implements Listener
         $player->setScoreboardSession();
         $player->setMCosmetic();
 
-        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM settings WHERE ign='$name';"), function ($result, $data) {
-            $player = $data[0];
-            if (!$player instanceof NetworkPlayer) return;
-
+        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM settings WHERE ign='$name';"), function ($result) use ($player){
             $name = $player->getName();
             $lang = "en_ENG";
 
             if (sizeof($result) === 0) {
                 AsyncQueue::submitQuery(new InsertQuery("INSERT INTO settings(ign, language, scoreboard) VALUES ('$name', '$lang', 1);"));
             }
-        }, [$player]);
+        });
 
-        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM duel_data WHERE ign='$name';"), function ($result, $data) {
-            $player = $data[0];
-            if (!$player instanceof NetworkPlayer) return;
-
+        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM duel_data WHERE ign='$name';"), function ($result) use ($player) {
             $name = $player->getName();
 
             if (sizeof($result) === 0) {
                 AsyncQueue::submitQuery(new InsertQuery("INSERT INTO duel_data(ign) VALUES ('$name');"));
             }
-        }, [$player]);
+        });
         
-        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM cosmetics WHERE ign='$name';"), function ($result, $data){
-            $player = $data[0];
-            if (!$player instanceof NetworkPlayer) return;
-
+        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM cosmetics WHERE ign='$name';"), function ($result) use ($player){
             $name = $player->getName();
 
             if (sizeof($result) === 0) {
                 AsyncQueue::insertQuery("INSERT INTO cosmetics(ign) VALUES ('$name');");
             }
-        }, [$player]);
+        });
     }
 
     public function onLogin(PlayerLoginEvent $event)
@@ -134,33 +125,21 @@ class PlayerListener implements Listener
 
         $name = $player->getName();
 
-        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM settings WHERE ign='$name';"), function ($result, $data) {
-            $player = $data[0];
-            if (!$player instanceof NetworkPlayer) return;
-
+        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM settings WHERE ign='$name';"), function ($result) use ($player){
             $name = $player->getName();
-
             Session::$playerData[$name] = $result[0];
-            $this->updateLang($player);
+            $player->getLangSession()->applyLanguage();
             var_dump($result[0]);
-        }, [$player]);
+        });
 
-        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM cosmetics WHERE ign='$name';"), function ($result, $data) {
-            $player = $data[0];
-            if (!$player instanceof NetworkPlayer) return;
-
+        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM cosmetics WHERE ign='$name';"), function ($result)use ($player) {
             $name = $player->getName();
             MCosmetic::$cosmeticsData[$name] = $result[0];
             var_dump($result[0]);
             $player->getMCosmetic()->applyCosmetics();
-        }, [$player]);
+        });
 
         $this->login[$name] = 1;
-    }
-
-    public function updateLang(NetworkPlayer $player): void
-    {
-        $player->getLangSession()->applyLanguage();
     }
 
     public function pJoin(PlayerJoinEvent $event): void

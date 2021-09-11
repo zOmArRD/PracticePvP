@@ -1,4 +1,7 @@
-current.server: Practice-1
+current.server: "Practice-1"
+
+downstream.server: "BackendPractice-1"
+ffa.server: "FFA-1"
 
 # Example:
 #   0 = "textures/items/apple_golden" | Image is provided by PATH

@@ -46,7 +46,10 @@ class SelectQuery extends AsyncQuery
 
     public function onCompletion(Server $server)
     {
-        if ($this->rows === null) Loader::$logger->error("Error while executing query. Please check database settings and try again.");
+        if ($this->rows === null) {
+            Loader::$logger->error("Error while executing query. Please check database settings and try again.");
+            return;
+        }
         $this->rows = unserialize($this->rows);
         parent::onCompletion($server);
     }

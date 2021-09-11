@@ -18,17 +18,15 @@ use const greek\DATABASE;
 class AsyncQueue
 {
     /** @var array  */
-    private static array $callbacks = [], $values = [];
+    private static array $callbacks = [];
 
     /**
-     * @param AsyncQuery $asyncQuery
+     * @param AsyncQuery    $asyncQuery
      * @param callable|null $callbackFunction
-     * @param array|null $valuesToPass
      */
-    static public function submitQuery(AsyncQuery $asyncQuery, ?callable $callbackFunction = null, ?array $valuesToPass = null): void
+    static public function submitQuery(AsyncQuery $asyncQuery, ?callable $callbackFunction = null): void
     {
         self::$callbacks[spl_object_hash($asyncQuery)] = $callbackFunction;
-        self::$values[spl_object_hash($asyncQuery)] = $valuesToPass;
         $asyncQuery->host = DATABASE['host'];
         $asyncQuery->user = DATABASE['user'];
         $asyncQuery->password = DATABASE['password'];
@@ -42,8 +40,7 @@ class AsyncQueue
     static public function activateCallback(AsyncQuery $asyncQuery): void
     {
         $callable = self::$callbacks[spl_object_hash($asyncQuery)] ?? null;
-        $values = self::$values[spl_object_hash($asyncQuery)] ?? null;
-        if (is_callable($callable)) $callable($asyncQuery["rows"], $values);
+        if (is_callable($callable)) $callable($asyncQuery["rows"]);
     }
 
     public static function insertQuery(string $sqlQuery): void
