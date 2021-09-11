@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace greek\modules\database\mysql;
 
-use greek\modules\database\mysql\query\InsertQuery;
 use pocketmine\Server;
 use const greek\DATABASE;
 
@@ -41,10 +40,5 @@ class AsyncQueue
     {
         $callable = self::$callbacks[spl_object_hash($asyncQuery)] ?? null;
         if (is_callable($callable)) $callable($asyncQuery["rows"]);
-    }
-
-    public static function insertQuery(string $sqlQuery): void
-    {
-        AsyncQueue::submitQuery(new InsertQuery($sqlQuery));
     }
 }

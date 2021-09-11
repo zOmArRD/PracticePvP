@@ -112,7 +112,7 @@ class PlayerListener implements Listener
             $name = $player->getName();
 
             if (sizeof($result) === 0) {
-                AsyncQueue::insertQuery("INSERT INTO cosmetics(ign) VALUES ('$name');");
+                AsyncQueue::submitQuery(new InsertQuery("INSERT INTO cosmetics(ign) VALUES ('$name');"));
             }
         });
     }
@@ -129,13 +129,11 @@ class PlayerListener implements Listener
             $name = $player->getName();
             Session::$playerData[$name] = $result[0];
             $player->getLangSession()->applyLanguage();
-            var_dump($result[0]);
         });
 
         AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM cosmetics WHERE ign='$name';"), function ($result)use ($player) {
             $name = $player->getName();
             MCosmetic::$cosmeticsData[$name] = $result[0];
-            var_dump($result[0]);
             $player->getMCosmetic()->applyCosmetics();
         });
 
