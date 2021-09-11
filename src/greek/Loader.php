@@ -25,6 +25,7 @@ use greek\network\player\skin\PersonaSkinAdapter;
 use greek\network\utils\TextUtils;
 use greek\task\TaskManager;
 use pocketmine\network\mcpe\protocol\types\SkinAdapterSingleton;
+use pocketmine\network\mcpe\RakLibInterface;
 use pocketmine\plugin\PluginBase;
 use pocketmine\plugin\PluginLogger;
 use pocketmine\utils\Config;
@@ -66,6 +67,13 @@ final class Loader extends PluginBase
 
         /* Register the InvMenu */
         InvMenuHandler::register($this);
+
+        /* Avoid some network crashes when transferring packets */
+        foreach ($this->getServer()->getNetwork()->getInterfaces() as $interface) {
+            if ($interface instanceof RakLibInterface) {
+                $interface->setPacketLimit(PHP_INT_MAX);
+            }
+        }
 
         self::$logger->info(PREFIX . "§a" . TextUtils::uDecode("-<&QU9VEN(&QO861E9````"));
     }

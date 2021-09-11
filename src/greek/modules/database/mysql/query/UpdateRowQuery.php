@@ -43,6 +43,6 @@ class UpdateRowQuery extends AsyncQuery
         foreach (unserialize($this->updates) as $k => $v) {
             $updates = "$k='$v'";
         }
-        $mysqli->query("UPDATE {$this->table} SET " . implode(",", $updates) . " WHERE ign='{$this->playerName}';");
+        $mysqli->query("UPDATE $this->table SET " . implode(",", $updates) . " WHERE ign='$this->playerName';");
     }
 }
