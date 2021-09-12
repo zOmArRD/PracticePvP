@@ -1,6 +1,6 @@
 current.server: "Practice-1"
 
-downstream.server: "BackendPractice-1"
+downstream.server: "BKP-1"
 ffa.server: "FFA-1"
 
 # Example:

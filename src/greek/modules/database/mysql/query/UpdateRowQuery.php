@@ -20,12 +20,13 @@ class UpdateRowQuery extends AsyncQuery
     /** @var string|null  */
     public ?string $table;
 
-    public string $updates, $playerName;
+    public string $updates, $conditionKey, $conditionValue;
 
-    public function __construct(array $updates, string $playerName, string $table = null)
+    public function __construct(array $updates, string $conditionKey, string $conditionValue, string $table = null)
     {
         $this->updates = serialize($updates);
-        $this->playerName = $playerName;
+        $this->conditionKey = $conditionKey;
+        $this->conditionValue = $conditionValue;
 
         if ($table === null) {
             Loader::$logger->error("Unable to update the changes in the database");
@@ -41,8 +42,8 @@ class UpdateRowQuery extends AsyncQuery
     {
         $updates = [];
         foreach (unserialize($this->updates) as $k => $v) {
-            $updates = "$k='$v'";
+            $updates[] = "$k='$v'";
         }
-        $mysqli->query("UPDATE $this->table SET " . implode(",", $updates) . " WHERE ign='$this->playerName';");
+        $mysqli->query("UPDATE $this->table SET " . implode(",", $updates) . " WHERE $this->conditionKey='$this->conditionValue';");
     }
 }

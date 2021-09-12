@@ -17,11 +17,13 @@ use greek\commands\Command;
 use greek\event\EventsManager;
 use greek\modules\database\mysql\AsyncQueue;
 use greek\modules\database\mysql\query\InsertQuery;
+use greek\modules\database\mysql\query\UpdateRowQuery;
 use greek\modules\invmenu\InvMenuHandler;
 use greek\modules\languages\Lang;
 use greek\modules\party\PartyFactory;
 use greek\network\config\Settings;
 use greek\network\player\skin\PersonaSkinAdapter;
+use greek\network\server\ServerManager;
 use greek\network\utils\TextUtils;
 use greek\task\TaskManager;
 use pocketmine\network\mcpe\protocol\types\SkinAdapterSingleton;
@@ -74,6 +76,9 @@ final class Loader extends PluginBase
                 $interface->setPacketLimit(PHP_INT_MAX);
             }
         }
+
+        /* Register the servers on the network */
+        ServerManager::init();
 
         self::$logger->info(PREFIX . "§a" . TextUtils::uDecode("-<&QU9VEN(&QO861E9````"));
     }
@@ -147,6 +152,7 @@ final class Loader extends PluginBase
         foreach (PartyFactory::getParties() as $party) {
             $party->removeFromMySQL();
         }
+        AsyncQueue::submitQuery(new UpdateRowQuery(["isOnline" => 0, "players" => 0], "ServerName", ServerManager::getCurrentServer()->getServerName(), "servers"));
     }
 
     /**
@@ -159,5 +165,6 @@ final class Loader extends PluginBase
         AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS ffa_data(ign TEXT, mode TEXT);"));
         AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS parties(id TEXT, leader VARCHAR(50), members TEXT, slots INT DEFAULT 12, public SMALLINT DEFAULT 0);"));
         AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS cosmetics(ign TEXT, particles TEXT);"));
+        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS servers(ServerName VARCHAR(50) UNIQUE, players INT, isOnline INT, isWhitelisted INT);"));
     }
 }

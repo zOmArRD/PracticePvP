@@ -19,6 +19,7 @@ use greek\modules\form\lib\SimpleForm;
 use greek\network\config\Settings;
 use greek\network\config\SettingsForm;
 use greek\network\player\NetworkPlayer;
+use greek\network\server\ServerManager;
 use greek\network\session\Session;
 use greek\network\session\SessionFactory;
 use pocketmine\Server;
@@ -126,7 +127,7 @@ class Scoreboard extends ScoreboardAPI
             "{date}" => date("d/m/Y"),
             "{practice.players}" => count(Server::getInstance()->getOnlinePlayers()),
             "{practice.maxplayers}" => Server::getInstance()->getMaxPlayers(),
-            "{practice.playing}" => 0, /* TODO: Get Down-Stream Server Players */
+            "{practice.playing}" => ServerManager::getPracticePlayers(),
             "{party.members}" => $this->getPartyData("members"),
             "{party.maxmembers}" => $this->getPartyData("slots"),
             "{party.leader}" => $this->getPartyData("leader"),
