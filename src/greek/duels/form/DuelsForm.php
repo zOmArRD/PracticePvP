@@ -42,7 +42,6 @@ class DuelsForm extends Manager
                 if ($data === "close") return;
                 $split = explode("-", $data);
                 $this->updateDownStreamData($player->getName(), $split[0], $split[1]);
-                var_dump($split);
             }
         });
 

@@ -161,10 +161,10 @@ final class Loader extends PluginBase
     private function verifyDatabases(): void
     {
         AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS settings(ign TEXT, language TEXT, scoreboard SMALLINT DEFAULT 1);"));
-        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS duel_data(ign TEXT, DuelType TEXT, QueueKit TEXT, isInviteDuel SMALLINT DEFAULT 0, playerInvited TEXT);"));
+        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS duel_backend(ign TEXT, DuelType TEXT, QueueKit TEXT, isInviteDuel SMALLINT DEFAULT 0, playerInvited TEXT);"));
         AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS ffa_data(ign TEXT, mode TEXT);"));
-        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS parties(id TEXT, leader VARCHAR(50), members TEXT, slots INT DEFAULT 12, public SMALLINT DEFAULT 0);"));
+        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS parties(id TEXT, leader TEXT, members TEXT, slots INT DEFAULT 12, public SMALLINT DEFAULT 0);"));
         AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS cosmetics(ign TEXT, particles TEXT);"));
-        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS servers(ServerName VARCHAR(50) UNIQUE, players INT, isOnline INT, isWhitelisted INT);"));
+        AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS servers(ServerName VARCHAR(50) UNIQUE, players SMALLINT DEFAULT 0, isOnline SMALLINT DEFAULT 0, isWhitelisted SMALLINT DEFAULT 0);"));
     }
 }

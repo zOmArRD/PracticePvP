@@ -17,6 +17,7 @@ use greek\manager\PartyManager;
 use greek\modules\cosmetics\MCosmetic;
 use greek\modules\languages\Lang;
 use greek\network\scoreboard\Scoreboard;
+use greek\network\server\ServerManager;
 use greek\network\session\Session;
 use greek\network\session\SessionFactory;
 use greek\network\utils\TextUtils;
@@ -25,9 +26,11 @@ use pocketmine\level\Level;
 use pocketmine\level\Position;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\network\mcpe\protocol\SetTimePacket;
+use pocketmine\network\mcpe\protocol\TransferPacket;
 use pocketmine\network\mcpe\protocol\types\GameMode;
 use pocketmine\Player;
 use pocketmine\Server;
+use const greek\PREFIX;
 use const greek\SPAWN_OPTIONS;
 
 class NetworkPlayer extends Player
@@ -211,6 +214,7 @@ class NetworkPlayer extends Player
 
     /**
      * Changes the time of the world where the player is (Only applies to this player)
+     *
      * @param int $time
      */
     public function changeTime(int $time)
@@ -222,5 +226,27 @@ class NetworkPlayer extends Player
 //        if ($player instanceof Player) {
 //            $this->getServer()->broadcastPacket([$player], $pk);
 //        }
+    }
+
+    /**
+     * @todo check if the down-stream has arenas available for transfer.
+     * @param string $serverTarget
+     */
+    public function transferServer(string $serverTarget)
+    {
+        $servers = ServerManager::getServers();
+        foreach ($servers as $server) {
+            if ($server->getServerName() == $serverTarget) {
+                if ($server->isOnline) {
+                    $pk = new TransferPacket();
+                    $pk->address = $server->getServerName();
+                    $this->directDataPacket($pk);
+                } else {
+                    $this->sendMessage(PREFIX . TextUtils::replaceColor("{red}The server is offline!"));
+                }
+            } else {
+                $this->sendMessage(PREFIX . TextUtils::replaceColor("{red}Could not connect to this server!"));
+            }
+        }
     }
 }

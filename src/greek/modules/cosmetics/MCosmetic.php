@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace greek\modules\cosmetics;
 
 use greek\modules\database\mysql\AsyncQueue;
+use greek\modules\database\mysql\query\InsertQuery;
 use greek\modules\form\lib\SimpleForm;
 use greek\network\player\NetworkPlayer;
 use greek\network\session\Session;
@@ -80,7 +81,7 @@ class MCosmetic
      */
     public function setStringValue(string $key, string $value): void
     {
-        AsyncQueue::insertQuery("UPDATE cosmetics SET $key='$value' WHERE ign='{$this->player->getName()}';");
+        AsyncQueue::submitQuery(new InsertQuery("UPDATE cosmetics SET $key='$value' WHERE ign='{$this->player->getName()}';"));
     }
 
     /**
@@ -118,6 +119,7 @@ class MCosmetic
 
         if (isset(Session::$playerData[$player->getName()])) {
             $data = Session::$playerData[$player->getName()];
+            var_dump($data);
 
             if ($data["particles"] !== null && $data["particles"] !== "null") {
                 $this->setParticles($data["particles"], false);

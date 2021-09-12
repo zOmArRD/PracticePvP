@@ -100,11 +100,11 @@ class PlayerListener implements Listener
             }
         });
 
-        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM duel_data WHERE ign='$name';"), function ($result) use ($player) {
+        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM duel_backend WHERE ign='$name';"), function ($result) use ($player) {
             $name = $player->getName();
 
             if (sizeof($result) === 0) {
-                AsyncQueue::submitQuery(new InsertQuery("INSERT INTO duel_data(ign) VALUES ('$name');"));
+                AsyncQueue::submitQuery(new InsertQuery("INSERT INTO duel_backend(ign) VALUES ('$name');"));
             }
         });
         
@@ -135,6 +135,7 @@ class PlayerListener implements Listener
             $name = $player->getName();
             MCosmetic::$cosmeticsData[$name] = $result[0];
             $player->getMCosmetic()->applyCosmetics();
+            var_dump(MCosmetic::$cosmeticsData[$name]);
         });
 
         $this->login[$name] = 1;

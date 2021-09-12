@@ -133,8 +133,8 @@ class TParticles extends Task
                             $this->radiusWitchCurse++;
                             return;
                         }
-                        $a = cos($this->radiusWitchCurse * 0.1) * 2;
-                        $b = sin($this->radiusWitchCurse * 0.1) * 2;
+                        $a = cos($this->radiusWitchCurse * 0.2) * 2;
+                        $b = sin($this->radiusWitchCurse * 0.2) * 2;
                         $level->addParticle(new GenericParticle(new Vector3($x + $a, $y + 1, $z + $b), Particle::TYPE_WITCH_SPELL));
                         $level->addParticle(new GenericParticle(new Vector3($x - $a, $y + 1, $z - $b), Particle::TYPE_WITCH_SPELL));
                         $level->addParticle(new GenericParticle(new Vector3($x + $b, $y + 1, $z - $a), Particle::TYPE_WITCH_SPELL));
