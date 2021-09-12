@@ -14,10 +14,8 @@ namespace greek\network\config;
 use greek\Loader;
 use greek\network\utils\TextUtils;
 use pocketmine\level\Level;
-use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\Config;
-use const greek\PREFIX;
 use const greek\SPAWN_OPTIONS;
 
 class Settings

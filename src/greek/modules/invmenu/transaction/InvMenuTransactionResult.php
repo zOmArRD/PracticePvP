@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace greek\modules\invmenu\transaction;
 
 use Closure;
-use pocketmine\Player;
 
 final class InvMenuTransactionResult
 {

@@ -19,7 +19,6 @@ use greek\network\config\SettingsForm;
 use greek\network\player\NetworkPlayer;
 use greek\network\session\Session;
 use greek\network\utils\TextUtils;
-use JetBrains\PhpStorm\Pure;
 use pocketmine\utils\Config;
 
 class Lang
@@ -41,7 +40,7 @@ class Lang
     public function setStringValue(string $key, string $value): void
     {
         $playerName = $this->getPlayer()->getName();
-        AsyncQueue::insertQuery("UPDATE settings SET $key='$value' WHERE ign='{$playerName}';");
+        AsyncQueue::submitQuery(new InsertQuery("UPDATE settings SET $key='$value' WHERE ign='{$playerName}';"));
     }
 
     public function setLanguage(string $language, bool $safe): void

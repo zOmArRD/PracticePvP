@@ -13,7 +13,6 @@ namespace greek\duels;
 
 use greek\modules\database\mysql\AsyncQueue;
 use greek\modules\database\mysql\query\InsertQuery;
-use greek\network\player\NetworkPlayer;
 
 class Manager
 {
@@ -41,6 +40,8 @@ class Manager
      * @param string $player
      * @param string $duelType
      * @param string $queueKit
+     * @param int    $isInviteDuel
+     * @param string $playerInvited
      */
     public function updateDownStreamData(string $player, string $duelType, string $queueKit, int $isInviteDuel = 0, string $playerInvited = ""): void
     {

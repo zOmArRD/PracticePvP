@@ -11,15 +11,9 @@ declare(strict_types=1);
 
 namespace greek\gui;
 
-use greek\modules\invmenu\inventory\InvMenuInventory;
 use greek\modules\invmenu\InvMenu;
 use greek\modules\invmenu\MenuIds;
-use greek\modules\invmenu\transaction\DeterministicInvMenuTransaction;
-use greek\modules\invmenu\transaction\InvMenuTransaction;
-use greek\modules\invmenu\transaction\InvMenuTransactionResult;
-use greek\network\player\NetworkPlayer;
 use greek\network\session\SessionFactory;
-use pocketmine\inventory\Inventory;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 

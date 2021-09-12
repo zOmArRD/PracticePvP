@@ -13,14 +13,12 @@ namespace greek\network\server;
 
 use greek\Loader;
 use greek\modules\database\mysql\AsyncQueue;
-use greek\modules\database\mysql\query\InsertQuery;
 use greek\modules\database\mysql\query\RegisterServerQuery;
 use greek\modules\database\mysql\query\SelectQuery;
 use greek\modules\database\mysql\query\UpdateRowQuery;
 use greek\network\config\Settings;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\utils\Config;
-use function Composer\Autoload\includeFile;
 
 class ServerManager
 {

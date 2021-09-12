@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace greek\modules\cosmetics\task;
 
+use greek\modules\cosmetics\MCosmetic;
 use pocketmine\level\particle\FlameParticle;
 use pocketmine\level\particle\GenericParticle;
 use pocketmine\level\particle\HeartParticle;
@@ -19,7 +20,6 @@ use pocketmine\level\particle\Particle;
 use pocketmine\math\Vector3;
 use pocketmine\scheduler\Task;
 use pocketmine\Server;
-use greek\modules\cosmetics\MCosmetic;
 use const pocketmine\START_TIME;
 
 class TParticles extends Task
