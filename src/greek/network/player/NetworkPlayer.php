@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace greek\network\player;
 
+use Exception;
 use greek\items\ItemsManager;
 use greek\Loader;
 use greek\manager\PartyManager;
@@ -179,7 +180,10 @@ class NetworkPlayer extends Player
     public function setItem(int $index, Item $item)
     {
         $pi = $this->getInventory();
-        $pi->setItem($index, $item);
+        try {
+            $pi->setItem($index, $item);
+        } catch (Exception) {
+        }
     }
 
     /**
@@ -238,9 +242,10 @@ class NetworkPlayer extends Player
         foreach ($servers as $server) {
             if ($server->getServerName() == $serverTarget) {
                 if ($server->isOnline) {
-                    $pk = new TransferPacket();
+                    /*$pk = new TransferPacket();
                     $pk->address = $server->getServerName();
-                    $this->directDataPacket($pk);
+                    $this->directDataPacket($pk);*/
+                    $this->sendMessage(PREFIX . $this->getTranslatedMsg("message.server.connecting"));
                 } else {
                     $this->sendMessage(PREFIX . TextUtils::replaceColor("{red}The server is offline!"));
                 }

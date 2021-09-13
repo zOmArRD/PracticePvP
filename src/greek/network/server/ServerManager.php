@@ -56,7 +56,6 @@ class ServerManager
             $players = count(Loader::getInstance()->getServer()->getOnlinePlayers());
             $isWhitelist = (Loader::getInstance()->getServer()->hasWhitelist() ? 1 : 0);
             AsyncQueue::submitQuery(new UpdateRowQuery(["players" => "$players", "isWhitelisted" => "$isWhitelist"], "ServerName", $currentServerName, "servers"));
-            //AsyncQueue::submitQuery(new InsertQuery("UPDATE servers SET players = $players, isWhitelisted = $isWhitelist WHERE ServerName='$currentServerName';"));
 
             foreach (self::getServers() as $server) {
                 $server->sync();

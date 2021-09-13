@@ -13,10 +13,15 @@ namespace greek\duels\form;
 
 use Exception;
 use greek\duels\Manager;
+use greek\Loader;
 use greek\modules\form\lib\SimpleForm;
 use greek\network\config\Settings;
 use greek\network\player\NetworkPlayer;
+use greek\network\utils\TextUtils;
+use pocketmine\scheduler\ClosureTask;
+use pocketmine\scheduler\Task;
 use pocketmine\utils\Config;
+use const greek\PREFIX;
 
 class DuelsForm extends Manager
 {
@@ -42,6 +47,11 @@ class DuelsForm extends Manager
                 if ($data === "close") return;
                 $split = explode("-", $data);
                 $this->updateDownStreamData($player->getName(), $split[0], $split[1]);
+                $player->sendMessage(PREFIX . TextUtils::replaceColor("{green}You have entered the queue ($split[1]) $split[0]"));
+                Loader::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($player): void {
+                    /* TODO: Obtener el server de la config */
+                    $player->transferServer("BKP-1");
+                }), 40);
             }
         });
 
