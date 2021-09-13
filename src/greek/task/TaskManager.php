@@ -1,12 +1,13 @@
-<?php /** @noinspection PhpNamedArgumentUsageInspection */
+<?php
 /*
- * Created by PhpStorm
+ * Created by PhpStorm.
  *
  * User: zOmArRD
- * Date: 6/8/2021
+ * Date: 20/7/2021
  *
- * Copyright © 2021 - All Rights Reserved.
+ * Copyright © 2021 Greek Network - All Rights Reserved.
  */
+
 declare(strict_types=1);
 
 namespace greek\task;

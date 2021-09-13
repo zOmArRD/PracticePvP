@@ -17,6 +17,7 @@ use greek\commands\party\PartyCmd;
 use greek\Loader;
 use pocketmine\command\Command as PMCommand;
 use pocketmine\Server;
+use const greek\PREFIX;
 
 abstract class CommandManager
 {
@@ -29,6 +30,9 @@ abstract class CommandManager
         $this->getServer()->getCommandMap()->register($prefix, $command);
     }
 
+    /**
+     * @return Server
+     */
     public function getServer(): Server
     {
         return Loader::getInstance()->getServer();
@@ -41,7 +45,7 @@ abstract class CommandManager
     {
         foreach (["lang" => new LangCmd(), "config" => new ConfigCmd(), "party" => new PartyCmd()] as $prefix => $command) {
             $this->registerCmd($prefix, $command);
-            Loader::$logger->info("The command $prefix has been registered.");
+            Loader::$logger->info(PREFIX . "The command $prefix has been registered.");
         }
     }
 }

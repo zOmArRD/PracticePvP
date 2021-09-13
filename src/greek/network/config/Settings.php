@@ -16,6 +16,7 @@ use greek\network\utils\TextUtils;
 use pocketmine\level\Level;
 use pocketmine\Server;
 use pocketmine\utils\Config;
+use const greek\PREFIX;
 use const greek\SPAWN_OPTIONS;
 
 class Settings
@@ -61,7 +62,7 @@ class Settings
             Server::getInstance()->getDefaultLevel()->stopTime();
         }
 
-        Loader::$logger->info(self::$prefix . "§a" . "Variable values loaded correctly.");
+        Loader::$logger->info(PREFIX . "§a" . "Variable values loaded correctly.");
     }
 
     /**

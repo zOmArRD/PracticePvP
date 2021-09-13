@@ -135,7 +135,6 @@ class PlayerListener implements Listener
             $name = $player->getName();
             MCosmetic::$cosmeticsData[$name] = $result[0];
             $player->getMCosmetic()->applyCosmetics();
-            var_dump(MCosmetic::$cosmeticsData[$name]);
         });
 
         $this->login[$name] = 1;
@@ -169,9 +168,7 @@ class PlayerListener implements Listener
         $player = $event->getPlayer();
         $name = $player->getName();
 
-        if (isset($this->login[$name]) || isset($this->move[$name])) {
-            $event->setCancelled();
-        }
+        if (isset($this->login[$name]) || isset($this->move[$name])) $event->setCancelled();
 
         if (isset($this->join[$name])) {
             unset($this->join[$name]);
@@ -197,9 +194,7 @@ class PlayerListener implements Listener
         $entity = $event->getTransaction()->getSource();
 
         if ($entity->getLevel()->getName() === SPAWN_OPTIONS['world.name'] || $entity->getLevel()->getName() === Server::getInstance()->getDefaultLevel()->getName()) {
-            if (!$entity->isOp()) {
-                $event->setCancelled();
-            }
+            if (!$entity->isOp()) $event->setCancelled();
         }
     }
 
@@ -208,9 +203,7 @@ class PlayerListener implements Listener
         $player = $event->getPlayer();
 
         if ($player->getLevel()->getName() === SPAWN_OPTIONS['world.name'] || $player->getLevel()->getName() === Server::getInstance()->getDefaultLevel()->getName()) {
-            if (!$player->isOp()) {
-                $event->setCancelled();
-            }
+            if (!$player->isOp()) $event->setCancelled();
         }
     }
 
@@ -219,9 +212,7 @@ class PlayerListener implements Listener
         $player = $event->getPlayer();
 
         if ($player->getLevel()->getName() === SPAWN_OPTIONS['world.name'] || $player->getLevel()->getName() === Server::getInstance()->getDefaultLevel()->getName()) {
-            if (!$player->isOp()) {
-                $event->setCancelled();
-            }
+            if (!$player->isOp()) $event->setCancelled();
         }
     }
 

@@ -119,7 +119,6 @@ class MCosmetic
 
         if (isset(Session::$playerData[$player->getName()])) {
             $data = Session::$playerData[$player->getName()];
-            var_dump($data);
 
             if ($data["particles"] !== null && $data["particles"] !== "null") {
                 $this->setParticles($data["particles"], false);
