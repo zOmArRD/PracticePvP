@@ -65,6 +65,9 @@ class Scoreboard extends ScoreboardAPI
         if ($player->isPerformanceViewer()) {
             $strings = null;
             $strings = $configSC->get($player->getLangSession()->getLanguage())['performance'];
+        } elseif ($player->isQueue()) {
+            $strings = null;
+            $strings = $configSC->get($player->getLangSession()->getLanguage())['queue'];
         }
 
         $data = [];
@@ -133,6 +136,8 @@ class Scoreboard extends ScoreboardAPI
             "{party.leader}" => $this->getPartyData("leader"),
             "{tps.current}" => $this->getTpsColor() . Server::getInstance()->getTicksPerSecond() . " (" . Server::getInstance()->getTickUsage() .")",
             "{tps.average}" => $this->getTpsColor() . Server::getInstance()->getTicksPerSecondAverage() . " (" . Server::getInstance()->getTickUsageAverage() . ")",
+            "{player.getqueue.kit}" => $this->getQueueData("kit"),
+            "{player.getqueue.type}" => $this->getQueueData("type"),
         ];
 
         $keys = array_keys($data);
@@ -217,4 +222,19 @@ class Scoreboard extends ScoreboardAPI
         }
         return "";
     }
+
+    /**
+     * @param string $type
+     *
+     * @return string
+     */
+    private function getQueueData(string $type): string
+    {
+        $player = $this->player;
+        if ($player->isQueue()) {
+            return $player->queueData[$type];
+        }
+        return "";
+    }
+
 }

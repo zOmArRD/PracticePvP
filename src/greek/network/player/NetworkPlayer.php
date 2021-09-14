@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace greek\network\player;
 
-use Exception;
 use greek\items\ItemsManager;
 use greek\Loader;
 use greek\manager\PartyManager;
@@ -38,7 +37,10 @@ class NetworkPlayer extends Player
 {
 
     /** @var bool */
-    public bool $isPerformanceViewer = false;
+    public bool $isPerformanceViewer = false, $isQueue = false;
+
+    /** @var array|null */
+    public ?array $queueData;
 
     /** @var Lang */
     public Lang $langSession;
@@ -51,6 +53,30 @@ class NetworkPlayer extends Player
 
     /** @var MCosmetic */
     public MCosmetic $MCosmetic;
+
+    /**
+     *
+     */
+    public function isQueue(): bool
+    {
+        return $this->isQueue;
+    }
+
+    /**
+     * @param string $duelKit
+     * @param string $type
+     * @param bool   $isQueue
+     */
+    public function setIsQueue(string $duelKit, string $type, bool $isQueue = false ): void
+    {
+        if (!$isQueue) {
+            $this->isQueue = false;
+            return;
+        }
+        $this->queueData["kit"] = $duelKit;
+        $this->queueData["type"] = $type;
+        $this->isQueue = $isQueue;
+    }
 
     /**
      * @param bool $isPerformanceViewer
@@ -180,9 +206,8 @@ class NetworkPlayer extends Player
     public function setItem(int $index, Item $item)
     {
         $pi = $this->getInventory();
-        try {
+        if (isset($pi)) {
             $pi->setItem($index, $item);
-        } catch (Exception) {
         }
     }
 
@@ -241,11 +266,15 @@ class NetworkPlayer extends Player
         $servers = ServerManager::getServers();
         foreach ($servers as $server) {
             if ($server->getServerName() == $serverTarget) {
-                if ($server->isOnline) {
-                    /*$pk = new TransferPacket();
-                    $pk->address = $server->getServerName();
-                    $this->directDataPacket($pk);*/
-                    $this->sendMessage(PREFIX . $this->getTranslatedMsg("message.server.connecting"));
+                if ($server->isOnline()) {
+                    if (!$server->isWhitelisted()) {
+                        /*$pk = new TransferPacket();
+                        $pk->address = $server->getServerName();
+                        $this->directDataPacket($pk);*/
+                        $this->sendMessage(PREFIX . $this->getTranslatedMsg("message.server.connecting"));
+                    } else {
+                        $this->sendMessage(PREFIX . TextUtils::replaceColor("{red}The server is under maintenance"));
+                    }
                 } else {
                     $this->sendMessage(PREFIX . TextUtils::replaceColor("{red}The server is offline!"));
                 }

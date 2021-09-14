@@ -40,7 +40,9 @@ class DuelsForm extends Manager
      */
     public function showForm(NetworkPlayer $player, bool $isRanked = false): void
     {
-        $form = new SimpleForm(function (NetworkPlayer $player, $data) {
+        $config = $this->getConfig();
+
+        $form = new SimpleForm(function (NetworkPlayer $player, $data) use ($config) {
 
             /* TODO: Make a queue method, and transfer to the server player, also upload the data to MySQL */
             if (isset($data)) {
@@ -48,10 +50,10 @@ class DuelsForm extends Manager
                 $split = explode("-", $data);
                 $this->updateDownStreamData($player->getName(), $split[0], $split[1]);
                 $player->sendMessage(PREFIX . TextUtils::replaceColor("{green}You have entered the queue ($split[1]) $split[0]"));
-                Loader::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($player): void {
-                    /* TODO: Obtener el server de la config */
-                    $player->transferServer("BKP-1");
-                }), 40);
+                $player->setIsQueue($split[1], $split[0], true);
+                Loader::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($player, $config): void {
+                    $player->transferServer($config->get('downstream.server'));
+                }), 60);
             }
         });
 
@@ -62,8 +64,6 @@ class DuelsForm extends Manager
         $getRanked = ($isRanked == true) ? "Ranked" : "UnRanked";
 
         $form->setTitle("§l§7» §1Queue for $getRanked §l§7«");
-
-        $config = $this->getConfig();
 
         $imageType = $config->get("image.form.duel.type");
 

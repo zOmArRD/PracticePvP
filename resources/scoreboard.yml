@@ -28,6 +28,8 @@ display.name: "§6§lGreekPvP §r§7(NA)"
 #   - {party.maxmembers}      Returns the maximum players per party.
 #   - {tps.current}           Returns the ticks per seconds.
 #   - {tps.average}           Returns the average of ticks per seconds.
+#   - {player.getqueue.kit}   Returns the player's Queue Kit.
+#   - {player.getqueue.type}   Returns the player's Queue Type.
 #
 # Note: For the colors you can use "§" or use {gray}, {dark.blue},
 #       for more examples read the documentation at greek/network/utils/TextUtils.php
@@ -56,6 +58,16 @@ en_ENG:
     - ""
     - " {white}Current TPS: {tps.current}"
     - " {white}Average TPS: {tps.average}"
+    - ""
+    - "{gold} play.greekmc.net"
+    - "{red}{gray}──────────────"
+  queue:
+    - "{gray}──────────────"
+    - " {white}Online: {gold}{practice.players}{gray}/{gold}{practice.maxplayers}"
+    - " {white}Playing: {gold}{practice.playing}"
+    - ""
+    - " {white}Queue for:"
+    - "  {gold}{player.getqueue.kit} ({player.getqueue.type})"
     - ""
     - "{gold} play.greekmc.net"
     - "{red}{gray}──────────────"

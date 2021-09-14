@@ -33,8 +33,6 @@ class Manager
      */
     public function updateDownStreamData(string $player, string $duelType, string $queueKit, int $isInviteDuel = 0, string $playerInvited = ""): void
     {
-        //AsyncQueue::submitQuery(new InsertQuery("UPDATE duel_backend SET DuelType = '$duelType', QueueKit = '$queueKit', isInviteDuel = $isInviteDuel, playerInvited = '$playerInvited' WHERE ign = '$player';"));
-
         AsyncQueue::submitQuery(new UpdateRowQuery(["DuelType" => $duelType, "QueueKit" => $queueKit, "isInviteDuel" => $isInviteDuel, "playerInvited" => $playerInvited], "ign", $player, "duel_backend"));
     }
 
