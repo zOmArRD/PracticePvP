@@ -15,6 +15,7 @@ use greek\modules\cosmetics\MCosmetic;
 use greek\modules\form\lib\SimpleForm;
 use greek\network\player\NetworkPlayer;
 use greek\network\utils\TextUtils;
+use const greek\PREFIX;
 
 class ParticlesSelector extends MCosmetic
 {
@@ -34,13 +35,13 @@ class ParticlesSelector extends MCosmetic
                     new CosmeticsMenu($this->getPlayer());
                 } elseif ($data === "disable") {
                     $this->removeParticles();
-                    $player->sendMessage($this->getMessageUpdated('Particles', 'desactivate'));
+                    $player->sendMessage(PREFIX . $this->getMessageUpdated('Particles', 'desactivate'));
                 } else {
                     if ($player->hasPermission("cosmetics.particles.$data")) {
                         $this->setParticles($data);
-                        $player->sendMessage($this->getMessageUpdated('particles'));
+                        $player->sendMessage(PREFIX . $this->getMessageUpdated('particles', 'activate', $data));
                     } else {
-                        $player->sendMessage($this->getMessageUpdated('', 'noperms'));
+                        $player->sendMessage(PREFIX . $this->getMessageUpdated('', 'noperms'));
                     }
                 }
             }
@@ -63,6 +64,7 @@ class ParticlesSelector extends MCosmetic
 
         $this->addButton($form, "Heart", [0, $images['heart']], 'heart', 'particles');
         $this->addButton($form, "Flame", [0, $images['flame']], 'flame', 'particles');
+        $this->addButton($form, "Dark Flame", [0, $images['flame']], 'darkflame', 'particles');
         $this->addButton($form, "Rain", [0, $images['rain']], 'rain', 'particles');
         $this->addButton($form, "Lava", [0, $images['lava']], 'lava', 'particles');
         $this->addButton($form, "Flame Rings", [0, $images['flamerings']], 'flamerings', 'particles');

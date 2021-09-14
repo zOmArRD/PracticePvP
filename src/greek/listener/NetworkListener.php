@@ -13,11 +13,13 @@ namespace greek\listener;
 
 use Closure;
 use greek\Loader;
+use greek\network\config\Settings;
 use pocketmine\entity\Attribute;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\event\server\DataPacketSendEvent;
+use pocketmine\event\server\QueryRegenerateEvent;
 use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
 use pocketmine\network\mcpe\protocol\NetworkStackLatencyPacket;
 use pocketmine\network\mcpe\protocol\UpdateAttributesPacket;
@@ -94,7 +96,7 @@ class NetworkListener implements Listener
                                 $times = $this->times_to_request - 1;
                                 /** @var TaskHandler|null $handler */
                                 $handler = null;
-                                $handler = Loader::getInstance()->getScheduler()->scheduleRepeatingTask(new ClosureTask(function (int $currentTick) use ($player, $times, &$handler): void {
+                                $handler = Loader::getInstance()->getScheduler()->scheduleRepeatingTask(new ClosureTask(function () use ($player, $times, &$handler): void {
                                     if (--$times >= 0 && $player->isOnline()) {
                                         $this->requestUpdate($player);
                                     } else {

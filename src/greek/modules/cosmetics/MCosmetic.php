@@ -66,13 +66,14 @@ class MCosmetic
     /**
      * @param string $cosmetic
      * @param string $type
+     * @param string $cosmeticName
      *
      * @return string
      */
-    public function getMessageUpdated(string $cosmetic, string $type = "activate"): string
+    public function getMessageUpdated(string $cosmetic, string $type = "activate", string $cosmeticName = ""): string
     {
         $msg = $this->getPlayer()->getTranslatedMsg("message.$type");
-        return TextUtils::replaceVars($msg, ["{cosmetic}" => $cosmetic]);
+        return TextUtils::replaceVars($msg, ["{cosmetic}" => $cosmetic]) . " $cosmeticName";
     }
 
     /**
@@ -94,7 +95,7 @@ class MCosmetic
         self::$particles[$player->getName()] = $particleId;
 
         if ($safe) {
-            Session::$playerData[$player->getName()]["particles"] = $particleId;
+            MCosmetic::$cosmeticsData[$player->getName()]["particles"] = $particleId;
             $this->setStringValue("particles", $particleId);
         }
     }
@@ -117,8 +118,8 @@ class MCosmetic
     {
         $player = $this->getPlayer();
 
-        if (isset(Session::$playerData[$player->getName()])) {
-            $data = Session::$playerData[$player->getName()];
+        if (isset(MCosmetic::$cosmeticsData[$player->getName()])) {
+            $data = MCosmetic::$cosmeticsData[$player->getName()];
 
             if ($data["particles"] !== null && $data["particles"] !== "null") {
                 $this->setParticles($data["particles"], false);
