@@ -26,7 +26,7 @@ class ServerManager
     protected const REFRESH_TICKS = 40;
 
     /** @var Server[] */
-    private static array $servers = [];
+    public static array $servers = [];
 
     /** @var Server */
     private static Server $currentServer;
@@ -61,6 +61,25 @@ class ServerManager
                 $server->sync();
             }
         }), self::REFRESH_TICKS);
+    }
+
+    public static function reloadServers(): void
+    {
+        self::$servers = [];
+
+        /** @var string $currentServerName */
+        $currentServerName = self::getConfig()->get('current.server');
+        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM servers"), function ($rows) use ($currentServerName) {
+            foreach ($rows as $row) {
+                $server = new Server($row["ServerName"], (int)$row["players"], (bool)$row["isOnline"], (bool)$row["isWhitelisted"]);
+                if ($row["ServerName"] === $currentServerName) {
+                    self::$currentServer = $server;
+                } else {
+                    self::$servers[] = $server;
+                }
+            }
+        });
+        var_dump(self::$servers);
     }
 
     /**

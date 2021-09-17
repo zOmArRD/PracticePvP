@@ -67,7 +67,7 @@ class NetworkPlayer extends Player
      * @param string $type
      * @param bool   $isQueue
      */
-    public function setIsQueue(string $duelKit, string $type, bool $isQueue = false ): void
+    public function setIsQueue(bool $isQueue = true, string $duelKit = "", string $type = ""): void
     {
         if (!$isQueue) {
             $this->isQueue = false;
@@ -259,11 +259,17 @@ class NetworkPlayer extends Player
 
     /**
      * @todo check if the down-stream has arenas available for transfer.
+     *
      * @param string $serverTarget
      */
     public function transferServer(string $serverTarget)
     {
         $servers = ServerManager::getServers();
+        if (count($servers) <= 0) {
+            $this->setIsQueue(false);
+            $this->sendMessage(PREFIX . TextUtils::replaceColor("{red}Could not connect to this server!") . " [error n01]");
+            return;
+        }
         foreach ($servers as $server) {
             if ($server->getServerName() == $serverTarget) {
                 if ($server->isOnline()) {
@@ -279,8 +285,9 @@ class NetworkPlayer extends Player
                     $this->sendMessage(PREFIX . TextUtils::replaceColor("{red}The server is offline!"));
                 }
             } else {
-                $this->sendMessage(PREFIX . TextUtils::replaceColor("{red}Could not connect to this server!"));
+                $this->sendMessage(PREFIX . TextUtils::replaceColor("{red}Could not connect to this server!") . " [error n02]");
             }
         }
+        $this->setIsQueue(false);
     }
 }

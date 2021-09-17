@@ -49,6 +49,7 @@ class GlobalTask extends Task
         if ($currentTick % 5 === 0) {
             $this->selectParticle("rain");
             $this->selectParticle("flamerings");
+            $this->selectParticle("darkflame");
             $this->selectParticle("witchcurse");
             $this->selectParticle("bloodhelix");
 
@@ -68,10 +69,11 @@ class GlobalTask extends Task
             $y = $player->getY();
             $z = $player->getZ();
             $location = $player->getLocation();
-            if (isset(MCosmetic::$particles[$player->getName()])) {
+            $name = $player->getName();
+            if (isset(MCosmetic::$particles[$name])) {
                 switch ($particle) {
                     case "lava":
-                        if (MCosmetic::$particles[$player->getName()] === "lava") {
+                        if (MCosmetic::$particles[$name] === "lava") {
                             $center = new Vector3($x, $y, $z);
                             for ($yaw = 0; $yaw <= 10; $yaw += (M_PI * 2) / 20) {
                                 $x = -sin($yaw) + $center->x;
@@ -82,7 +84,7 @@ class GlobalTask extends Task
                         }
                         break;
                     case "heart":
-                        if (MCosmetic::$particles[$player->getName()] === "heart") {
+                        if (MCosmetic::$particles[$name] === "heart") {
                             $level->addParticle(new HeartParticle(new Vector3($x, $y + 2, $z)));
                             $level->addParticle(new HeartParticle(new Vector3($x + 0.6, $y + 1.3, $z + 0.6)));
                             $level->addParticle(new HeartParticle(new Vector3($x - 0.6, $y + 1, $z - 0.6)));
@@ -91,7 +93,7 @@ class GlobalTask extends Task
                         }
                         break;
                     case "flame":
-                        if (MCosmetic::$particles[$player->getName()] === "flame") {
+                        if (MCosmetic::$particles[$name] === "flame") {
                             $size = 0.8;
                             $a = cos(deg2rad($this->radiusFlame / 0.04)) * $size;
                             $b = sin(deg2rad($this->radiusFlame / 0.04)) * $size;
@@ -103,19 +105,19 @@ class GlobalTask extends Task
                         }
                         break;
                     case "darkflame":
-                        if (MCosmetic::$particles[$player->getName()] === "darkflame") {
+                        if (MCosmetic::$particles[$name] === "darkflame") {
                             $size = 0.8;
                             $a = cos(deg2rad($this->darkflame / 0.04)) * $size;
                             $b = sin(deg2rad($this->darkflame / 0.04)) * $size;
                             $c = cos(deg2rad($this->darkflame / 0.04)) * 0.6;
                             $d = sin(deg2rad($this->darkflame / 0.04)) * 0.6;
-                            $level->addParticle(new GenericParticle(new Vector3($x + $a, $y + $c + $d + 1.2, $z + $b), Particle::TYPE_COLORED_FLAME));
-                            $level->addParticle(new GenericParticle(new Vector3($x - $b, $y + $c + $d + 1.2, $z - $a), Particle::TYPE_COLORED_FLAME));
+                            $level->addParticle(new GenericParticle(new Vector3($x + $a, $y + $c + $d + 1.2, $z + $b), Particle::TYPE_VILLAGER_ANGRY));
+                            $level->addParticle(new GenericParticle(new Vector3($x - $b, $y + $c + $d + 1.2, $z - $a), Particle::TYPE_VILLAGER_ANGRY));
                             $this->darkflame++;
                         }
                         break;
                     case "rain":
-                        if (MCosmetic::$particles[$player->getName()] === "rain") {
+                        if (MCosmetic::$particles[$name] === "rain") {
                             if ($this->radiusRain < 0) {
                                 $this->radiusRain++;
                                 return;
@@ -136,7 +138,7 @@ class GlobalTask extends Task
                         }
                         break;
                     case "flamerings":
-                        if (MCosmetic::$particles[$player->getName()] === "flamerings") {
+                        if (MCosmetic::$particles[$name] === "flamerings") {
                             for ($i = 5; $i > 0; $i -= 0.1) {
                                 $radio = $i / 3;
                                 $x = $radio * cos(3 * $i);
@@ -155,7 +157,7 @@ class GlobalTask extends Task
                         }
                         break;
                     case "bloodhelix":
-                        if (MCosmetic::$particles[$player->getName()] === "bloodhelix") {
+                        if (MCosmetic::$particles[$name] === "bloodhelix") {
 
                             if ($this->radiusEmerald < 0) {
                                 $this->radiusEmerald++;
@@ -179,7 +181,7 @@ class GlobalTask extends Task
                         }
                         break;
                     case "witchcurse":
-                        if (MCosmetic::$particles[$player->getName()] === "witchcurse") {
+                        if (MCosmetic::$particles[$name] === "witchcurse") {
                             if ($this->radiusWitchCurse < 0) {
                                 $this->radiusWitchCurse++;
                                 return;

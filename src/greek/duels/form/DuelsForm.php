@@ -17,6 +17,7 @@ use greek\Loader;
 use greek\modules\form\lib\SimpleForm;
 use greek\network\config\Settings;
 use greek\network\player\NetworkPlayer;
+use greek\network\server\ServerManager;
 use greek\network\utils\TextUtils;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\scheduler\Task;
@@ -41,16 +42,18 @@ class DuelsForm extends Manager
     public function showForm(NetworkPlayer $player, bool $isRanked = false): void
     {
         $config = $this->getConfig();
+        var_dump(ServerManager::$servers);
 
-        $form = new SimpleForm(function (NetworkPlayer $player, $data) use ($config) {
+        $getRanked = ($isRanked == true) ? "Ranked" : "UnRanked";
+
+        $form = new SimpleForm(function (NetworkPlayer $player, $data) use ($config, $getRanked) {
 
             /* TODO: Make a queue method, and transfer to the server player, also upload the data to MySQL */
             if (isset($data)) {
                 if ($data === "close") return;
-                $split = explode("-", $data);
-                $this->updateDownStreamData($player->getName(), $split[0], $split[1]);
-                $player->sendMessage(PREFIX . TextUtils::replaceColor("{green}You have entered the queue ($split[1]) $split[0]"));
-                $player->setIsQueue($split[1], $split[0], true);
+                $this->updateDownStreamData($player->getName(), $getRanked, $data);
+                $player->sendMessage(PREFIX . TextUtils::replaceColor("{green}You have entered the queue ($data) $getRanked"));
+                $player->setIsQueue(true, $data, $getRanked);
                 Loader::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($player, $config): void {
                     $player->transferServer($config->get('downstream.server'));
                 }), 60);
@@ -61,14 +64,12 @@ class DuelsForm extends Manager
             "close" => "textures/gui/newgui/anvil-crossout"
         ];
 
-        $getRanked = ($isRanked == true) ? "Ranked" : "UnRanked";
-
         $form->setTitle("§l§7» §1Queue for $getRanked §l§7«");
 
         $imageType = $config->get("image.form.duel.type");
 
         try {
-            foreach ($config->get("downstream.modes") as $kits) $form->addButton("§7§l» §r§9" . $kits["Kit"] . " §l§7«" . "\n§r§fJoin in the queue", $imageType, $kits['Icon'], "$getRanked-" . $kits["Kit"]);
+            foreach ($config->get("downstream.modes") as $kits) $form->addButton("§7§l» §r§9" . $kits["Kit"] . " §l§7«" . "\n§r§fJoin in the queue", $imageType, $kits['Icon'], $kits["Kit"]);
         } catch (Exception) {
         }
 

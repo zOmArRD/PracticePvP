@@ -14,6 +14,7 @@ namespace greek\network\config;
 use greek\modules\form\lib\CustomForm;
 use greek\modules\form\lib\SimpleForm;
 use greek\network\player\NetworkPlayer;
+use greek\network\server\ServerManager;
 use pocketmine\level\Level;
 
 class SettingsForm
@@ -77,11 +78,11 @@ class SettingsForm
         $form = new SimpleForm(function (NetworkPlayer $player, $data){
             if (isset($data)) {
                 switch ($data) {
-                    /*case "sethub":
-                        Settings::updateSpawn($player->level->getName(), [$player->getX(), $player->getY(), $player->getZ(), $player->getYaw(), $player->getPitch()]);
-                        break;*/
                     case "scoreboard":
                         $this->showFormScoreboard();
+                        break;
+                    case "reloadservers":
+                        ServerManager::reloadServers();
                         break;
                     default:
                         $this->showForm();
@@ -95,6 +96,7 @@ class SettingsForm
 
         //$form->addButton("§bSet Hub" . "\n" . "§7In your current position", $form::IMAGE_TYPE_PATH, "", "sethub");
         $form->addButton("§bScoreboard Viewer" . "\n" . "§7Look at the performance.", $form::IMAGE_TYPE_PATH, "", "scoreboard");
+        $form->addButton("§bReload Servers" . "\n" . "§7from database", $form::IMAGE_TYPE_PATH, "", "reloadservers");
         $form->addButton($player->getTranslatedMsg("form.button.back"));
 
         $player->sendForm($form);

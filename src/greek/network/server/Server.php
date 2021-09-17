@@ -47,9 +47,16 @@ class Server
     public function sync(): void{
         AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM servers WHERE ServerName='$this->serverName';"), function ($rows) {
            $row = $rows[0];
-           $this->setIsOnline((bool)$row["isOnline"]);
-           $this->setPlayers((int)$row["players"]);
-           $this->setIsWhitelisted((bool)$row["isWhitelisted"]);
+           if ($row !== null) {
+               $this->setIsOnline((bool)$row["isOnline"]);
+               $this->setPlayers((int)$row["players"]);
+               $this->setIsWhitelisted((bool)$row["isWhitelisted"]);
+           } else {
+               $this->setIsOnline((bool)0);
+               $this->setPlayers(0);
+               $this->setIsWhitelisted((bool)0);
+           }
+
         });
     }
 
