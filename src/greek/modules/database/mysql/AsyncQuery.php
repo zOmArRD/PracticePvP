@@ -23,14 +23,12 @@ abstract class AsyncQuery extends AsyncTask
 
     public function onRun()
     {
-        try {
-            $this->query($mysqli = new mysqli($this->host, $this->user, $this->password, $this->database));
-            $mysqli->close();
-        } catch (Exception $exception) {
-            var_dump($exception->getMessage());
+        $this->query($mysqli = new mysqli($this->host, $this->user, $this->password, $this->database));
+        if ($mysqli->connect_error) {
+            die("Connection failed: " . $mysqli->connect_error);
         }
+        $mysqli->close();
     }
-
     /**
      * @param Server $server
      */

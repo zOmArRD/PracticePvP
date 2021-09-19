@@ -18,7 +18,7 @@ use greek\network\config\Settings;
 use greek\network\player\NetworkPlayer;
 use pocketmine\utils\Config;
 
-class FFAForm extends Manager
+final class FFAForm extends Manager
 {
     public function __construct(NetworkPlayer $player)
     {

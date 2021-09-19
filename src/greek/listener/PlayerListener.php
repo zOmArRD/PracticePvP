@@ -37,7 +37,7 @@ use ReflectionClass;
 use ReflectionException;
 use const greek\SPAWN_OPTIONS;
 
-class PlayerListener implements Listener
+final class PlayerListener implements Listener
 {
     /** @var array */
     public array $login, $join, $move;

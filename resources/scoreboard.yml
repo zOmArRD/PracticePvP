@@ -55,6 +55,7 @@ en_ENG:
   performance:
     - "{gray}──────────────"
     - " {white}Online: {gold}{practice.players}{gray}/{gold}{practice.maxplayers}"
+    - " {white}Playing: {gold}{practice.playing}"
     - ""
     - " {white}Current TPS: {tps.current}"
     - " {white}Average TPS: {tps.average}"

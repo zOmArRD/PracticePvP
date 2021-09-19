@@ -23,7 +23,7 @@ use pocketmine\scheduler\Task;
 use pocketmine\Server;
 use const pocketmine\START_TIME;
 
-class GlobalTask extends Task
+final class GlobalTask extends Task
 {
     /** @var int */
     private int $radiusFlame = 0, $radiusRain = 0, $radiusEmerald = 0, $radiusWitchCurse = 0, $darkflame = 0;
@@ -60,7 +60,10 @@ class GlobalTask extends Task
         }
     }
 
-
+    /**
+     * Select the type of particles you want to appear.
+     * @param string $particle
+     */
     private function selectParticle(string $particle): void
     {
         foreach (Server::getInstance()->getOnlinePlayers() as $player) {

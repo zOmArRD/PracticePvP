@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace greek\commands;
 
 
-class Command extends CommandManager
+final class Command extends CommandManager
 {
     public function __construct()
     {

@@ -27,7 +27,7 @@ use pocketmine\Player;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\scheduler\TaskHandler;
 
-class NetworkListener implements Listener
+final class NetworkListener implements Listener
 {
     /** @var Closure[][] */
     private array $callbacks = [];

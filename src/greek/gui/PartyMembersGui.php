@@ -17,10 +17,8 @@ use greek\network\session\SessionFactory;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 
-class PartyMembersGui extends BaseGui
+final class PartyMembersGui extends BaseGui
 {
-    private ?string $target = null;
-
     public function __construct(string $name = "Greek Network", string $identifier = MenuIds::TYPE_CHEST)
     {
         parent::__construct($name, $identifier);
@@ -32,21 +30,6 @@ class PartyMembersGui extends BaseGui
         $menu = $this->getMenu();
 
         $menu->setListener(InvMenu::readonly());
-
-        /*$menu->setListener(InvMenu::readonly(function (DeterministicInvMenuTransaction $transaction): void {
-            $item = $transaction->getItemClicked();
-            $itemName = $item->getName();
-            $playerName = str_replace("§7[§cLeader§7] §a", "", $itemName);
-            $this->target = $playerName;
-            var_dump($this->target);
-            $transaction->then(function (NetworkPlayer $player): void {
-                $player->getPartyManager()->openPartyPlayerForm($this->target);
-            });
-        }));
-
-        $menu->setInventoryCloseListener(function (NetworkPlayer $player) {
-            if ($this->target !== null) $player->getPartyManager()->openPartyPlayerForm($this->target);
-        });*/
     }
 
     public function addPlayerToGui(string $name): void
@@ -58,7 +41,6 @@ class PartyMembersGui extends BaseGui
         } else {
             $item->setCustomName("§7[§aMember§7] §a$name");
         }
-
         $this->getMenu()->getInventory()->addItem($item);
     }
 }

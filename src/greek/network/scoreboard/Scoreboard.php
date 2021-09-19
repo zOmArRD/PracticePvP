@@ -15,6 +15,7 @@ use Exception;
 use greek\Loader;
 use greek\modules\database\mysql\AsyncQueue;
 use greek\modules\database\mysql\query\InsertQuery;
+use greek\modules\database\mysql\query\UpdateRowQuery;
 use greek\modules\form\lib\SimpleForm;
 use greek\network\config\Settings;
 use greek\network\config\SettingsForm;
@@ -28,6 +29,7 @@ use pocketmine\utils\TextFormat;
 
 class Scoreboard extends ScoreboardAPI
 {
+    /** @var string[] */
     private const EMPTY_CACHE = ["§0\e", "§1\e", "§2\e", "§3\e", "§4\e", "§5\e", "§6\e", "§7\e", "§8\e", "§9\e", "§a\e", "§b\e", "§c\e", "§d\e", "§e\e"];
 
     public function __construct(NetworkPlayer $player)
@@ -62,7 +64,7 @@ class Scoreboard extends ScoreboardAPI
             $strings = $configSC->get($player->getLangSession()->getLanguage())['normal'];
         }
 
-        if ($player->isPerformanceViewer()) {
+        if ($player->isPerformanceViewer() and !$session->hasParty()) {
             $strings = null;
             $strings = $configSC->get($player->getLangSession()->getLanguage())['performance'];
         } elseif ($player->isQueue()) {
@@ -201,7 +203,7 @@ class Scoreboard extends ScoreboardAPI
 
     public function setMysqlScore($ign, int $bool = 1)
     {
-        AsyncQueue::submitQuery(new InsertQuery("UPDATE settings SET scoreboard = $bool WHERE ign ='$ign';"));
+        AsyncQueue::submitQuery(new UpdateRowQuery(['scoreboard' => $bool], 'ign', $ign, 'settings'));
     }
 
     /**

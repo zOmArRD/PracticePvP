@@ -24,7 +24,7 @@ use greek\event\party\PartyUpdateSlotsEvent;
 use pocketmine\event\Listener;
 use const greek\PREFIX;
 
-class PartyListener implements Listener
+final class PartyListener implements Listener
 {
     /**
      * @param PartyCreateEvent $event

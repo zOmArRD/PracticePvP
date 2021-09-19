@@ -20,11 +20,10 @@ use greek\network\player\NetworkPlayer;
 use greek\network\server\ServerManager;
 use greek\network\utils\TextUtils;
 use pocketmine\scheduler\ClosureTask;
-use pocketmine\scheduler\Task;
 use pocketmine\utils\Config;
 use const greek\PREFIX;
 
-class DuelsForm extends Manager
+final class DuelsForm extends Manager
 {
     /**
      * @param NetworkPlayer $player

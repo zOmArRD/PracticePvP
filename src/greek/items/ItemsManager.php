@@ -17,7 +17,7 @@ use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 
-class ItemsManager
+final class ItemsManager
 {
     /**
      * @param string $itemId

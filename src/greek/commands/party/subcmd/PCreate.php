@@ -15,7 +15,7 @@ use greek\commands\ISubCommand;
 use greek\network\player\NetworkPlayer;
 use pocketmine\command\CommandSender;
 
-class PCreate implements ISubCommand
+final class PCreate implements ISubCommand
 {
 
     public function executeSub(CommandSender $player, array $args): void

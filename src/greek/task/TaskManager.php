@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace greek\task;
 
-class TaskManager extends TaskBase
+final class TaskManager extends TaskBase
 {
     public function __construct()
     {

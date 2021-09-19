@@ -16,7 +16,7 @@ use greek\network\player\NetworkPlayer;
 use pocketmine\command\CommandSender;
 use const greek\PREFIX;
 
-class PKick implements ISubCommand
+final class PKick implements ISubCommand
 {
 
     public function executeSub(CommandSender $player, array $args): void

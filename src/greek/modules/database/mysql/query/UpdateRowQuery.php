@@ -17,10 +17,8 @@ use mysqli;
 
 class UpdateRowQuery extends AsyncQuery
 {
-    /** @var string|null  */
-    public ?string $table;
-
-    public string $updates, $conditionKey, $conditionValue;
+    /** @var string|null */
+    public ?string $table, $updates, $conditionKey, $conditionValue;
 
     public function __construct(array $updates, string $conditionKey, string $conditionValue, string $table = null)
     {

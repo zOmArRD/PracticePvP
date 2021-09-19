@@ -19,8 +19,9 @@ use greek\modules\database\mysql\query\UpdateRowQuery;
 use greek\network\config\Settings;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\utils\Config;
+use const greek\PREFIX;
 
-class ServerManager
+final class ServerManager
 {
     /** @var int */
     protected const REFRESH_TICKS = 40;
@@ -49,6 +50,7 @@ class ServerManager
                     self::$currentServer = $server;
                 } else {
                     self::$servers[] = $server;
+                    Loader::$logger->notice(PREFIX . "A new server has been registered | ($server->serverName)");
                 }
             }
         });
@@ -76,10 +78,10 @@ class ServerManager
                     self::$currentServer = $server;
                 } else {
                     self::$servers[] = $server;
+                    Loader::$logger->notice(PREFIX . "A new server has been registered | ($server->serverName)");
                 }
             }
         });
-        var_dump(self::$servers);
     }
 
     /**

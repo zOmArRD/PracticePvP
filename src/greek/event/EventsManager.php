@@ -17,7 +17,7 @@ use greek\listener\PartyListener;
 use greek\listener\PlayerListener;
 use greek\listener\SessionListener;
 
-class EventsManager extends Events
+final class EventsManager extends Events
 {
     public function __construct()
     {
@@ -29,10 +29,8 @@ class EventsManager extends Events
      */
     public function load(): void
     {
-        foreach ([new PlayerListener(),
-                     new InteractListener(),
-                     new NetworkListener(),
-                     new PartyListener(),
-                     new SessionListener()] as $listener) $this->register($listener);
+        foreach ([new PlayerListener(), new InteractListener(), new NetworkListener(), new PartyListener(), new SessionListener()] as $listener) {
+            $this->register($listener);
+        }
     }
 }

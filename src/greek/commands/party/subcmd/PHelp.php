@@ -16,7 +16,7 @@ use greek\commands\party\PartyCmd;
 use pocketmine\command\CommandSender;
 use const greek\PREFIX;
 
-class PHelp implements ISubCommand
+final class PHelp implements ISubCommand
 {
 
     public function executeSub(CommandSender $player, array $args): void

@@ -147,7 +147,7 @@ final class Loader extends PluginBase
         return $this->getFile() . 'resources/';
     }
 
-    public function onDisable()
+    public function onDisable(): void
     {
         foreach (PartyFactory::getParties() as $party) {
             $party->removeFromMySQL();

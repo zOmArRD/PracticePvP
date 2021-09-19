@@ -13,13 +13,13 @@ namespace greek\network\session;
 
 use greek\network\player\NetworkPlayer;
 
-class SessionFactory
+final class SessionFactory
 {
-    /** @var array  */
+    /** @var Session[] */
     private static array $sessions = [];
 
     /**
-     * @return array
+     * @return Session[]
      */
     public static function getSessions(): array
     {

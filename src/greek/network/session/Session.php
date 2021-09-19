@@ -20,8 +20,8 @@ class Session
     /** @var NetworkPlayer */
     public NetworkPlayer $player;
 
-    /** @var Party|null  */
-    private Party|null $party = null;
+    /** @var Party */
+    private Party $party;
 
     /** @var bool */
     private bool $partyChat = false;

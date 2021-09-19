@@ -20,7 +20,7 @@ use greek\network\player\NetworkPlayer;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 
-class InteractListener implements Listener
+final class InteractListener implements Listener
 {
     /** @var array */
     private array $itemCountDown;

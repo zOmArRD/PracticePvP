@@ -17,7 +17,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\utils\TextFormat;
 use const greek\PREFIX;
 
-class LangCmd extends Command
+final class LangCmd extends Command
 {
 
     public function __construct()

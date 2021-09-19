@@ -14,7 +14,7 @@ namespace greek\network\utils;
 use Exception;
 use pocketmine\utils\TextFormat;
 
-class TextUtils extends TextFormat
+final class TextUtils extends TextFormat
 {
     /**
      * This function is in charge of searching for the keys that are defined here below,

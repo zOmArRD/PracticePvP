@@ -24,7 +24,7 @@ use greek\network\player\NetworkPlayer;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 
-class PartyCmd extends Command
+final class PartyCmd extends Command
 {
     /** @var ISubCommand[] */
     public static array $subCmd = [];
