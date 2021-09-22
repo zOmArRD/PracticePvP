@@ -1,7 +1,7 @@
-###########################################################################################
-# This is a YML file. Be careful when editing. Check your edits in a YAML checker like    #
-# the one at http://yaml-online-parser.appspot.com                                        #
-###########################################################################################
+################################
+# This was written by zOmArRD  #
+# For Greek Network MCPE       #
+################################
 ---
 display.name: "§6§lGreekPvP §r§7(NA)"
 
@@ -10,7 +10,7 @@ display.name: "§6§lGreekPvP §r§7(NA)"
 #   But here is the important things.
 #   -> The scoreboard are in ascending order. From 1-15
 #      From down to up.
-#   -> We have limited empty spaces due to mojang tomf*ckery
+#   -> We have limited empty spaces due to mojang which is a shit
 #   -> They must be in array.
 #   -> You can simplify {someone color} as '§'
 #   -> The maximum arrays in one scoreboard is 15, Please follow this
@@ -19,56 +19,58 @@ display.name: "§6§lGreekPvP §r§7(NA)"
 #   Enjoy your game with scoreboard (While it lasts)
 #
 # - Tags information.
-#   - {date}:                 Displays the current date in the format 00/00/00.
-#   - {player.name}           Returns the name of the player.
-#   - {practice.players}      Returns the players on the Up-Stream server.
-#   - {practice.maxplayers}   Returns the maximum players allowed on the server.
-#   - {practice.playing}      Return the players who are in an arena.
-#   - {party.member}          Returns the current players of the party.
-#   - {party.maxmembers}      Returns the maximum players per party.
-#   - {tps.current}           Returns the ticks per seconds.
-#   - {tps.average}           Returns the average of ticks per seconds.
-#   - {player.getqueue.kit}   Returns the player's Queue Kit.
-#   - {player.getqueue.type}   Returns the player's Queue Type.
+#   - {date}:                   Displays the current date in the format 05/09/21 (string).
+#   - {player.get.name}         Returns the name of the player (string).
+#   - {lobby.get.players}       Get the players that are in the Lobby (int).
+#   - {lobby.get.maxplayers}    Get the maximum number of players allowed in the Lobby (int).
+#   - {practice.get.playing}    It is responsible for getting the players on the Down-Stream and possibly on the FFA servers (int).
+#   - {party.get.leader}        Returns the name of the party leader (string).
+#   - {party.get.members}       Returns the number of members of the party (int).
+#   - {tps.get.current}         Returns the ticks per second on the server (int).
+#   - {tps.get.average}         Returns the average tps on the server  (int).
+#   - {player.get.queue.kit}    Obtains the Kit that the player is queued to (string).
+#   - {player.get.queue.type}   Returns Ranked/UnRanked depending on ??
 #
 # Note: For the colors you can use "§" or use {gray}, {dark.blue},
 #       for more examples read the documentation at greek/network/utils/TextUtils.php
 en_ENG:
+  # -> These arrays contain the necessary strings
+  #    for each mode the player is in.
   normal:
     - "{gray}──────────────"
-    - " {white}Online: {gold}{practice.players}{gray}/{gold}{practice.maxplayers}"
-    - " {white}Playing: {gold}{practice.playing}"
+    - " {white}Online: {gold}{lobby.get.players}{gray}/{gold}{lobby.get.maxplayers}"
+    - " {white}In Fights: {gold}{practice.get.playing}"
     - ""
     - "{gold} play.greekmc.net"
     - "{red}{gray}──────────────"
   party:
     - "{gray}──────────────"
-    - " {white}Online: {gold}{practice.players}{gray}/{gold}{practice.maxplayers}"
-    - " {white}Playing: {gold}{practice.playing}"
+    - " {white}Online: {gold}{lobby.get.players}{gray}/{gold}{lobby.get.maxplayers}"
+    - " {white}In Fights: {gold}{practice.get.playing}"
     - ""
     - " {white}Party:"
-    - "  {white}Leader: {gold}{party.leader}"
-    - "  {white}Members: {green}{party.members}{gray}/{green}{party.maxmembers}"
+    - "  {white}Leader: {gold}{party.get.leader}"
+    - "  {white}Members: {green}{party.get.members}{gray}/{green}{party.get.maxmembers}"
     - ""
     - "{gold} play.greekmc.net"
     - "{red}{gray}──────────────"
   performance:
     - "{gray}──────────────"
-    - " {white}Online: {gold}{practice.players}{gray}/{gold}{practice.maxplayers}"
-    - " {white}Playing: {gold}{practice.playing}"
+    - " {white}Online: {gold}{lobby.get.players}{gray}/{gold}{lobby.get.maxplayers}"
+    - " {white}In Fights: {gold}{practice.get.playing}"
     - ""
-    - " {white}Current TPS: {tps.current}"
-    - " {white}Average TPS: {tps.average}"
+    - " {white}Current TPS: {tps.get.current}"
+    - " {white}Average TPS: {tps.get.average}"
     - ""
     - "{gold} play.greekmc.net"
     - "{red}{gray}──────────────"
   queue:
     - "{gray}──────────────"
-    - " {white}Online: {gold}{practice.players}{gray}/{gold}{practice.maxplayers}"
-    - " {white}Playing: {gold}{practice.playing}"
+    - " {white}Online: {gold}{lobby.get.players}{gray}/{gold}{lobby.get.maxplayers}"
+    - " {white}In Fights: {gold}{practice.get.playing}"
     - ""
     - " {white}Queue for:"
-    - "  {gold}{player.getqueue.kit} ({player.getqueue.type})"
+    - "  {gold}{player.get.queue.kit} ({player.get.queue.type})"
     - ""
     - "{gold} play.greekmc.net"
     - "{red}{gray}──────────────"

@@ -119,6 +119,7 @@ final class Loader extends PluginBase
 
         $cfg = new Config($this->getDataFolder() . $archive, Config::YAML);
 
+
         /* This will verify that if the existing configuration file is not the same as the plugin version, it will be replaced. */
         if ($cfg->get('config.version') !== self::CONFIG_VER) {
             self::$logger->error(TextUtils::uDecode("85&AE('9E<G-I;VX@;V8@=&AE(&9I;&4@") . "$archive" . "is not compatible with the current version of the plugin, the old configuration will be in /resources/{$this->getName()}");
@@ -137,9 +138,9 @@ final class Loader extends PluginBase
             $iso = $language["ISOCode"];
             $this->saveResource("lang/$iso.yml");
             Lang::$lang[$iso] = new Config($this->getDataFolder() . "lang/$iso.yml");
-            $this->getLogger()->notice(PREFIX . "$iso " . TextUtils::uDecode("0:&%S(&)E96X@;&]A9&5D(0```"));
+            $this->getLogger()->info(PREFIX . "$iso " . TextUtils::uDecode("0:&%S(&)E96X@;&]A9&5D(0```"));
         }
-        self::$logger->notice(TextUtils::uDecode("M5&AE(&-O;F9I9W5R871I;VX@:&%S(&)E96X@;&]A9&5D('-U8V-E<W-F=6QL !>0```"));
+        self::$logger->info(PREFIX . TextUtils::uDecode("M5&AE(&-O;F9I9W5R871I;VX@:&%S(&)E96X@;&]A9&5D('-U8V-E<W-F=6QL !>0```"));
     }
 
     public function getResourcesFolder(): string
@@ -160,6 +161,7 @@ final class Loader extends PluginBase
      */
     private function verifyDatabases(): void
     {
+        self::$logger->info(PREFIX . "Checking the database.");
         AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS settings(ign TEXT, language TEXT, scoreboard SMALLINT DEFAULT 1);"));
         AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS duel_backend(ign TEXT, DuelType TEXT, QueueKit TEXT, isInviteDuel SMALLINT DEFAULT 0, playerInvited TEXT);"));
         AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS ffa_data(ign TEXT, mode TEXT);"));
