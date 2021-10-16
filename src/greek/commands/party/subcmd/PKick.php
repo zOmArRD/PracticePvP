@@ -18,7 +18,10 @@ use const greek\PREFIX;
 
 final class PKick implements ISubCommand
 {
-
+    /**
+     * @param CommandSender $player
+     * @param array         $args
+     */
     public function executeSub(CommandSender $player, array $args): void
     {
         if (!$player instanceof NetworkPlayer) return;

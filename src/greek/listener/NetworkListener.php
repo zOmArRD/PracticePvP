@@ -36,7 +36,7 @@ final class NetworkListener implements Listener
     private int $times_to_request = 5;
 
     /**
-     * @param Player $player
+     * @param Player  $player
      * @param Closure $callback
      */
     private function onPacketSend(Player $player, Closure $callback): void
@@ -51,7 +51,8 @@ final class NetworkListener implements Listener
 
     /**
      * @param DataPacketReceiveEvent $event
-     * @priority MONITOR
+     *
+     * @priority        MONITOR
      * @ignoreCancelled true
      */
     public function onDataPacketReceive(DataPacketReceiveEvent $event): void
@@ -80,7 +81,8 @@ final class NetworkListener implements Listener
 
     /**
      * @param DataPacketSendEvent $event
-     * @priority MONITOR
+     *
+     * @priority        MONITOR
      * @ignoreCancelled true
      */
     public function onDataPacketSend(DataPacketSendEvent $event): void
@@ -114,6 +116,7 @@ final class NetworkListener implements Listener
 
     /**
      * @param PlayerQuitEvent $event
+     *
      * @priority MONITOR
      */
     public function onPlayerQuit(PlayerQuitEvent $event): void

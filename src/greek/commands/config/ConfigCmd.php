@@ -22,16 +22,13 @@ final class ConfigCmd extends Command
 {
     public function __construct()
     {
-        parent::__construct("config",
-            "Server configuration.",
-            "/config",
-            ['configuration']);
+        parent::__construct("config", "Server configuration.", "/config", ['configuration']);
     }
 
     /**
      * @param CommandSender $sender
-     * @param string $commandLabel
-     * @param array $args
+     * @param string        $commandLabel
+     * @param array         $args
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args): void
     {

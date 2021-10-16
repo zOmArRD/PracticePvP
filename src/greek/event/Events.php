@@ -12,25 +12,31 @@ declare(strict_types=1);
 namespace greek\event;
 
 use greek\Loader;
+use greek\network\Network;
 use pocketmine\event\Listener;
 use pocketmine\plugin\PluginManager;
 
 abstract class Events
 {
+    public function getNetwork(): Network
+    {
+        return new Network();
+    }
+
     /**
      * @return PluginManager
      */
-    public function getPluginManager(): PluginManager
+    private function getPluginManager(): PluginManager
     {
-        return Loader::$instance->getServer()->getPluginManager();
+        return $this->getNetwork()->getPluginManager();
     }
 
     /**
      * @return Loader
      */
-    public function getPlugin(): Loader
+    private function getPlugin(): Loader
     {
-        return Loader::getInstance();
+        return $this->getNetwork()->plugin();
     }
 
     /**

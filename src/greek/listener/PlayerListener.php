@@ -91,7 +91,7 @@ final class PlayerListener implements Listener
         $player->setScoreboardSession();
         $player->setMCosmetic();
 
-        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM settings WHERE ign='$name';"), function ($result) use ($player){
+        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM settings WHERE ign='$name';"), function ($result) use ($player) {
             $name = $player->getName();
             $lang = "en_ENG";
 
@@ -107,8 +107,8 @@ final class PlayerListener implements Listener
                 AsyncQueue::submitQuery(new InsertQuery("INSERT INTO duel_backend(ign) VALUES ('$name');"));
             }
         });
-        
-        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM cosmetics WHERE ign='$name';"), function ($result) use ($player){
+
+        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM cosmetics WHERE ign='$name';"), function ($result) use ($player) {
             $name = $player->getName();
 
             if (sizeof($result) === 0) {
@@ -125,13 +125,13 @@ final class PlayerListener implements Listener
 
         $name = $player->getName();
 
-        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM settings WHERE ign='$name';"), function ($result) use ($player){
+        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM settings WHERE ign='$name';"), function ($result) use ($player) {
             $name = $player->getName();
             Session::$playerData[$name] = $result[0];
             $player->getLangSession()->applyLanguage();
         });
 
-        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM cosmetics WHERE ign='$name';"), function ($result)use ($player) {
+        AsyncQueue::submitQuery(new SelectQuery("SELECT * FROM cosmetics WHERE ign='$name';"), function ($result) use ($player) {
             $name = $player->getName();
             MCosmetic::$cosmeticsData[$name] = $result[0];
             $player->getMCosmetic()->applyCosmetics();

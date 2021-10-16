@@ -19,14 +19,14 @@ use pocketmine\event\Event;
 
 abstract class PartyEvent extends Event implements Cancellable
 {
-    /** @var Party  */
+    /** @var Party */
     private Party $party;
 
-    /** @var Session  */
+    /** @var Session */
     private Session $session;
 
     /**
-     * @param Party $party
+     * @param Party   $party
      * @param Session $session
      */
     public function __construct(Party $party, Session $session)

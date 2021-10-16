@@ -26,9 +26,10 @@ final class InteractListener implements Listener
     private array $itemCountDown;
 
     /**
+     * @todo End the event for each item.
+     *
      * @param PlayerInteractEvent $event
      *
-     * @todo End the event for each item.
      */
     public function legacyInteract(PlayerInteractEvent $event): void
     {

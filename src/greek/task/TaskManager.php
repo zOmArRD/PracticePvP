@@ -19,7 +19,10 @@ final class TaskManager extends TaskBase
         $this->loadTask();
     }
 
-    function loadTask(): void
+    /**
+     * It is in charge of loading the tasks of the plugin.
+     */
+    private function loadTask(): void
     {
         $this->registerTask(new GlobalTask(), 1);
     }

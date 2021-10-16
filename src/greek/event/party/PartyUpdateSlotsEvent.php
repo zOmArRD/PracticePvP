@@ -17,13 +17,13 @@ use JetBrains\PhpStorm\Pure;
 
 class PartyUpdateSlotsEvent extends PartyEvent
 {
-    /** @var int  */
+    /** @var int */
     private int $slots;
 
     /**
-     * @param Party $party
+     * @param Party   $party
      * @param Session $session
-     * @param int $slots
+     * @param int     $slots
      */
     #[Pure]
     public function __construct(Party $party, Session $session, int $slots)

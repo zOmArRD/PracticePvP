@@ -22,9 +22,9 @@ use greek\modules\invmenu\InvMenuHandler;
 use greek\modules\languages\Lang;
 use greek\modules\party\PartyFactory;
 use greek\network\config\Settings;
+use greek\network\Network;
 use greek\network\player\skin\PersonaSkinAdapter;
 use greek\network\server\ServerManager;
-use greek\network\utils\TextUtils;
 use greek\task\TaskManager;
 use pocketmine\network\mcpe\protocol\types\SkinAdapterSingleton;
 use pocketmine\network\mcpe\RakLibInterface;
@@ -34,9 +34,8 @@ use pocketmine\utils\Config;
 
 final class Loader extends PluginBase
 {
-
     /** @var string */
-    public const CONFIG_VER = "1.0.0", ARCHIVE_STRING = "config.yml";
+    private const CONFIG_VER = "1.0.0", ARCHIVE_STRING = "config.yml";
 
     /** @var Loader */
     public static Loader $instance;
@@ -80,13 +79,13 @@ final class Loader extends PluginBase
         /* Register the servers on the network */
         ServerManager::init();
 
-        self::$logger->info(PREFIX . "§a" . TextUtils::uDecode("-<&QU9VEN(&QO861E9````"));
+        self::$logger->info(PREFIX . "§a" . $this->getNetwork()->getTextUtils()->uDecode("-<&QU9VEN(&QO861E9````"));
     }
 
     /**
      * @param Loader $instance
      */
-    public static function setInstance(Loader $instance): void
+    private static function setInstance(Loader $instance): void
     {
         self::$instance = $instance;
     }
@@ -102,7 +101,7 @@ final class Loader extends PluginBase
     /**
      * @param PluginLogger $logger
      */
-    public static function setLogger(PluginLogger $logger): void
+    private static function setLogger(PluginLogger $logger): void
     {
         self::$logger = $logger;
     }
@@ -110,7 +109,7 @@ final class Loader extends PluginBase
     /**
      * It is responsible for verifying and loading the settings that are stored in the resources' folder of the plugin.
      */
-    public function verifySettings(): void
+    private function verifySettings(): void
     {
         @mkdir($this->getDataFolder());
         $archive = self::ARCHIVE_STRING;
@@ -119,10 +118,9 @@ final class Loader extends PluginBase
 
         $cfg = new Config($this->getDataFolder() . $archive, Config::YAML);
 
-
         /* This will verify that if the existing configuration file is not the same as the plugin version, it will be replaced. */
         if ($cfg->get('config.version') !== self::CONFIG_VER) {
-            self::$logger->error(TextUtils::uDecode("85&AE('9E<G-I;VX@;V8@=&AE(&9I;&4@") . "$archive" . "is not compatible with the current version of the plugin, the old configuration will be in /resources/{$this->getName()}");
+            self::$logger->error($this->getNetwork()->getTextUtils()->uDecode("85&AE('9E<G-I;VX@;V8@=&AE(&9I;&4@") . "$archive" . "is not compatible with the current version of the plugin, the old configuration will be in /resources/{$this->getName()}");
 
             /* This replaces the file. */
             rename($this->getDataFolder() . 'config.yml', $this->getDataFolder() . 'config.yml.old');
@@ -138,9 +136,9 @@ final class Loader extends PluginBase
             $iso = $language["ISOCode"];
             $this->saveResource("lang/$iso.yml");
             Lang::$lang[$iso] = new Config($this->getDataFolder() . "lang/$iso.yml");
-            $this->getLogger()->info(PREFIX . "$iso " . TextUtils::uDecode("0:&%S(&)E96X@;&]A9&5D(0```"));
+            $this->getLogger()->info(PREFIX . "$iso " . $this->getNetwork()->getTextUtils()->uDecode("0:&%S(&)E96X@;&]A9&5D(0```"));
         }
-        self::$logger->info(PREFIX . TextUtils::uDecode("M5&AE(&-O;F9I9W5R871I;VX@:&%S(&)E96X@;&]A9&5D('-U8V-E<W-F=6QL !>0```"));
+        self::$logger->info(PREFIX . $this->getNetwork()->getTextUtils()->uDecode("M5&AE(&-O;F9I9W5R871I;VX@:&%S(&)E96X@;&]A9&5D('-U8V-E<W-F=6QL !>0```"));
     }
 
     public function getResourcesFolder(): string
@@ -168,5 +166,13 @@ final class Loader extends PluginBase
         AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS parties(id TEXT, leader TEXT, members TEXT, slots INT DEFAULT 12, public SMALLINT DEFAULT 0);"));
         AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS cosmetics(ign TEXT, particles TEXT);"));
         AsyncQueue::submitQuery(new InsertQuery("CREATE TABLE IF NOT EXISTS servers(ServerName VARCHAR(50) UNIQUE, players SMALLINT DEFAULT 0, isOnline SMALLINT DEFAULT 0, isWhitelisted SMALLINT DEFAULT 0);"));
+    }
+
+    /**
+     * @return Network
+     */
+    public function getNetwork(): Network
+    {
+        return new Network();
     }
 }

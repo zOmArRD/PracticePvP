@@ -17,7 +17,10 @@ use pocketmine\command\CommandSender;
 
 final class PCreate implements ISubCommand
 {
-
+    /**
+     * @param CommandSender $player
+     * @param array         $args
+     */
     public function executeSub(CommandSender $player, array $args): void
     {
         if ($player instanceof NetworkPlayer) $player->getPartyManager()->create();

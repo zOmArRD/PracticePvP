@@ -16,10 +16,10 @@ languages:
 # Credentials for the MYSQL database.
 # It is extremely necessary.
 #database:
-#  user: "root"
-#  password: "omar"
-#  host: 127.0.0.1
-#  database: "minecraftnetwork"
+#  user: root
+#  password: omar
+#  host: localhost
+#  database: minecraft
 database:
   user: root
   password: omar

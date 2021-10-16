@@ -28,6 +28,7 @@ final class SessionFactory
 
     /**
      * @param string $username
+     *
      * @return Session|null
      */
     public static function getSessionByName(string $username): ?Session
@@ -37,6 +38,7 @@ final class SessionFactory
 
     /**
      * @param NetworkPlayer $player
+     *
      * @return Session|null
      */
     public static function getSession(NetworkPlayer $player): ?Session
@@ -46,6 +48,7 @@ final class SessionFactory
 
     /**
      * @param string $username
+     *
      * @return bool
      */
     public static function hasSessionByName(string $username): bool
@@ -55,6 +58,7 @@ final class SessionFactory
 
     /**
      * @param NetworkPlayer $player
+     *
      * @return bool
      */
     public static function hasSession(NetworkPlayer $player): bool

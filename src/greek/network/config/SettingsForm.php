@@ -64,7 +64,7 @@ class SettingsForm
         $form->setTitle($player->getTranslatedMsg("form.title.settingsform"));
         $form->addButton($player->getTranslatedMsg("form.button.settingsform.changelanguage"), $form::IMAGE_TYPE_PATH, $images['language'], "changelanguage");
         $form->addButton($player->getTranslatedMsg("form.button.settingsform.scoreboard"), $form::IMAGE_TYPE_URL, "https://i.ibb.co/TY6MyrN/Hnet-com-image.png", "scoreboardsettings");
-        $form->addButton($player->getTranslatedMsg("form.button.settingsform.timechanger"), $form::IMAGE_TYPE_PATH, $images['time'], "timechanger");
+        //$form->addButton($player->getTranslatedMsg("form.button.settingsform.timechanger"), $form::IMAGE_TYPE_PATH, $images['time'], "timechanger");
         if ($player->isOp()) {
             $form->addButton("§l§9Server Settings", $form::IMAGE_TYPE_URL, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1ZvlkYtyFsEfNG5Cl-Zh3O32hwir7J3LNXA&usqp=CAU", "serversettings");
         }

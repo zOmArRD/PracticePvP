@@ -31,14 +31,11 @@ final class PartyCmd extends Command
 
     public function __construct()
     {
-        parent::__construct("party",
-            "Party Command",
-            "/party help",
-            ["p", "fiesta"]);
+        parent::__construct("party", "Party Command", "/party help", ["p", "fiesta"]);
         $this->registerSubCmd();
     }
 
-    public function registerSubCmd(): void
+    private function registerSubCmd(): void
     {
         foreach (["help" => new PHelp(),
                      "create" => new PCreate(),
@@ -78,7 +75,12 @@ final class PartyCmd extends Command
         $subCmd->executeSub($sender, $args);
     }
 
-    public function getSubCmd(string $prefix): ?string
+    /**
+     * @param string $prefix
+     *
+     * @return string|null
+     */
+    private function getSubCmd(string $prefix): ?string
     {
         return match ($prefix) {
             "help" => "help",

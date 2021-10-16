@@ -17,7 +17,7 @@ interface ISubCommand
 {
     /**
      * @param CommandSender $player
-     * @param array $args
+     * @param array         $args
      */
     public function executeSub(CommandSender $player, array $args): void;
 }

@@ -18,7 +18,10 @@ use const greek\PREFIX;
 
 final class PHelp implements ISubCommand
 {
-
+    /**
+     * @param CommandSender $player
+     * @param array         $args
+     */
     public function executeSub(CommandSender $player, array $args): void
     {
         $player->sendMessage(PREFIX . "§bList of subcommands for party!");

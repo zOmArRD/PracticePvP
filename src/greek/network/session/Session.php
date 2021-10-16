@@ -20,8 +20,8 @@ class Session
     /** @var NetworkPlayer */
     public NetworkPlayer $player;
 
-    /** @var Party */
-    private Party $party;
+    /** @var Party|null */
+    private ?Party $party = null;
 
     /** @var bool */
     private bool $partyChat = false;
@@ -135,6 +135,7 @@ class Session
 
     /**
      * @param PartyInvitation $invitation
+     *
      * @return bool
      */
     public function hasInvitation(PartyInvitation $invitation): bool
@@ -144,6 +145,7 @@ class Session
 
     /**
      * @param Session $session
+     *
      * @return bool
      */
     public function hasSessionInvitation(Session $session): bool
@@ -167,8 +169,9 @@ class Session
     /**
      * @param PartyInvitation $invitation
      */
-    public function removeInvitation(PartyInvitation $invitation): void {
-        if($this->hasInvitation($invitation)) {
+    public function removeInvitation(PartyInvitation $invitation): void
+    {
+        if ($this->hasInvitation($invitation)) {
             unset($this->invitations[array_search($invitation, $this->invitations, true)]);
         }
     }
@@ -176,9 +179,10 @@ class Session
     /**
      * @param Party $party
      */
-    public function removeInvitationsFromParty(Party $party): void {
-        foreach($this->getInvitations() as $invitation) {
-            if($invitation->getPartyId() === $party->getId()) {
+    public function removeInvitationsFromParty(Party $party): void
+    {
+        foreach ($this->getInvitations() as $invitation) {
+            if ($invitation->getPartyId() === $party->getId()) {
                 $this->removeInvitation($invitation);
             }
         }

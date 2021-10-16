@@ -25,6 +25,7 @@ display.name: "§6§lGreekPvP §r§7(NA)"
 #   - {lobby.get.maxplayers}    Get the maximum number of players allowed in the Lobby (int).
 #   - {practice.get.playing}    It is responsible for getting the players on the Down-Stream and possibly on the FFA servers (int).
 #   - {party.get.leader}        Returns the name of the party leader (string).
+#   - {party.get.maxmembers}    Returns the number of max members of the party (int).
 #   - {party.get.members}       Returns the number of members of the party (int).
 #   - {tps.get.current}         Returns the ticks per second on the server (int).
 #   - {tps.get.average}         Returns the average tps on the server  (int).

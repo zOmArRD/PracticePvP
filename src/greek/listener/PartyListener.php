@@ -28,6 +28,7 @@ final class PartyListener implements Listener
 {
     /**
      * @param PartyCreateEvent $event
+     *
      * @ignoreCancelled
      * @priority HIGHEST
      */
@@ -43,6 +44,7 @@ final class PartyListener implements Listener
 
     /**
      * @param PartyDisbandEvent $event
+     *
      * @ignoreCancelled
      * @priority HIGHEST
      */
@@ -63,6 +65,7 @@ final class PartyListener implements Listener
 
     /**
      * @param PartyInviteEvent $event
+     *
      * @ignoreCancelled
      * @priority HIGHEST
      */
@@ -78,6 +81,7 @@ final class PartyListener implements Listener
 
     /**
      * @param PartyJoinEvent $event
+     *
      * @ignoreCancelled
      * @priority HIGHEST
      */
@@ -93,6 +97,7 @@ final class PartyListener implements Listener
 
     /**
      * @param PartyLeaderPromoteEvent $event
+     *
      * @ignoreCancelled
      * @priority HIGHEST
      */
@@ -112,6 +117,7 @@ final class PartyListener implements Listener
 
     /**
      * @param PartyLeaveEvent $event
+     *
      * @ignoreCancelled
      * @priority HIGHEST
      */
@@ -127,6 +133,7 @@ final class PartyListener implements Listener
 
     /**
      * @param PartyMemberKickEvent $event
+     *
      * @ignoreCancelled
      * @priority HIGHEST
      */
@@ -141,6 +148,7 @@ final class PartyListener implements Listener
 
     /**
      * @param PartySetPrivateEvent $event
+     *
      * @ignoreCancelled
      * @priority HIGHEST
      */
@@ -151,6 +159,7 @@ final class PartyListener implements Listener
 
     /**
      * @param PartySetPublicEvent $event
+     *
      * @ignoreCancelled
      * @priority HIGHEST
      */
@@ -161,6 +170,7 @@ final class PartyListener implements Listener
 
     /**
      * @param PartyUpdateSlotsEvent $event
+     *
      * @ignoreCancelled
      * @priority HIGHEST
      */

@@ -20,8 +20,9 @@ use pocketmine\item\ItemIds;
 final class ItemsManager
 {
     /**
-     * @param string $itemId
+     * @param string        $itemId
      * @param NetworkPlayer $player
+     *
      * @return Item
      */
     static public function get(string $itemId, NetworkPlayer $player): Item
@@ -42,8 +43,9 @@ final class ItemsManager
     }
 
     /**
-     * @param int $itemId
+     * @param int    $itemId
      * @param string $customName
+     *
      * @return Item
      */
     static public function load(int $itemId, string $customName): Item

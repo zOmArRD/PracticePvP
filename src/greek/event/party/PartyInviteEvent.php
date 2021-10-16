@@ -14,13 +14,13 @@ namespace greek\event\party;
 use greek\modules\party\Party;
 use greek\network\session\Session;
 
-class PartyInviteEvent extends PartyEvent
+final class PartyInviteEvent extends PartyEvent
 {
-    /** @var Session  */
+    /** @var Session */
     private Session $target;
 
     /**
-     * @param Party $party
+     * @param Party   $party
      * @param Session $session
      * @param Session $target
      */

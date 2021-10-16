@@ -38,11 +38,9 @@ final class DuelsForm extends Manager
      * @param NetworkPlayer $player
      * @param false         $isRanked
      */
-    public function showForm(NetworkPlayer $player, bool $isRanked = false): void
+    private function showForm(NetworkPlayer $player, bool $isRanked = false): void
     {
         $config = $this->getConfig();
-        var_dump(ServerManager::$servers);
-
         $getRanked = ($isRanked == true) ? "Ranked" : "UnRanked";
 
         $form = new SimpleForm(function (NetworkPlayer $player, $data) use ($config, $getRanked) {
@@ -51,7 +49,7 @@ final class DuelsForm extends Manager
             if (isset($data)) {
                 if ($data === "close") return;
                 $this->updateDownStreamData($player->getName(), $getRanked, $data);
-                $player->sendMessage(PREFIX . TextUtils::replaceColor("{green}You have entered the queue ($data) $getRanked"));
+                $player->sendMessage(PREFIX . Loader::getInstance()->getNetwork()->getTextUtils()->replaceColor("{green}You have entered the queue ($data) $getRanked"));
                 $player->setIsQueue(true, $data, $getRanked);
                 Loader::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($player, $config): void {
                     $player->transferServer($config->get('downstream.server'));
@@ -76,6 +74,9 @@ final class DuelsForm extends Manager
         $player->sendForm($form);
     }
 
+    /**
+     * @return Config
+     */
     private function getConfig(): Config
     {
         return Settings::getConfig("network.data.yml");

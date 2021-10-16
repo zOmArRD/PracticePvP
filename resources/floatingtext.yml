@@ -1,0 +1,6 @@
+---
+text.data:
+  - Text: "Hello {player.name}"
+    Id: "01"
+    Position: "4,45,4"
+...

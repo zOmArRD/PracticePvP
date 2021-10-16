@@ -52,7 +52,6 @@ final class GlobalTask extends Task
             $this->selectParticle("darkflame");
             $this->selectParticle("witchcurse");
             $this->selectParticle("bloodhelix");
-
         }
         if ($currentTick % 3 === 0) {
             $this->selectParticle("flame");
@@ -62,6 +61,7 @@ final class GlobalTask extends Task
 
     /**
      * Select the type of particles you want to appear.
+     *
      * @param string $particle
      */
     private function selectParticle(string $particle): void
@@ -203,4 +203,3 @@ final class GlobalTask extends Task
         }
     }
 }
-

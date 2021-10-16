@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace greek\task;
 
 use greek\Loader;
+use greek\network\Network;
 use pocketmine\scheduler\Task;
 use pocketmine\scheduler\TaskHandler;
 use pocketmine\scheduler\TaskScheduler;
@@ -23,7 +24,7 @@ abstract class TaskBase
      */
     public function getTaskManager(): TaskScheduler
     {
-        return Loader::getInstance()->getScheduler();
+        return (new Network())->getTaskManager();
     }
 
     /**

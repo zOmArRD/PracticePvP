@@ -22,10 +22,10 @@ use const greek\PREFIX;
 abstract class CommandManager
 {
     /**
-     * @param string $prefix
+     * @param string    $prefix
      * @param PMCommand $command
      */
-    public function registerCmd(string $prefix, PMCommand $command): void
+    private function registerCmd(string $prefix, PMCommand $command): void
     {
         $this->getServer()->getCommandMap()->register($prefix, $command);
     }
@@ -33,7 +33,7 @@ abstract class CommandManager
     /**
      * @return Server
      */
-    public function getServer(): Server
+    private function getServer(): Server
     {
         return Loader::getInstance()->getServer();
     }

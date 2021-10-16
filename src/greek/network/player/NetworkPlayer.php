@@ -16,6 +16,7 @@ use greek\Loader;
 use greek\manager\PartyManager;
 use greek\modules\cosmetics\MCosmetic;
 use greek\modules\languages\Lang;
+use greek\network\Network;
 use greek\network\scoreboard\Scoreboard;
 use greek\network\server\ServerManager;
 use greek\network\session\Session;
@@ -54,9 +55,6 @@ class NetworkPlayer extends Player
     /** @var MCosmetic */
     public MCosmetic $MCosmetic;
 
-    /**
-     *
-     */
     public function isQueue(): bool
     {
         return $this->isQueue;
@@ -189,9 +187,12 @@ class NetworkPlayer extends Player
     public function getTranslatedMsg(string $idMsg): string
     {
         $langClass = $this->getLangSession();
-        return TextUtils::replaceColor($langClass->getString($idMsg));
+        return (new Network())->getTextUtils()->replaceColor($langClass->getString($idMsg));
     }
 
+    /**
+     * @param string $id
+     */
     public function sendTranslatedMsg(string $id): void
     {
         $this->sendMessage($this->getTranslatedMsg($id));
@@ -267,7 +268,7 @@ class NetworkPlayer extends Player
         $servers = ServerManager::getServers();
         if (count($servers) <= 0) {
             $this->setIsQueue(false);
-            $this->sendMessage(PREFIX . TextUtils::replaceColor("{red}Could not connect to this server!") . " [error n01]");
+            $this->sendMessage(PREFIX . (new Network())->getTextUtils()->replaceColor("{red}Could not connect to this server!") . " [error n01]");
             return;
         }
         foreach ($servers as $server) {
@@ -279,13 +280,13 @@ class NetworkPlayer extends Player
                         $this->directDataPacket($pk);*/
                         $this->sendMessage(PREFIX . $this->getTranslatedMsg("message.server.connecting"));
                     } else {
-                        $this->sendMessage(PREFIX . TextUtils::replaceColor("{red}The server is under maintenance"));
+                        $this->sendMessage(PREFIX . (new Network())->getTextUtils()->replaceColor("{red}The server is under maintenance"));
                     }
                 } else {
-                    $this->sendMessage(PREFIX . TextUtils::replaceColor("{red}The server is offline!"));
+                    $this->sendMessage(PREFIX . (new Network())->getTextUtils()->replaceColor("{red}The server is offline!"));
                 }
             } else {
-                $this->sendMessage(PREFIX . TextUtils::replaceColor("{red}Could not connect to this server!") . " [error n02]");
+                $this->sendMessage(PREFIX . (new Network())->getTextUtils()->replaceColor("{red}Could not connect to this server!") . " [error n02]");
             }
         }
         $this->setIsQueue(false);

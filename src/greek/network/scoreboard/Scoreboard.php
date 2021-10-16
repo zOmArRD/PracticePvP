@@ -82,20 +82,31 @@ class Scoreboard extends ScoreboardAPI
         }
 
         foreach ($data as $scLine => $message) {
-            $line = $scLine +1;
+            $line = $scLine + 1;
             $this->setLine($line, $message);
         }
     }
 
-    private function getTpsColor(): string
+    private function getTpsType(string $type): string
     {
+        $ticks = Server::getInstance()->getTicksPerSecond();
+        $ticksUsage = Server::getInstance()->getTickUsage();
+
+        $average = Server::getInstance()->getTicksPerSecondAverage();
+        $averageUsage = Server::getInstance()->getTickUsageAverage();
+
         $color = TextFormat::GREEN;
-        if (Server::getInstance()->getTicksPerSecond() < 17) {
-            $color = TextFormat::GOLD;
-        } elseif (Server::getInstance()->getTicksPerSecond() < 12) {
+        if ($ticks < 12) {
             $color = TextFormat::RED;
+        } elseif ($ticks < 17) {
+            $color = TextFormat::GOLD;
         }
-        return $color;
+
+        return match ($type) {
+            "current" => $color . $ticks . " (" . $ticksUsage . "%)",
+            "average" => $color . $average . " (" . $averageUsage . "%)",
+            default => "",
+        };
     }
 
     public function replaceData(int $line, string $message): string
@@ -128,18 +139,18 @@ class Scoreboard extends ScoreboardAPI
             "{italic}" => TextFormat::ITALIC,
             "{reset}" => TextFormat::RESET,
             "{eol}" => TextFormat::EOL,
-            "{player.name}" => $this->getPlayer()->getName(),
+            "{player.get.name}" => $this->getPlayer()->getName(),
             "{date}" => date("d/m/Y"),
-            "{practice.players}" => count(Server::getInstance()->getOnlinePlayers()),
-            "{practice.maxplayers}" => Server::getInstance()->getMaxPlayers(),
-            "{practice.playing}" => ServerManager::getPracticePlayers(),
-            "{party.members}" => $this->getPartyData("members"),
-            "{party.maxmembers}" => $this->getPartyData("slots"),
-            "{party.leader}" => $this->getPartyData("leader"),
-            "{tps.current}" => $this->getTpsColor() . Server::getInstance()->getTicksPerSecond() . " (" . Server::getInstance()->getTickUsage() .")",
-            "{tps.average}" => $this->getTpsColor() . Server::getInstance()->getTicksPerSecondAverage() . " (" . Server::getInstance()->getTickUsageAverage() . ")",
-            "{player.getqueue.kit}" => $this->getQueueData("kit"),
-            "{player.getqueue.type}" => $this->getQueueData("type"),
+            "{lobby.get.players}" => count(Server::getInstance()->getOnlinePlayers()),
+            "{lobby.get.maxplayers}" => Server::getInstance()->getMaxPlayers(),
+            "{practice.get.playing}" => ServerManager::getPracticePlayers(),
+            "{party.get.members}" => $this->getPartyData("members"),
+            "{party.get.maxmembers}" => $this->getPartyData("slots"),
+            "{party.get.leader}" => $this->getPartyData("leader"),
+            "{tps.get.current}" => $this->getTpsType("current"),
+            "{tps.get.average}" => $this->getTpsType("average"),
+            "{player.get.queue.kit}" => $this->getQueueData("kit"),
+            "{player.get.queue.type}" => $this->getQueueData("type"),
         ];
 
         $keys = array_keys($data);
@@ -208,6 +219,7 @@ class Scoreboard extends ScoreboardAPI
 
     /**
      * @param string $type
+     *
      * @return int|string
      */
     private function getPartyData(string $type): int|string
@@ -238,5 +250,4 @@ class Scoreboard extends ScoreboardAPI
         }
         return "";
     }
-
 }

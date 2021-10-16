@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace greek\event\party;
 
-class PartyJoinEvent extends PartyEvent
+final class PartyJoinEvent extends PartyEvent
 {
     /* What are you looking for here? */
 }

@@ -36,7 +36,7 @@ class Settings
     {
         $general = $config->get('general');
 
-        self::$prefix = TextUtils::replaceColor($general['prefix']);
+        self::$prefix = Loader::getInstance()->getNetwork()->getTextUtils()->replaceColor($general['prefix']);
 
         /* Saves in an array the data from the database provided by the config. */
         self::$database = $config->get('database');

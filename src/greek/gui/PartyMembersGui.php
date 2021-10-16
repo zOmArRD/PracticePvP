@@ -19,6 +19,10 @@ use pocketmine\item\ItemIds;
 
 final class PartyMembersGui extends BaseGui
 {
+    /**
+     * @param string $name
+     * @param string $identifier
+     */
     public function __construct(string $name = "Greek Network", string $identifier = MenuIds::TYPE_CHEST)
     {
         parent::__construct($name, $identifier);
@@ -32,15 +36,21 @@ final class PartyMembersGui extends BaseGui
         $menu->setListener(InvMenu::readonly());
     }
 
+    /**
+     * Add a head to the menu with the player's name.
+     * @param string $name
+     */
     public function addPlayerToGui(string $name): void
     {
         $session = SessionFactory::getSessionByName($name);
         $item = ItemFactory::get(ItemIds::MOB_HEAD, 3);
+
         if ($session->getParty()->getLeaderName() == $name) {
             $item->setCustomName("§7[§cLeader§7] §a$name");
         } else {
             $item->setCustomName("§7[§aMember§7] §a$name");
         }
+
         $this->getMenu()->getInventory()->addItem($item);
     }
 }

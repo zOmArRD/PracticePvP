@@ -25,7 +25,7 @@ final class TextUtils extends TextFormat
      * @return string The text with the color applied.
      * @example TextUtils::replaceColor("{green}Hi Sir, how are u today");
      */
-    static public function replaceColor(string $text): string
+    public function replaceColor(string $text): string
     {
         $m = $text;
 
@@ -71,7 +71,7 @@ final class TextUtils extends TextFormat
      * @example TextUtils::replaceVars("Hi my name is {player.name}", ["{player.name}" => "Pedro"]);
      *
      */
-    public static function replaceVars(string $msg, array $array): string
+    public function replaceVars(string $msg, array $array): string
     {
         $m = $msg;
         $keys = array_keys($array);
@@ -86,7 +86,7 @@ final class TextUtils extends TextFormat
      *
      * @return bool|string
      */
-    public static function uDecode(string $id): bool|string
+    public function uDecode(string $id): bool|string
     {
         try {
             return convert_uudecode($id);
